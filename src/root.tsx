@@ -15,7 +15,7 @@ import "./root.css";
 
 export default function Root() {
   return (
-    <Html lang="en">
+    <Html lang="en" data-theme="corporate">
       <Head>
         <Title>SolidStart - With TailwindCSS</Title>
         <Meta charset="utf-8" />

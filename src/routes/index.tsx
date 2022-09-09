@@ -1,5 +1,15 @@
 import { Link } from "@solidjs/router";
+import { createServerData, redirect } from "solid-start/server";
 import Counter from "~/components/Counter";
+
+export function routeData() {
+  return createServerData(async (_, { request }) => {
+    if (await getUser(request)) {
+      throw redirect("/");
+    }
+    return {};
+  });
+}
 
 export default function Home() {
   return (
@@ -16,7 +26,7 @@ export default function Home() {
           class="text-sky-600 hover:underline"
         >
           solidjs.com
-        </Link>{" "}
+        </Link>
         to learn how to build Solid apps.
       </p>
       <p class="my-4">
