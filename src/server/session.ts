@@ -8,15 +8,19 @@ type LoginForm = {
 
 export async function register({ username, password }: LoginForm) {
   return db.user.create({
-    data: { username: username, password },
+    data: { password, username: username },
   });
 }
 
 export async function login({ username, password }: LoginForm) {
   const user = await db.user.findUnique({ where: { username } });
-  if (!user) return null;
+  if (!user) {
+    return null;
+  }
   const isCorrectPassword = password === user.password;
-  if (!isCorrectPassword) return null;
+  if (!isCorrectPassword) {
+    return null;
+  }
   return user;
 }
 
@@ -24,15 +28,20 @@ const sessionSecret = import.meta.env.SESSION_SECRET;
 
 const storage = createCookieSessionStorage({
   cookie: {
+    httpOnly: true,
+
+    maxAge: 60 * 60 * 24 * 30,
+
     name: "RJ_session",
+
+    path: "/",
+
+    sameSite: "lax",
+
+    secrets: ["hello"],
     // secure doesn't work on localhost for Safari
     // https://web.dev/when-to-use-local-https/
     secure: true,
-    secrets: ["hello"],
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 30,
-    httpOnly: true,
   },
 });
 
@@ -43,7 +52,9 @@ export function getUserSession(request: Request) {
 export async function getUserId(request: Request) {
   const session = await getUserSession(request);
   const userId = session.get("userId");
-  if (!userId || typeof userId !== "string") return null;
+  if (!userId || typeof userId !== "string") {
+    return null;
+  }
   return userId;
 }
 
