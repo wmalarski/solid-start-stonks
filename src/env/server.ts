@@ -6,4 +6,4 @@ const schema = z.object({
   VITE_SUPABASE_URL: z.string(),
 });
 
-export const env = schema.parse(import.meta.env);
+export const serverEnv = schema.parse(import.meta.env);

@@ -1,5 +1,12 @@
+import { createClient } from "@supabase/supabase-js";
 import { redirect } from "solid-start/server";
 import { createCookieSessionStorage } from "solid-start/session";
+import { serverEnv } from "~/env/server";
+
+const supabase = createClient(
+  serverEnv.VITE_SUPABASE_URL,
+  serverEnv.VITE_SUPABASE_KEY
+);
 
 const sessionSecret = import.meta.env.SESSION_SECRET;
 

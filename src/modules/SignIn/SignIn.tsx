@@ -1,6 +1,6 @@
 import { createSignal, JSX } from "solid-js";
-import { supabase } from "~/server/supabase";
 import { getBaseUrl } from "~/utils/baseUrl";
+import { supabase } from "~/utils/supabase";
 import { MagicLinkForm } from "./MagicLinkForm/MagicLinkForm";
 
 export const SignIn = (): JSX.Element => {
