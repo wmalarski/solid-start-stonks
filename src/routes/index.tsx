@@ -1,17 +1,17 @@
 import { Link } from "@solidjs/router";
-import { createServerData, redirect } from "solid-start/server";
+import { JSX } from "solid-js";
 import Counter from "~/components/Counter";
 
-export function routeData() {
-  return createServerData(async (_, { request }) => {
-    if (await getUser(request)) {
-      throw redirect("/");
-    }
-    return {};
-  });
-}
+// export function routeData() {
+//   return createServerData(async (_, { request }) => {
+//     if (await getUser(request)) {
+//       throw redirect("/");
+//     }
+//     return {};
+//   });
+// }
 
-export default function Home() {
+const Home = (): JSX.Element => {
   return (
     <main class="text-center mx-auto text-gray-700 p-4">
       <h1 class="max-6-xs text-6xl text-sky-700 font-thin uppercase my-16">
@@ -31,11 +31,15 @@ export default function Home() {
       </p>
       <p class="my-4">
         <span>Home</span>
-        {" - "}
         <Link href="/about" class="text-sky-600 hover:underline">
           About Page
-        </Link>{" "}
+        </Link>
+        <Link href="/login" class="text-sky-600 hover:underline">
+          Login
+        </Link>
       </p>
     </main>
   );
-}
+};
+
+export default Home;
