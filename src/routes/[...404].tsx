@@ -1,4 +1,5 @@
 import { Link } from "@solidjs/router";
+import { paths } from "~/utils/paths";
 
 export default function NotFound() {
   return (
@@ -18,11 +19,11 @@ export default function NotFound() {
         to learn how to build Solid apps.
       </p>
       <p class="my-4">
-        <Link href="/" class="text-sky-600 hover:underline">
+        <Link href={paths.index} class="text-sky-600 hover:underline">
           Home
         </Link>
         {" - "}
-        <Link href="/about" class="text-sky-600 hover:underline">
+        <Link href={paths.about} class="text-sky-600 hover:underline">
           About Page
         </Link>
       </p>

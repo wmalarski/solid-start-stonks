@@ -1,5 +1,6 @@
 import { JSX } from "solid-js";
 import { Navigate } from "solid-start";
+import { paths } from "~/utils/paths";
 
 // const fetcher = async () => {
 //   const { data, error } = await supabase.auth.getSessionFromUrl({
@@ -14,7 +15,7 @@ const MagicLink = (): JSX.Element => {
 
   return (
     <main class="text-center mx-auto text-gray-700 p-4">
-      <Navigate href="/" />
+      <Navigate href={paths.index} />
       {/* <Show when={data()} keyed>
         {(result) => (
           <div>

@@ -1,4 +1,5 @@
 import { JSX } from "solid-js";
+import { paths } from "~/utils/paths";
 import { supabase } from "~/utils/supabase";
 
 export const Sidebar = (): JSX.Element => {
@@ -11,10 +12,10 @@ export const Sidebar = (): JSX.Element => {
   return (
     <ul class="menu bg-base-100 w-56 p-2 rounded-box">
       <li>
-        <a href="/">Home</a>
+        <a href={paths.index}>Home</a>
       </li>
       <li>
-        <a href="/about">About</a>
+        <a href={paths.about}>About</a>
       </li>
       <li>
         <button onClick={handleLogout}>Logout</button>

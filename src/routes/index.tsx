@@ -2,6 +2,7 @@ import { Link } from "@solidjs/router";
 import { JSX } from "solid-js";
 import Counter from "~/components/Counter";
 import { Sidebar } from "~/modules/Sidebar/Sidebar";
+import { paths } from "~/utils/paths";
 import { supabase } from "~/utils/supabase";
 
 // export function routeData() {
@@ -36,10 +37,10 @@ const Home = (): JSX.Element => {
       </p>
       <p class="my-4">
         <span>Home</span>
-        <Link href="/about" class="text-sky-600 hover:underline">
+        <Link href={paths.about} class="text-sky-600 hover:underline">
           About Page
         </Link>
-        <Link href="/login" class="text-sky-600 hover:underline">
+        <Link href={paths.login} class="text-sky-600 hover:underline">
           Login
         </Link>
       </p>
