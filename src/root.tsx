@@ -1,5 +1,5 @@
 // @refresh reload
-import { Suspense } from "solid-js";
+import { JSX, Suspense } from "solid-js";
 import {
   Body,
   ErrorBoundary,
@@ -12,8 +12,9 @@ import {
   Title,
 } from "solid-start";
 import "./root.css";
+import { SessionProvider } from "./utils/supabase";
 
-export default function Root() {
+const Root = (): JSX.Element => {
   return (
     <Html lang="en" data-theme="corporate">
       <Head>
@@ -24,17 +25,17 @@ export default function Root() {
       <Body>
         <Suspense>
           <ErrorBoundary>
-            <a class="mr-2" href="/">
-              Index
-            </a>
-            <a href="/about">About</a>
-            <Routes>
-              <FileRoutes />
-            </Routes>
+            <SessionProvider>
+              <Routes>
+                <FileRoutes />
+              </Routes>
+            </SessionProvider>
           </ErrorBoundary>
         </Suspense>
         <Scripts />
       </Body>
     </Html>
   );
-}
+};
+
+export default Root;

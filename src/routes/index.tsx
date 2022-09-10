@@ -1,6 +1,8 @@
 import { Link } from "@solidjs/router";
 import { JSX } from "solid-js";
 import Counter from "~/components/Counter";
+import { Sidebar } from "~/modules/Sidebar/Sidebar";
+import { supabase } from "~/utils/supabase";
 
 // export function routeData() {
 //   return createServerData(async (_, { request }) => {
@@ -12,12 +14,15 @@ import Counter from "~/components/Counter";
 // }
 
 const Home = (): JSX.Element => {
+  const session = supabase.auth.session();
   return (
     <main class="text-center mx-auto text-gray-700 p-4">
+      <Sidebar />
       <h1 class="max-6-xs text-6xl text-sky-700 font-thin uppercase my-16">
         Hello world!
       </h1>
       <Counter />
+      <pre>{JSON.stringify(session, null, 2)}</pre>
       <p class="mt-8">
         Visit{" "}
         <Link
