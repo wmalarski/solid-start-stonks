@@ -1,12 +1,12 @@
 // @refresh reload
-import { JSX, lazy, Suspense } from "solid-js";
+import { JSX, Suspense } from "solid-js";
 import {
   Body,
   ErrorBoundary,
+  FileRoutes,
   Head,
   Html,
   Meta,
-  Route,
   Routes,
   Scripts,
   Title,
@@ -27,29 +27,7 @@ const Root = (): JSX.Element => {
           <ErrorBoundary>
             <SessionProvider>
               <Routes>
-                <Route
-                  path="/"
-                  component={lazy(() => import("./modules/Root/Root"))}
-                >
-                  <Route
-                    path="/login"
-                    component={lazy(() => import("./modules/Public/Public"))}
-                  />
-                  <Route
-                    path="/"
-                    component={lazy(
-                      () => import("./modules/Protected/Protected")
-                    )}
-                  >
-                    <Route
-                      path="/"
-                      component={lazy(
-                        () => import("./modules/Invoices/Invoices")
-                      )}
-                    />
-                  </Route>
-                </Route>
-                {/* <FileRoutes /> */}
+                <FileRoutes />
               </Routes>
             </SessionProvider>
           </ErrorBoundary>
