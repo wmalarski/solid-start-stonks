@@ -1,6 +1,6 @@
 export const paths = {
-  about: "/about",
   index: "/",
+  invoices: "/dashboard/invoices",
   login: "/login",
   magicLink: "/magic-link",
   notFound: "/notFound",

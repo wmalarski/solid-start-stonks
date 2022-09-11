@@ -18,11 +18,6 @@ export const Sidebar = (): JSX.Element => {
         </NavLink>
       </li>
       <li>
-        <NavLink activeClass="active" href={paths.about}>
-          About
-        </NavLink>
-      </li>
-      <li>
         <button onClick={handleLogout}>Logout</button>
       </li>
     </ul>
