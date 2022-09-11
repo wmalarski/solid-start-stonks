@@ -1,17 +1,31 @@
 import { Component } from "solid-js";
-import { useSupabaseSession } from "~/utils/supabase";
+import { useRouteData } from "solid-start";
 
-// export function routeData() {
-//   return createServerData((_, { request }) => {
-//     // console.log(request.headers);
-//     return {};
-//   });
-// }
+export const routeData = () => {
+  // const result =
+  // return createServerData(
+  //   (...args) => {
+  //     console.log("first", args);
+  //     return "first-arg";
+  //   },
+  //   (...args) => {
+  //     console.log("second", args);
+  //     return "second-arg";
+  //   }
+  // );
+  return { hello: "world" };
+};
 
 const Invoices: Component = () => {
-  const session = useSupabaseSession();
+  const a = useRouteData<typeof routeData>();
 
-  return <pre>{JSON.stringify(session(), null, 2)}</pre>;
+  // const session = useSupabaseSession();
+
+  // createEffect(() => {
+  //   console.log(a);
+  // });
+
+  return <pre>{JSON.stringify(a, null, 2)}</pre>;
 };
 
 export default Invoices;

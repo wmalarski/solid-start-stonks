@@ -36,20 +36,21 @@ type Props = {
   children: JSX.Element;
 };
 
-// const action = createServerAction((_, { request }) => {
-//   const cookie = request.headers.get("cookie");
-//   return createUserSession(cookie);
-// });
+const sendSession = async (session: Session) => {
+  await fetch("/api/auth", {
+    body: JSON.stringify(session),
+    method: "POST",
+  });
+};
 
 export const SessionProvider: Component<Props> = (props) => {
   const [session, setSession] = createSignal<SessionState>({
     status: "loading",
   });
 
-  const { data } = supabase.auth.onAuthStateChange((_event, session) => {
-    console.log("onAuthStateChange", { _event, session });
-    // action
+  const { data } = supabase.auth.onAuthStateChange(async (_event, session) => {
     setSession(session ? { session, status: "auth" } : { status: "anon" });
+    await sendSession(session);
   });
 
   onCleanup(() => {
