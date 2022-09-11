@@ -36,6 +36,11 @@ type Props = {
   children: JSX.Element;
 };
 
+// const action = createServerAction((_, { request }) => {
+//   const cookie = request.headers.get("cookie");
+//   return createUserSession(cookie);
+// });
+
 export const SessionProvider: Component<Props> = (props) => {
   const [session, setSession] = createSignal<SessionState>({
     status: "loading",
@@ -43,6 +48,7 @@ export const SessionProvider: Component<Props> = (props) => {
 
   const { data } = supabase.auth.onAuthStateChange((_event, session) => {
     console.log("onAuthStateChange", { _event, session });
+    // action
     setSession(session ? { session, status: "auth" } : { status: "anon" });
   });
 

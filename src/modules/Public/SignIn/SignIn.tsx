@@ -1,6 +1,5 @@
 import { createSignal, JSX } from "solid-js";
 import { getBaseUrl } from "~/utils/baseUrl";
-import { paths } from "~/utils/paths";
 import { supabase } from "~/utils/supabase";
 import { MagicLinkForm } from "./MagicLinkForm/MagicLinkForm";
 
@@ -14,7 +13,7 @@ export const SignIn = (): JSX.Element => {
   const handleSubmit = async (email: string) => {
     setStatus({ error: "", isLoading: true, isSuccess: false });
 
-    const redirectTo = `${getBaseUrl()}${paths.magicLink}`;
+    const redirectTo = getBaseUrl();
 
     const result = await supabase.auth.signIn({ email }, { redirectTo });
 

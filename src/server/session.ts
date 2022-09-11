@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { redirect } from "solid-start/server";
+import { json, redirect } from "solid-start/server";
 import { createCookieSessionStorage } from "solid-start/session";
 import { serverEnv } from "~/env/server";
 
@@ -8,7 +8,12 @@ const supabase = createClient(
   serverEnv.VITE_SUPABASE_KEY
 );
 
-const sessionSecret = import.meta.env.SESSION_SECRET;
+// const sessionSecret = import.meta.env.SESSION_SECRET;
+
+// export const setAuthCookie = (request: Request, response: Response) => {
+//   supabase.auth.api.setAuthCookie(request, response);
+
+// }
 
 const storage = createCookieSessionStorage({
   cookie: {
@@ -71,12 +76,8 @@ export const getUser = async (request: Request) => {
   }
 };
 
-export const createUserSession = async (userId: string, redirectTo: string) => {
-  const session = await storage.getSession();
-  session.set("userId", userId);
-  return redirect(redirectTo, {
-    headers: {
-      "Set-Cookie": await storage.commitSession(session),
-    },
-  });
+export const createUserSession = async (cookieString: string) => {
+  const session = await storage.getSession(cookieString);
+  const committed = await storage.commitSession(session);
+  return json({}, { headers: { "Set-Cookie": committed }, status: 200 });
 };
