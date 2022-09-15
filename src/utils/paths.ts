@@ -1,6 +1,7 @@
 export const paths = {
-  dashboard: "/dashboard",
   index: "/",
+  invoice: (id: string) => `/dashboard/invoice/${id}`,
+  invoices: "/dashboard/invoices",
   login: "/login",
   notFound: "/notFound",
 };

@@ -1,6 +1,6 @@
 import { Component, Show } from "solid-js";
 import { Navigate, Outlet } from "solid-start";
-import { Sidebar } from "~/modules/Protected/Sidebar/Sidebar";
+import { Sidebar } from "~/modules/Sidebar/Sidebar";
 import { paths } from "~/utils/paths";
 import { useSessionStatus } from "~/utils/supabase";
 
@@ -11,7 +11,7 @@ const Dashboard: Component = () => {
     <Show when={status() !== "loading"}>
       <Show
         when={status() === "auth"}
-        fallback={<Navigate href={paths.dashboard} />}
+        fallback={<Navigate href={paths.invoices} />}
       >
         <main class="flex flex-row">
           <Sidebar />
