@@ -1,7 +1,14 @@
-import { Component } from "solid-js";
+import { Component, createEffect, createResource } from "solid-js";
 import { useRouteData } from "solid-start";
+import server$ from "solid-start/server";
 
 export const routeData = () => {
+  const [data] = createResource(() =>
+    server$((...args) => {
+      console.log("server", ...args);
+      return { hello: "world" };
+    })
+  );
   // const result =
   // return createServerData(
   //   (...args) => {
@@ -13,7 +20,7 @@ export const routeData = () => {
   //     return "second-arg";
   //   }
   // );
-  return { hello: "world" };
+  return data;
 };
 
 const Invoices: Component = () => {
@@ -21,11 +28,11 @@ const Invoices: Component = () => {
 
   // const session = useSupabaseSession();
 
-  // createEffect(() => {
-  //   console.log(a);
-  // });
+  createEffect(() => {
+    console.log("createEffect", a());
+  });
 
-  return <pre>{JSON.stringify(a, null, 2)}</pre>;
+  return <pre>{JSON.stringify(a(), null, 2)}</pre>;
 };
 
 export default Invoices;
