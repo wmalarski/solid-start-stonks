@@ -1,6 +1,6 @@
 import { Component, Show } from "solid-js";
 import { Navigate } from "solid-start";
-import { SignIn } from "~/modules/Public/SignIn/SignIn";
+import { SignIn } from "~/modules/SignIn/SignIn";
 import { paths } from "~/utils/paths";
 import { useSessionStatus } from "~/utils/supabase";
 
