@@ -36,6 +36,8 @@
     "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.4.3",
     "@supabase/supabase-js": "^1.35.6",
+    "@trpc/client": "^10.0.0-proxy-alpha.76",
+    "@trpc/server": "^10.0.0-proxy-alpha.76",
     "clsx": "^1.2.1",
     "daisyui": "^2.27.0",
     "solid-js": "1.5.4",

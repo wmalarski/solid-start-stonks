@@ -1,38 +1,16 @@
-import { Component, createEffect, createResource } from "solid-js";
+import { Component, createResource } from "solid-js";
 import { useRouteData } from "solid-start";
-import server$ from "solid-start/server";
+import { mockInvoices } from "~/tests/mocks";
 
 export const routeData = () => {
-  const [data] = createResource(() =>
-    server$((...args) => {
-      console.log("server", ...args);
-      return { hello: "world" };
-    })
-  );
-  // const result =
-  // return createServerData(
-  //   (...args) => {
-  //     console.log("first", args);
-  //     return "first-arg";
-  //   },
-  //   (...args) => {
-  //     console.log("second", args);
-  //     return "second-arg";
-  //   }
-  // );
+  const [data] = createResource(() => mockInvoices(10));
   return data;
 };
 
 const Invoices: Component = () => {
-  const a = useRouteData<typeof routeData>();
+  const data = useRouteData<typeof routeData>();
 
-  // const session = useSupabaseSession();
-
-  createEffect(() => {
-    console.log("createEffect", a());
-  });
-
-  return <pre>{JSON.stringify(a(), null, 2)}</pre>;
+  return <pre>{JSON.stringify(data(), null, 2)}</pre>;
 };
 
 export default Invoices;

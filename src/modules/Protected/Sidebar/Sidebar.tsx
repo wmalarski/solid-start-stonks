@@ -5,8 +5,7 @@ import { supabase } from "~/utils/supabase";
 
 export const Sidebar = (): JSX.Element => {
   const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
-    console.log({ error });
+    await supabase.auth.signOut();
     // TODO show toast
   };
 
