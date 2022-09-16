@@ -87,13 +87,13 @@ export const InvoiceDetails = (props: Props): JSX.Element => {
       </div>
       <table class="text-sm col-span-2 table w-full">
         <thead>
-          <tr class="">
-            <th class="w-3">Lp.</th>
-            <th>Nazwa towaru lub usługi</th>
-            <th class="w-3">JM</th>
-            <th class="w-3">Ilość</th>
-            <th class="w-3">Cena jednostkowa PLN</th>
-            <th class="w-3">Wartość towaru (usługi) PLN</th>
+          <tr class="whitespace-normal">
+            <th class="whitespace-normal w-3">Lp.</th>
+            <th class="whitespace-normal ">Nazwa towaru lub usługi</th>
+            <th class="whitespace-normal w-3">JM</th>
+            <th class="whitespace-normal w-3">Ilość</th>
+            <th class="whitespace-normal w-4">Cena jednostkowa PLN</th>
+            <th class="whitespace-normal w-6">Wartość towaru (usługi) PLN</th>
           </tr>
         </thead>
         <tbody>
