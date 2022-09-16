@@ -26,6 +26,25 @@ const dict = {
       transfer: "Przelew",
       unit: "JM",
     },
+    invoices: {
+      header: "Invoices",
+      more: "Więcej",
+    },
+    magicLink: {
+      button: "Send magic link to your email!",
+      header: "Send magic link",
+      subheader:
+        "To log in, or register. Use the form below to get a magic link to your email.",
+      success: "An email should arrive in your inbox shortly",
+    },
+    notFound: {
+      header: "Not found",
+      home: "Faktury",
+    },
+    sidebar: {
+      home: "Faktury",
+      logout: "Wyloguj",
+    },
   },
 };
 

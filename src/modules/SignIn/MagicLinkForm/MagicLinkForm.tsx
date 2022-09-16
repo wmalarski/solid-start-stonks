@@ -1,3 +1,4 @@
+import { useI18n } from "@solid-primitives/i18n";
 import clsx from "clsx";
 import { createSignal, JSX, Show } from "solid-js";
 import { z } from "zod";
@@ -14,6 +15,8 @@ type Props = {
 };
 
 export const MagicLinkForm = (props: Props): JSX.Element => {
+  const [t] = useI18n();
+
   const [email, setEmail] = createSignal("");
   const [parseError, setParseError] = createSignal("");
 
@@ -31,11 +34,8 @@ export const MagicLinkForm = (props: Props): JSX.Element => {
   return (
     <div class="card bg-base-300 w-fit">
       <div class="card-body">
-        <h3 class="card-title">Send magic link</h3>
-        <div class="pb-2">
-          To log in, or register. Use the form below to get a magic link to your
-          email.
-        </div>
+        <h3 class="card-title">{t("magicLink.header")}</h3>
+        <div class="pb-2">{t("magicLink.subheader")}</div>
         <div class="w-full">
           <input
             class="input w-full"
@@ -53,9 +53,7 @@ export const MagicLinkForm = (props: Props): JSX.Element => {
             {(error) => <div class="text-sm text-red-400">{error}</div>}
           </Show>
           <Show when={props.isSuccess}>
-            <div class="text-sm text-green-600">
-              An email should arrive in your inbox shortly
-            </div>
+            <div class="text-sm text-green-600">{t("magicLink.success")}</div>
           </Show>
         </div>
         <div class="card-actions pt-3 relative">
@@ -65,7 +63,7 @@ export const MagicLinkForm = (props: Props): JSX.Element => {
             onClick={handleSendLink}
             type="button"
           >
-            Send magic link to your email!
+            {t("magicLink.button")}
           </button>
         </div>
       </div>

@@ -1,9 +1,12 @@
+import { useI18n } from "@solid-primitives/i18n";
 import { JSX } from "solid-js";
 import { NavLink } from "solid-start";
 import { paths } from "~/utils/paths";
 import { supabase } from "~/utils/supabase";
 
 export const Sidebar = (): JSX.Element => {
+  const [t] = useI18n();
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     // TODO show toast
@@ -13,11 +16,11 @@ export const Sidebar = (): JSX.Element => {
     <ul class="menu bg-base-100 w-56 p-2 rounded-box print:invisible print:hidden">
       <li>
         <NavLink activeClass="active" href={paths.index}>
-          Home
+          {t("sidebar.home")}
         </NavLink>
       </li>
       <li>
-        <button onClick={handleLogout}>Logout</button>
+        <button onClick={handleLogout}>{t("sidebar.logout")}</button>
       </li>
     </ul>
   );
