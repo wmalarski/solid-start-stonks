@@ -1325,6 +1325,11 @@
   resolved "https://registry.yarnpkg.com/@sideway/pinpoint/-/pinpoint-2.0.0.tgz#cff8ffadc372ad29fd3f78277aeb29e632cc70df"
   integrity sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==
 
+"@solid-primitives/i18n@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@solid-primitives/i18n/-/i18n-1.1.1.tgz#0ab0727788ae3468e4f6edd903b106abc4579475"
+  integrity sha512-ywIJ4MADZ25of6X/hgPTd6UNWbgM6X/ZNJStIexAlaLi9fFWw1yFRP/cllSBabEfMoCWgOETgoT16JQzxZlphg==
+
 "@solidjs/meta@^0.28.0":
   version "0.28.0"
   resolved "https://registry.yarnpkg.com/@solidjs/meta/-/meta-0.28.0.tgz#0c5e09eef8784c8ddd3196fadd64baa025e1a1de"

@@ -10,7 +10,6 @@ export type Invoice = {
   notes: string;
   paymentAccount: string;
   paymentBank: string;
-  paymentDueDate: Date;
   paymentMethod: "cash" | "transfer";
   sellerAddress1: string;
   sellerAddress2: string;

@@ -17,7 +17,6 @@ export const mockInvoice = (update: Partial<Invoice> = {}): Invoice => {
     notes: "notes",
     paymentAccount: "string",
     paymentBank: "string",
-    paymentDueDate: new Date(),
     paymentMethod: "cash",
     sellerAddress1: "string",
     sellerAddress2: "string",

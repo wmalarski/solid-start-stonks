@@ -1,4 +1,5 @@
 // @refresh reload
+import { I18nContext } from "@solid-primitives/i18n";
 import { JSX, Suspense } from "solid-js";
 import {
   Body,
@@ -12,6 +13,7 @@ import {
   Title,
 } from "solid-start";
 import "./root.css";
+import { i18n } from "./utils/i18n";
 import { SessionProvider } from "./utils/supabase";
 
 const Root = (): JSX.Element => {
@@ -25,11 +27,13 @@ const Root = (): JSX.Element => {
       <Body>
         <Suspense>
           <ErrorBoundary>
-            <SessionProvider>
-              <Routes>
-                <FileRoutes />
-              </Routes>
-            </SessionProvider>
+            <I18nContext.Provider value={i18n}>
+              <SessionProvider>
+                <Routes>
+                  <FileRoutes />
+                </Routes>
+              </SessionProvider>
+            </I18nContext.Provider>
           </ErrorBoundary>
         </Suspense>
         <Scripts />
