@@ -15,7 +15,9 @@ const Dashboard: Component = () => {
       >
         <main class="flex min-h-screen w-full flex-row">
           <Sidebar />
-          <Outlet />
+          <div class="max-h-screen w-full overflow-scroll">
+            <Outlet />
+          </div>
         </main>
       </Show>
     </Show>
