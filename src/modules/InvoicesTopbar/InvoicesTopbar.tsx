@@ -1,14 +1,9 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { Link } from "@solidjs/router";
 import { Component } from "solid-js";
-import type { Invoice } from "~/server/types";
 import { paths } from "~/utils/paths";
 
-type Props = {
-  invoice: Invoice;
-};
-
-export const InvoiceTopbar: Component<Props> = (props) => {
+export const InvoicesTopbar: Component = () => {
   const [t] = useI18n();
 
   return (
@@ -17,11 +12,6 @@ export const InvoiceTopbar: Component<Props> = (props) => {
         <ul>
           <li>
             <Link href={paths.invoices}>{t("topbar.home")}</Link>
-          </li>
-          <li>
-            <Link href={paths.invoice(props.invoice.id)}>
-              {props.invoice.invoiceTitle}
-            </Link>
           </li>
         </ul>
       </div>

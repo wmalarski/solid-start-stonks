@@ -27,7 +27,7 @@ const dict = {
       unit: "JM",
     },
     invoices: {
-      header: "Invoices",
+      header: "Faktury",
       more: "Więcej",
     },
     magicLink: {
