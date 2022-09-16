@@ -13,7 +13,7 @@ const InvoicePage: Component = () => {
   const data = useRouteData<typeof routeData>();
 
   return (
-    <div class="grid grid-cols-1 w-full items-start">
+    <div class="grid w-full grid-cols-1 grid-rows-[auto_1fr] items-start">
       <InvoiceTopbar invoice={data()} />
       <InvoiceDetails invoice={data()} />
     </div>

@@ -38,43 +38,43 @@ export const InvoiceDetails: Component<Props> = (props) => {
   };
 
   return (
-    <div class="grid grid-cols-2 gap-x-16 gap-y-8 m-12">
-      <span class="text-right col-span-2 text-sm">
+    <div class="m-12 grid grid-cols-2 gap-x-16 gap-y-8">
+      <span class="col-span-2 text-right text-sm">
         {t("invoice.header", {
           city: props.invoice.city,
           date: dateFormatter(props.invoice.date),
         })}
       </span>
       <div>
-        <p class="font-extrabold text-xl">{t("invoice.seller")}</p>
+        <p class="text-xl font-extrabold">{t("invoice.seller")}</p>
         <div class="divider m-0" />
         <p class="font-bold">{props.invoice.sellerName}</p>
         <p class="text-sm">{props.invoice.sellerAddress1}</p>
         <p class="text-sm">{props.invoice.sellerAddress2}</p>
-        <p class="text-sm mt-2">
+        <p class="mt-2 text-sm">
           {t("invoice.nip", { nip: props.invoice.sellerNip })}
         </p>
       </div>
       <div>
-        <p class="font-extrabold text-xl">{t("invoice.buyer")}</p>
+        <p class="text-xl font-extrabold">{t("invoice.buyer")}</p>
         <div class="divider m-0" />
         <p class="font-bold">{props.invoice.buyerName}</p>
         <p class="text-sm">{props.invoice.buyerAddress1}</p>
         <p class="text-sm">{props.invoice.buyerAddress2}</p>
-        <p class="text-sm mt-2">
+        <p class="mt-2 text-sm">
           {t("invoice.nip", { nip: props.invoice.buyerNip })}
         </p>
       </div>
       <div class="col-span-2">
-        <p class="font-extrabold text-xl text-center m-1">
+        <p class="m-1 text-center text-xl font-extrabold">
           {t("invoice.title", { title: props.invoice.invoiceTitle })}
         </p>
         <div class="divider m-0" />
       </div>
-      <div class="col-span-2 flex flex-row gap-x-20 justify-center text-sm">
-        <div class="flex flex-row gap-4 items-start">
+      <div class="col-span-2 flex flex-row justify-center gap-x-20 text-sm">
+        <div class="flex flex-row items-start gap-4">
           <p>{t("invoice.paymentMethod")}</p>
-          <div class="grid grid-cols-[auto_1fr] text-sm gap-1">
+          <div class="grid grid-cols-[auto_1fr] gap-1 text-sm">
             <input
               type="radio"
               class="radio radio-xs"
@@ -108,15 +108,15 @@ export const InvoiceDetails: Component<Props> = (props) => {
           </tbody>
         </table>
       </div>
-      <table class="text-sm col-span-2 table w-full">
+      <table class="col-span-2 table w-full text-sm">
         <thead>
           <tr>
-            <th class="whitespace-normal w-3">{t("invoice.index")}</th>
+            <th class="w-3 whitespace-normal">{t("invoice.index")}</th>
             <th class="whitespace-normal">{t("invoice.serviceName")}</th>
-            <th class="whitespace-normal w-3">{t("invoice.unit")}</th>
-            <th class="whitespace-normal w-3">{t("invoice.count")}</th>
-            <th class="whitespace-normal w-4">{t("invoice.price")}</th>
-            <th class="whitespace-normal w-6">{t("invoice.sum")}</th>
+            <th class="w-3 whitespace-normal">{t("invoice.unit")}</th>
+            <th class="w-3 whitespace-normal">{t("invoice.count")}</th>
+            <th class="w-4 whitespace-normal">{t("invoice.price")}</th>
+            <th class="w-6 whitespace-normal">{t("invoice.sum")}</th>
           </tr>
         </thead>
         <tbody>

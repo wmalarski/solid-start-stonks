@@ -32,7 +32,7 @@ export const MagicLinkForm: Component<Props> = (props) => {
   };
 
   return (
-    <div class="card bg-base-300 w-fit">
+    <div class="card bg-base-300">
       <div class="card-body">
         <h3 class="card-title">{t("magicLink.header")}</h3>
         <div class="pb-2">{t("magicLink.subheader")}</div>
@@ -56,7 +56,7 @@ export const MagicLinkForm: Component<Props> = (props) => {
             <div class="text-sm text-green-600">{t("magicLink.success")}</div>
           </Show>
         </div>
-        <div class="card-actions pt-3 relative">
+        <div class="card-actions relative pt-3">
           <button
             class={clsx("btn btn-primary w-full", { loading: props.isLoading })}
             disabled={props.isLoading}

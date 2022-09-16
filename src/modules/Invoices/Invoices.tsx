@@ -11,8 +11,8 @@ export const Invoices: Component<Props> = (props) => {
   const [t] = useI18n();
 
   return (
-    <div class="flex flex-col gap-4 w-full p-4">
-      <h1 class="font-semibold text-lg">{t("invoices.header")}</h1>
+    <div class="flex w-full flex-col gap-4 p-4">
+      <h1 class="text-lg font-semibold">{t("invoices.header")}</h1>
       <For each={props.invoices}>
         {(invoice) => <InvoiceItem invoice={invoice} />}
       </For>

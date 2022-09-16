@@ -13,15 +13,24 @@ export const Sidebar: Component = () => {
   };
 
   return (
-    <ul class="menu bg-base-200 w-56 min-h-screen p-2 print:invisible print:hidden">
-      <li>
-        <NavLink activeClass="active" href={paths.index}>
-          {t("sidebar.home")}
-        </NavLink>
-      </li>
-      <li>
-        <button onClick={handleLogout}>{t("sidebar.logout")}</button>
-      </li>
-    </ul>
+    <div
+      data-theme="black"
+      class="flex min-h-screen flex-col justify-between py-4 print:invisible print:hidden"
+    >
+      <ul class="menu w-56 p-2 ">
+        <li>
+          <NavLink class="text-sm" activeClass="active" href={paths.index}>
+            {t("sidebar.home")}
+          </NavLink>
+        </li>
+      </ul>
+      <ul class="menu w-56 p-2 ">
+        <li>
+          <button class="text-sm" onClick={handleLogout}>
+            {t("sidebar.logout")}
+          </button>
+        </li>
+      </ul>
+    </div>
   );
 };

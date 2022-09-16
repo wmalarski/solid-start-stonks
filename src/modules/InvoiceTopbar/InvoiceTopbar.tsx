@@ -1,36 +1,37 @@
 import { useI18n } from "@solid-primitives/i18n";
+import { Link } from "@solidjs/router";
 import { Component } from "solid-js";
 import type { Invoice } from "~/server/types";
+import { paths } from "~/utils/paths";
 
 type Props = {
   invoice: Invoice;
 };
 
-export const InvoiceTopbar: Component<Props> = () => {
+export const InvoiceTopbar: Component<Props> = (props) => {
   const [t] = useI18n();
 
   return (
-    <div class="navbar bg-base-100 print:invisible print:hidden">
-      <div class="">
-        <button class="btn btn-square btn-ghost">
-          <svg
-            class="fill-current"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" />
-          </svg>
-        </button>
+    <div class="navbar flex w-full px-8 print:invisible print:hidden">
+      <div class="breadcrumbs text-sm">
+        <ul>
+          <li>
+            <Link href={paths.invoices}>{t("topbar.home")}</Link>
+          </li>
+          <li>
+            <Link href={paths.invoice(props.invoice.id)}>
+              {props.invoice.invoiceTitle}
+            </Link>
+          </li>
+        </ul>
       </div>
       <div class="">
-        <button class="btn btn-square btn-ghost">
+        <button class="btn btn-ghost btn-square">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            class="inline-block w-5 h-5 stroke-current"
+            class="inline-block h-5 w-5 stroke-current"
           >
             <path
               stroke-linecap="round"

@@ -12,8 +12,8 @@ export const InvoiceItem: Component<Props> = (props) => {
   const [t] = useI18n();
 
   return (
-    <div class="card w-full bg-base-100 shadow-xl">
-      <div class="card-body">
+    <div class="card w-full shadow-xl">
+      <div class="card-body bg-base-100">
         <h2 class="card-title">{props.invoice.invoiceTitle}</h2>
         <pre>{JSON.stringify(props.invoice, null, 2)}</pre>
         <div class="card-actions">

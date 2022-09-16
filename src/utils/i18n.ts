@@ -45,6 +45,9 @@ const dict = {
       home: "Faktury",
       logout: "Wyloguj",
     },
+    topbar: {
+      home: "Faktury",
+    },
   },
 };
 

@@ -11,6 +11,7 @@
     "plugin:promise/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:solid/typescript",
+    "plugin:tailwindcss/recommended",
     "plugin:prettier/recommended"
   ],
   "parser": "@typescript-eslint/parser",
@@ -91,6 +92,7 @@
         "enforceForJSX": true
       }
     ],
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "tailwindcss/no-custom-classname": "off"
   }
 }
