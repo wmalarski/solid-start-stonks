@@ -1,6 +1,7 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { Component } from "solid-js";
 import type { Invoice } from "~/server/types";
+import { pricePLN } from "~/utils/pricePLN";
 
 type Props = {
   invoice: Invoice;
@@ -135,7 +136,7 @@ export const InvoiceDetails: Component<Props> = (props) => {
             <td>{t("invoice.toPay")}</td>
             <td class="text-right">{currencyFormatter(sum())}</td>
             <td class="w-6/12 pl-4">
-              {t("invoice.longToPay", { sum: String(sum()) })}
+              {t("invoice.longToPay", { sum: pricePLN(sum()) })}
             </td>
           </tr>
           <tr>
