@@ -7,6 +7,7 @@ export type Invoice = {
   date: Date;
   id: string;
   invoiceTitle: string;
+  notes: string;
   paymentAccount: string;
   paymentBank: string;
   paymentDueDate: Date;
