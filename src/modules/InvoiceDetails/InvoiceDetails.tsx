@@ -66,7 +66,7 @@ export const InvoiceDetails: Component<Props> = (props) => {
         </p>
       </div>
       <div class="col-span-2">
-        <p class="m-1 text-center text-xl font-extrabold">
+        <p class="m-1 text-center text-2xl font-extrabold">
           {t("invoice.title", { title: props.invoice.invoiceTitle })}
         </p>
         <div class="divider m-0" />
