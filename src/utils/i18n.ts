@@ -2,6 +2,15 @@ import { createI18nContext } from "@solid-primitives/i18n";
 
 const dict = {
   pl: {
+    addInvoice: {
+      header: "Dodaj fakture",
+    },
+    copyInvoice: {
+      header: "Kopiuj fakture",
+    },
+    editInvoice: {
+      header: "Edytuj fakture",
+    },
     invoice: {
       account: "Nr konta:",
       bankName: "Nazwa Banku:",
@@ -26,6 +35,29 @@ const dict = {
       transfer: "Przelew",
       unit: "JM",
     },
+    invoiceForm: {
+      buyerAddress1: "Adres 1",
+      buyerAddress2: "Adres 2",
+      buyerName: "Nazwa",
+      buyerNip: "Nip",
+      cancel: "Anuluj",
+      city: "Miasto:",
+      date: "Data",
+      general: "Faktura",
+      invoiceTitle: "Tytuł",
+      notes: "Notatki",
+      paymentAccount: "Konto",
+      paymentBank: "Bank",
+      save: "Zapisz",
+      sellerAddress1: "Adres 1",
+      sellerAddress2: "Adres 2",
+      sellerName: "Nazwa",
+      sellerNip: "Nip",
+      serviceCount: "Liczba",
+      servicePrice: "Cena",
+      serviceTitle: "Tytuł",
+      serviceUnit: "Jednostka",
+    },
     invoices: {
       header: "Faktury",
       more: "Więcej",
@@ -46,7 +78,10 @@ const dict = {
       logout: "Wyloguj",
     },
     topbar: {
+      copyInvoice: "Kopiuj",
+      editInvoice: "Edytuj",
       home: "Faktury",
+      removeInvoice: "Usuń",
     },
   },
 };
