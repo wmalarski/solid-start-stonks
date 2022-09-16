@@ -38,7 +38,7 @@ export const InvoiceDetails: Component<Props> = (props) => {
   };
 
   return (
-    <div class="grid grid-cols-2 gap-x-16 gap-y-8 m-12 border-gray-400 w-full">
+    <div class="grid grid-cols-2 gap-x-16 gap-y-8 m-12">
       <span class="text-right col-span-2 text-sm">
         {t("invoice.header", {
           city: props.invoice.city,

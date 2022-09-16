@@ -24,7 +24,7 @@ const Root = (): JSX.Element => {
         <Meta charset="utf-8" />
         <Meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      <Body>
+      <Body class="min-h-screen">
         <Suspense>
           <ErrorBoundary>
             <I18nContext.Provider value={i18n}>

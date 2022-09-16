@@ -13,7 +13,7 @@ const Dashboard: Component = () => {
         when={status() === "auth"}
         fallback={<Navigate href={paths.invoices} />}
       >
-        <main class="flex flex-row">
+        <main class="flex flex-row w-full min-h-screen">
           <Sidebar />
           <Outlet />
         </main>

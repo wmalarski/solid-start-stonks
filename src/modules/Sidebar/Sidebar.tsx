@@ -13,7 +13,7 @@ export const Sidebar: Component = () => {
   };
 
   return (
-    <ul class="menu bg-base-100 w-56 p-2 rounded-box print:invisible print:hidden">
+    <ul class="menu bg-base-200 w-56 min-h-screen p-2 print:invisible print:hidden">
       <li>
         <NavLink activeClass="active" href={paths.index}>
           {t("sidebar.home")}
