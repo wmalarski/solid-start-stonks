@@ -1,6 +1,6 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { Link } from "@solidjs/router";
-import { JSX } from "solid-js";
+import { Component } from "solid-js";
 import type { Invoice } from "~/server/types";
 import { paths } from "~/utils/paths";
 
@@ -8,7 +8,7 @@ type Props = {
   invoice: Invoice;
 };
 
-export const InvoiceItem = (props: Props): JSX.Element => {
+export const InvoiceItem: Component<Props> = (props) => {
   const [t] = useI18n();
 
   return (

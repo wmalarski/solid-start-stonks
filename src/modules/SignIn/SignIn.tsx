@@ -1,9 +1,9 @@
-import { createSignal, JSX } from "solid-js";
+import { Component, createSignal } from "solid-js";
 import { getBaseUrl } from "~/utils/baseUrl";
 import { supabase } from "~/utils/supabase";
 import { MagicLinkForm } from "./MagicLinkForm/MagicLinkForm";
 
-export const SignIn = (): JSX.Element => {
+export const SignIn: Component = () => {
   const [status, setStatus] = createSignal({
     error: "",
     isLoading: false,

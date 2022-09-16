@@ -1,6 +1,6 @@
 import { useI18n } from "@solid-primitives/i18n";
 import clsx from "clsx";
-import { createSignal, JSX, Show } from "solid-js";
+import { Component, createSignal, Show } from "solid-js";
 import { z } from "zod";
 
 const schema = z.object({
@@ -14,7 +14,7 @@ type Props = {
   error: string;
 };
 
-export const MagicLinkForm = (props: Props): JSX.Element => {
+export const MagicLinkForm: Component<Props> = (props) => {
   const [t] = useI18n();
 
   const [email, setEmail] = createSignal("");

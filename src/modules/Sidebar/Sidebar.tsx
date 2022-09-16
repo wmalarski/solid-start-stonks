@@ -1,10 +1,10 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { JSX } from "solid-js";
+import { Component } from "solid-js";
 import { NavLink } from "solid-start";
 import { paths } from "~/utils/paths";
 import { supabase } from "~/utils/supabase";
 
-export const Sidebar = (): JSX.Element => {
+export const Sidebar: Component = () => {
   const [t] = useI18n();
 
   const handleLogout = async () => {
