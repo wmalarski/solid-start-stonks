@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 export type Invoice = {
   buyerAddress1: string;
   buyerAddress2: string;
@@ -21,3 +22,13 @@ export type Invoice = {
   serviceTitle: string;
   serviceUnit: string;
 };
+
+export type ResourceResult<TData> =
+  | {
+      kind: "error";
+      message: string;
+    }
+  | {
+      kind: "success";
+      data: TData;
+    };
