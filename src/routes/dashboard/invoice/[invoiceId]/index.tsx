@@ -21,7 +21,7 @@ const InvoicePage: Component = () => {
       <h1 class="px-8 text-3xl font-semibold print:invisible print:hidden">
         {t("invoice.title", { title: data().invoiceTitle })}
       </h1>
-      <div class="[@media_not_print]:card [@media_not_print]:card-compact [@media_not_print]:mx-8 [@media_not_print]:shadow-xl">
+      <div class="[@media_not_print]:card [@media_not_print]:card-compact [@media_not_print]:m-8 [@media_not_print]:mt-0 [@media_not_print]:shadow-xl">
         <div class="[@media_not_print]:card-body [@media_not_print]:p-0">
           <InvoiceDetails invoice={data()} />
         </div>

@@ -25,12 +25,14 @@ const CopyInvoicePage: Component = () => {
         ]}
       />
       <h1 class="px-8 text-3xl font-semibold">{t("copyInvoice.header")}</h1>
-      <InvoiceForm
-        error=""
-        isLoading={false}
-        onSubmit={() => void 0}
-        initial={data()}
-      />
+      <div class="p-8 pt-0">
+        <InvoiceForm
+          error=""
+          isLoading={false}
+          onSubmit={() => void 0}
+          initial={data()}
+        />
+      </div>
     </div>
   );
 };
