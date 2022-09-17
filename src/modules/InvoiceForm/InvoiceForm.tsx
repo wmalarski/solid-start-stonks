@@ -2,6 +2,7 @@
 import { useI18n } from "@solid-primitives/i18n";
 import clsx from "clsx";
 import { Component, createEffect, createSignal, Show } from "solid-js";
+import { DatePicker } from "~/components/DatePicker/DatePicker";
 import { Invoice } from "~/server/types";
 
 export type InvoiceFormData = Omit<Invoice, "id">;
@@ -79,18 +80,12 @@ export const InvoiceForm: Component<Props> = (props) => {
         <label for="date" class="label label-text font-semibold">
           {t("invoiceForm.date")}
         </label>
-        <div class="flex w-full gap-2">
-          <input
-            class="input input-bordered input-sm grow"
+        <div class="flex w-full flex-col gap-2">
+          <DatePicker
             disabled={props.isLoading}
             id="date"
-            onChange={(event) =>
-              handleChange({ date: event.currentTarget.valueAsDate })
-            }
-            placeholder={t("invoiceForm.date")}
-            type="datetime-local"
-            value={input().date.toISOString()}
-            // format
+            value={input().date}
+            onChange={(date) => handleChange({ date })}
           />
         </div>
         <label for="invoiceTitle" class="label label-text font-semibold">
