@@ -23,7 +23,7 @@ export const InvoiceDetails: Component<Props> = (props) => {
     }).format(value);
   };
 
-  const dateFormatter = (value: Date) => {
+  const dateFormatter = (value: string | Date) => {
     return new Intl.DateTimeFormat(locale()).format(new Date(value));
   };
 

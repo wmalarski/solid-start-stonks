@@ -1,7 +1,11 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { Component } from "solid-js";
 import { Navigate, RouteDataArgs, useRouteData } from "solid-start";
-import { createServerData$ } from "solid-start/server";
+import {
+  createServerAction$,
+  createServerData$,
+  redirect,
+} from "solid-start/server";
 import { LoadingSwitch } from "~/components/LoadingSwitch/LoadingSwitch";
 import { InvoiceForm } from "~/modules/InvoiceForm/InvoiceForm";
 import { InvoiceTopbar } from "~/modules/InvoiceTopbar/InvoiceTopbar";
@@ -18,6 +22,13 @@ const EditInvoicePage: Component = () => {
   const [t] = useI18n();
 
   const data = useRouteData<typeof routeData>();
+
+  const [edit, submit] = createServerAction$(async (form: FormData, event) => {
+    const id = form.get("id") as string;
+    console.log({ event, id: form.get("id") });
+    await Promise.resolve();
+    return redirect(paths.invoice(id));
+  });
 
   return (
     <LoadingSwitch
@@ -40,14 +51,28 @@ const EditInvoicePage: Component = () => {
             <InvoiceForm
               error=""
               isLoading={false}
+              Form={submit.Form}
               onSubmit={(update) => {
                 const form = new FormData();
                 form.set("id", invoice.id);
-                // submit(form);
+                console.log({ update });
+                submit(form);
               }}
               initial={invoice}
             />
           </div>
+          <pre>
+            {JSON.stringify(
+              {
+                error: edit.error,
+                input: edit.input,
+                pending: edit.pending,
+                result: edit.result,
+              },
+              null,
+              2
+            )}
+          </pre>
         </div>
       )}
     </LoadingSwitch>

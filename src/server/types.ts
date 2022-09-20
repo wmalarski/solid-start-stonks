@@ -5,7 +5,7 @@ export type Invoice = {
   buyerName: string;
   buyerNip: string;
   city: string;
-  date: Date;
+  date: string;
   id: string;
   invoiceTitle: string;
   notes: string;

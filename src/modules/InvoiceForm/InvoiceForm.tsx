@@ -1,7 +1,14 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { useI18n } from "@solid-primitives/i18n";
 import clsx from "clsx";
-import { Component, createEffect, createSignal, Show } from "solid-js";
+import {
+  Component,
+  createEffect,
+  createSignal,
+  ParentComponent,
+  Show,
+} from "solid-js";
+import { FormProps } from "solid-start";
 import { DatePicker } from "~/components/DatePicker/DatePicker";
 import { Invoice } from "~/server/types";
 
@@ -13,7 +20,7 @@ const formDefault: InvoiceFormData = {
   buyerName: "",
   buyerNip: "",
   city: "",
-  date: new Date(),
+  date: new Date().toISOString(),
   invoiceTitle: "",
   notes: "",
   paymentAccount: "",
@@ -32,6 +39,7 @@ const formDefault: InvoiceFormData = {
 
 type Props = {
   error: string;
+  Form: ParentComponent<FormProps>;
   initial?: InvoiceFormData;
   isLoading: boolean;
   onSubmit: (args: InvoiceFormData) => void;
@@ -59,7 +67,7 @@ export const InvoiceForm: Component<Props> = (props) => {
 
   return (
     <div class="card shadow-xl">
-      <div class="card-body grid w-full grid-cols-[auto_1fr] gap-2">
+      <props.Form class="card-body grid w-full grid-cols-[auto_1fr] gap-2">
         <h3 class="col-span-2 text-xl">{t("invoiceForm.general")}</h3>
         <label for="city" class="label label-text font-semibold">
           {t("invoiceForm.city")}
@@ -84,8 +92,8 @@ export const InvoiceForm: Component<Props> = (props) => {
           <DatePicker
             disabled={props.isLoading}
             id="date"
-            value={input().date}
-            onChange={(date) => handleChange({ date })}
+            value={new Date(input().date)}
+            onChange={(date) => handleChange({ date: date.toISOString() })}
           />
         </div>
         <label for="invoiceTitle" class="label label-text font-semibold">
@@ -371,7 +379,7 @@ export const InvoiceForm: Component<Props> = (props) => {
             {t("invoiceForm.save")}
           </button>
         </div>
-      </div>
+      </props.Form>
     </div>
   );
 };
