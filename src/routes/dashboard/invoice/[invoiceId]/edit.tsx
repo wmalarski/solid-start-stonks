@@ -1,10 +1,11 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { Component } from "solid-js";
+import { Component, createEffect } from "solid-js";
 import { Navigate, RouteDataArgs, useRouteData } from "solid-start";
 import {
   createServerAction$,
   createServerData$,
   redirect,
+  ServerError,
 } from "solid-start/server";
 import { LoadingSwitch } from "~/components/LoadingSwitch/LoadingSwitch";
 import { InvoiceForm } from "~/modules/InvoiceForm/InvoiceForm";
@@ -31,8 +32,24 @@ const EditInvoicePage: Component = () => {
     const id = form.get("id") as string;
     const parsed = await parseUpdateInvoiceForm(form);
 
-    updateInvoice(parsed);
-    return redirect(paths.invoice(id));
+    if (parsed.success) {
+      updateInvoice(parsed.data);
+      return redirect(paths.invoice(id));
+    }
+
+    throw new ServerError(JSON.stringify(parsed.error));
+
+    // return json(parsed.error, { status: 200 });
+  });
+
+  // const [resource] = createResource(async () => await edit.input);
+
+  createEffect(() => {
+    const err = edit.error as ServerError;
+    if (err) {
+      const message = JSON.parse(err.message);
+      console.log({ error: edit.error, message });
+    }
   });
 
   return (
@@ -67,7 +84,7 @@ const EditInvoicePage: Component = () => {
                 error: edit.error,
                 input: edit.input,
                 pending: edit.pending,
-                result: edit.result,
+                result: edit.result?.json(),
               },
               null,
               2

@@ -61,9 +61,9 @@ export const parseUpdateInvoiceForm = async (form: FormData) => {
   const entries = Object.fromEntries(form.entries());
   const raw = {
     ...entries,
-    serviceCount: +entries.serviceCount,
+    // serviceCount: +entries.serviceCount,
     servicePrice: +entries.servicePrice,
   };
 
-  return await UpdateInvoice.parseAsync(raw);
+  return await UpdateInvoice.safeParseAsync(raw);
 };
