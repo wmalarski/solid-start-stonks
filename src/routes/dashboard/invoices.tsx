@@ -1,15 +1,18 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { Component, createResource } from "solid-js";
-import { Navigate, useRouteData } from "solid-start";
+import { Component } from "solid-js";
+import { Navigate, RouteDataArgs, useRouteData } from "solid-start";
+import { createServerData$ } from "solid-start/server";
 import { LoadingSwitch } from "~/components/LoadingSwitch/LoadingSwitch";
 import { Invoices } from "~/modules/Invoices/Invoices";
 import { InvoicesTopbar } from "~/modules/InvoicesTopbar/InvoicesTopbar";
 import { findInvoices } from "~/server/invoices";
 import { paths } from "~/utils/paths";
 
-export const routeData = () => {
-  const [data] = createResource(() => findInvoices({ limit: 10, skip: 0 }));
-  return data;
+export const routeData = (args: RouteDataArgs) => {
+  const page = +args.location.query.page || 0;
+  return createServerData$((source) => findInvoices.fn(source), {
+    key: findInvoices.key({ limit: 10, skip: page * 10 }),
+  });
 };
 
 const InvoicesPage: Component = () => {

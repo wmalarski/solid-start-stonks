@@ -24,7 +24,7 @@ export const InvoiceDetails: Component<Props> = (props) => {
   };
 
   const dateFormatter = (value: Date) => {
-    return new Intl.DateTimeFormat(locale()).format(value);
+    return new Intl.DateTimeFormat(locale()).format(new Date(value));
   };
 
   const sum = () => {

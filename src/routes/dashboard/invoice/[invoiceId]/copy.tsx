@@ -1,6 +1,7 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { Component, createResource } from "solid-js";
+import { Component } from "solid-js";
 import { Navigate, RouteDataArgs, useRouteData } from "solid-start";
+import { createServerData$ } from "solid-start/server";
 import { LoadingSwitch } from "~/components/LoadingSwitch/LoadingSwitch";
 import { InvoiceForm } from "~/modules/InvoiceForm/InvoiceForm";
 import { InvoiceTopbar } from "~/modules/InvoiceTopbar/InvoiceTopbar";
@@ -8,8 +9,9 @@ import { findInvoice } from "~/server/invoices";
 import { paths } from "~/utils/paths";
 
 export const routeData = ({ params }: RouteDataArgs) => {
-  const [data] = createResource(() => findInvoice({ id: params.invoiceId }));
-  return data;
+  return createServerData$((source) => findInvoice.fn(source), {
+    key: findInvoice.key(params.invoiceId),
+  });
 };
 
 const CopyInvoicePage: Component = () => {

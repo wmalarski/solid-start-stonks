@@ -3,28 +3,28 @@ import { Invoice, ResourceResult } from "./types";
 
 const invoices = mockInvoices(23);
 
-type FindInvoice = {
-  id: string;
+type FindInvoice = ["findInvoice", string];
+
+export const findInvoice = {
+  fn: ([, id]: FindInvoice): ResourceResult<Invoice> => {
+    const find = invoices.find((invoice) => invoice.id === id);
+    if (!find) {
+      return { kind: "error", message: "Not found" };
+    }
+    return { data: find, kind: "success" };
+  },
+  key: (id: string): FindInvoice => ["findInvoice", id],
 };
 
-export const findInvoice = ({ id }: FindInvoice): ResourceResult<Invoice> => {
-  const find = invoices.find((invoice) => invoice.id === id);
-  if (!find) {
-    return { kind: "error", message: "Not found" };
-  }
-  return { data: find, kind: "success" };
-};
+type FindInvoicesArgs = { skip: number; limit: number };
 
-type FindInvoices = {
-  skip: number;
-  limit: number;
-};
+type FindInvoices = ["findInvoices", FindInvoicesArgs];
 
-export const findInvoices = ({
-  skip,
-  limit,
-}: FindInvoices): ResourceResult<Invoice[]> => {
-  return { data: invoices.slice(skip, skip + limit), kind: "success" };
+export const findInvoices = {
+  fn: ([, { skip, limit }]: FindInvoices): ResourceResult<Invoice[]> => {
+    return { data: invoices.slice(skip, skip + limit), kind: "success" };
+  },
+  key: (args: FindInvoicesArgs): FindInvoices => ["findInvoices", args],
 };
 
 type InsertInvoice = {
