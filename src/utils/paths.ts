@@ -4,7 +4,10 @@ export const paths = {
   editInvoice: (id: string) => `/dashboard/invoice/${id}/edit`,
   index: "/",
   invoice: (id: string) => `/dashboard/invoice/${id}`,
-  invoices: "/dashboard/invoices",
+  invoices: (page = 0) =>
+    `/dashboard/invoices?${new URLSearchParams({
+      page: `${page}`,
+    })}`,
   login: "/login",
   notFound: "/notFound",
 };

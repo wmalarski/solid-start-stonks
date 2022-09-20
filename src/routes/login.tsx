@@ -11,7 +11,7 @@ const Login: Component = () => {
     <Show when={status() !== "loading"}>
       <Show
         when={status() === "anon"}
-        fallback={<Navigate href={paths.invoices} />}
+        fallback={<Navigate href={paths.invoices()} />}
       >
         <SignIn />
       </Show>

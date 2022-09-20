@@ -20,9 +20,23 @@ type FindInvoicesArgs = { skip: number; limit: number };
 
 type FindInvoices = ["findInvoices", FindInvoicesArgs];
 
+type FindInvoicesResult = {
+  invoices: Invoice[];
+  size: number;
+};
+
 export const findInvoices = {
-  fn: ([, { skip, limit }]: FindInvoices): ResourceResult<Invoice[]> => {
-    return { data: invoices.slice(skip, skip + limit), kind: "success" };
+  fn: ([
+    ,
+    { skip, limit },
+  ]: FindInvoices): ResourceResult<FindInvoicesResult> => {
+    return {
+      data: {
+        invoices: invoices.slice(skip, skip + limit),
+        size: invoices.length,
+      },
+      kind: "success",
+    };
   },
   key: (args: FindInvoicesArgs): FindInvoices => ["findInvoices", args],
 };

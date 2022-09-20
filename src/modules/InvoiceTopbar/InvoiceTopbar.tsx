@@ -14,7 +14,7 @@ export const InvoiceTopbar: Component<Props> = (props) => {
 
   const breadcrumbs = () => {
     return [
-      { path: paths.invoices, text: t("topbar.home") },
+      { path: paths.invoices(), text: t("topbar.home") },
       {
         path: paths.invoice(props.invoice.id),
         text: props.invoice.invoiceTitle,

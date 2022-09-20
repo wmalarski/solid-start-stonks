@@ -11,7 +11,7 @@ const Dashboard: Component = () => {
     <Show when={status() !== "loading"}>
       <Show
         when={status() === "auth"}
-        fallback={<Navigate href={paths.invoices} />}
+        fallback={<Navigate href={paths.invoices()} />}
       >
         <main class="flex min-h-screen w-full flex-row">
           <Sidebar />

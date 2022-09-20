@@ -10,7 +10,7 @@ const Index: Component = () => {
     <Show when={status() !== "loading"}>
       <Show
         when={status() === "anon"}
-        fallback={<Navigate href={paths.invoices} />}
+        fallback={<Navigate href={paths.invoices()} />}
       >
         <Navigate href={paths.login} />
       </Show>

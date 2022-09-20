@@ -82,6 +82,7 @@ const dict = {
       logout: "Wyloguj",
     },
     topbar: {
+      addInvoice: "Dodaj",
       copyInvoice: "Kopiuj",
       editInvoice: "Edytuj",
       home: "Faktury",
