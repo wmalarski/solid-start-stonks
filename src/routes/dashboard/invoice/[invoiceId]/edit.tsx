@@ -10,7 +10,7 @@ import { paths } from "~/utils/paths";
 
 export const routeData = ({ params }: RouteDataArgs) => {
   return createServerData$((source) => findInvoice.fn(source), {
-    key: findInvoice.key(params.invoiceId),
+    key: () => findInvoice.key(params.invoiceId),
   });
 };
 
