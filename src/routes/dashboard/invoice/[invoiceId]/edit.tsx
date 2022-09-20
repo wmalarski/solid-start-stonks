@@ -38,7 +38,11 @@ const EditInvoicePage: Component = () => {
             <InvoiceForm
               error=""
               isLoading={false}
-              onSubmit={() => void 0}
+              onSubmit={(update) => {
+                const form = new FormData();
+                form.set("id", invoice.id);
+                // submit(form);
+              }}
               initial={invoice}
             />
           </div>
