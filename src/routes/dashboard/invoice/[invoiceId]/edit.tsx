@@ -9,7 +9,11 @@ import {
 import { LoadingSwitch } from "~/components/LoadingSwitch/LoadingSwitch";
 import { InvoiceForm } from "~/modules/InvoiceForm/InvoiceForm";
 import { InvoiceTopbar } from "~/modules/InvoiceTopbar/InvoiceTopbar";
-import { findInvoice } from "~/server/invoices";
+import {
+  findInvoice,
+  parseUpdateInvoiceForm,
+  updateInvoice,
+} from "~/server/invoices";
 import { paths } from "~/utils/paths";
 
 export const routeData = ({ params }: RouteDataArgs) => {
@@ -23,10 +27,11 @@ const EditInvoicePage: Component = () => {
 
   const data = useRouteData<typeof routeData>();
 
-  const [edit, submit] = createServerAction$(async (form: FormData, event) => {
+  const [edit, submit] = createServerAction$(async (form: FormData) => {
     const id = form.get("id") as string;
-    console.log({ event, id: form.get("id") });
-    await Promise.resolve();
+    const parsed = await parseUpdateInvoiceForm(form);
+
+    updateInvoice(parsed);
     return redirect(paths.invoice(id));
   });
 
@@ -49,15 +54,10 @@ const EditInvoicePage: Component = () => {
           <h1 class="px-8 text-3xl font-semibold">{t("editInvoice.header")}</h1>
           <div class="p-8 pt-0">
             <InvoiceForm
-              error=""
-              isLoading={false}
+              error={edit.error as string}
+              id={invoice.id}
+              isLoading={edit.pending}
               Form={submit.Form}
-              onSubmit={(update) => {
-                const form = new FormData();
-                form.set("id", invoice.id);
-                console.log({ update });
-                submit(form);
-              }}
               initial={invoice}
             />
           </div>

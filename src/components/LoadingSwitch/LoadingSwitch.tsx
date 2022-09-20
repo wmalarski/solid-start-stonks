@@ -6,13 +6,13 @@ type Props<TData> = {
   children: JSX.Element | ((data: TData) => JSX.Element);
   fallback?: JSX.Element;
   loading?: JSX.Element;
-  resource: Resource<ResourceResult<TData>>;
+  resource: Resource<ResourceResult<TData> | undefined>;
 };
 
 export function LoadingSwitch<TData>(props: Props<TData>): JSX.Element {
   const children = () => {
     const resource = props.resource();
-    if (resource.kind !== "success") {
+    if (resource?.kind !== "success") {
       return null;
     }
     if (typeof props.children === "function") {
@@ -24,7 +24,7 @@ export function LoadingSwitch<TData>(props: Props<TData>): JSX.Element {
   return (
     <Show when={props.resource()} fallback={props.loading}>
       <Show
-        when={props.resource().kind === "success"}
+        when={props.resource()?.kind === "success"}
         fallback={props.fallback}
       >
         {children()}

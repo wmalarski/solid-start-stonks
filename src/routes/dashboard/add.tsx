@@ -21,10 +21,9 @@ const AddInvoicePage: Component = () => {
       <h1 class="px-8 text-3xl font-semibold">{t("addInvoice.header")}</h1>
       <div class="p-8 pt-0">
         <InvoiceForm
-          error=""
+          error={add.error as string}
           Form={submit.Form}
-          isLoading={false}
-          onSubmit={() => void 0}
+          isLoading={add.pending}
         />
       </div>
       <pre>

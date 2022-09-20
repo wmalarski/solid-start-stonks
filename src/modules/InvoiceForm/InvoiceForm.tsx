@@ -1,13 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { useI18n } from "@solid-primitives/i18n";
 import clsx from "clsx";
-import {
-  Component,
-  createEffect,
-  createSignal,
-  ParentComponent,
-  Show,
-} from "solid-js";
+import { Component, ParentComponent, Show } from "solid-js";
 import { FormProps } from "solid-start";
 import { DatePicker } from "~/components/DatePicker/DatePicker";
 import { Invoice } from "~/server/types";
@@ -40,34 +34,24 @@ const formDefault: InvoiceFormData = {
 type Props = {
   error: string;
   Form: ParentComponent<FormProps>;
+  id?: string;
   initial?: InvoiceFormData;
   isLoading: boolean;
-  onSubmit: (args: InvoiceFormData) => void;
 };
 
 export const InvoiceForm: Component<Props> = (props) => {
   const [t] = useI18n();
 
-  const [input, setInput] = createSignal<InvoiceFormData>(formDefault);
-
-  const handleSubmit = () => {
-    props.onSubmit(input());
-  };
-
-  createEffect(() => {
-    if (!props.initial) {
-      return;
-    }
-    setInput(props.initial);
-  });
-
-  const handleChange = (update: Partial<InvoiceFormData> = {}) => {
-    setInput((current) => ({ ...current, ...update }));
+  const initial = () => {
+    return props.initial || formDefault;
   };
 
   return (
     <div class="card shadow-xl">
       <props.Form class="card-body grid w-full grid-cols-[auto_1fr] gap-2">
+        <Show when={props.id} keyed>
+          {(id) => <input id="id" name="id" type="hidden" value={id} />}
+        </Show>
         <h3 class="col-span-2 text-xl">{t("invoiceForm.general")}</h3>
         <label for="city" class="label label-text font-semibold">
           {t("invoiceForm.city")}
@@ -77,12 +61,10 @@ export const InvoiceForm: Component<Props> = (props) => {
             class="input input-bordered input-sm grow"
             disabled={props.isLoading}
             id="city"
-            onChange={(event) =>
-              handleChange({ city: event.currentTarget.value })
-            }
+            name="city"
             placeholder={t("invoiceForm.city")}
             type="text"
-            value={input().city}
+            value={initial().city}
           />
         </div>
         <label for="date" class="label label-text font-semibold">
@@ -92,8 +74,8 @@ export const InvoiceForm: Component<Props> = (props) => {
           <DatePicker
             disabled={props.isLoading}
             id="date"
-            value={new Date(input().date)}
-            onChange={(date) => handleChange({ date: date.toISOString() })}
+            value={new Date(initial().date)}
+            onChange={() => void 0}
           />
         </div>
         <label for="invoiceTitle" class="label label-text font-semibold">
@@ -104,12 +86,10 @@ export const InvoiceForm: Component<Props> = (props) => {
             class="input input-bordered input-sm grow"
             disabled={props.isLoading}
             id="invoiceTitle"
-            onChange={(event) =>
-              handleChange({ invoiceTitle: event.currentTarget.value })
-            }
+            name="invoiceTitle"
             placeholder={t("invoiceForm.invoiceTitle")}
             type="text"
-            value={input().invoiceTitle}
+            value={initial().invoiceTitle}
           />
         </div>
         <div class="divider col-span-2 m-0" />
@@ -122,12 +102,10 @@ export const InvoiceForm: Component<Props> = (props) => {
             class="input input-bordered input-sm grow"
             disabled={props.isLoading}
             id="sellerAddress1"
-            onChange={(event) =>
-              handleChange({ sellerAddress1: event.currentTarget.value })
-            }
+            name="sellerAddress1"
             placeholder={t("invoiceForm.sellerAddress1")}
             type="text"
-            value={input().sellerAddress1}
+            value={initial().sellerAddress1}
           />
         </div>
         <label for="sellerAddress2" class="label label-text font-semibold">
@@ -138,12 +116,10 @@ export const InvoiceForm: Component<Props> = (props) => {
             class="input input-bordered input-sm grow"
             disabled={props.isLoading}
             id="sellerAddress2"
-            onChange={(event) =>
-              handleChange({ sellerAddress2: event.currentTarget.value })
-            }
+            name="sellerAddress2"
             placeholder={t("invoiceForm.sellerAddress2")}
             type="text"
-            value={input().sellerAddress2}
+            value={initial().sellerAddress2}
           />
         </div>
         <label for="sellerName" class="label label-text font-semibold">
@@ -154,12 +130,10 @@ export const InvoiceForm: Component<Props> = (props) => {
             class="input input-bordered input-sm grow"
             disabled={props.isLoading}
             id="sellerName"
-            onChange={(event) =>
-              handleChange({ sellerName: event.currentTarget.value })
-            }
+            name="sellerName"
             placeholder={t("invoiceForm.sellerName")}
             type="text"
-            value={input().sellerName}
+            value={initial().sellerName}
           />
         </div>
         <label for="sellerNip" class="label label-text font-semibold">
@@ -170,12 +144,10 @@ export const InvoiceForm: Component<Props> = (props) => {
             class="input input-bordered input-sm grow"
             disabled={props.isLoading}
             id="sellerNip"
-            onChange={(event) =>
-              handleChange({ sellerNip: event.currentTarget.value })
-            }
+            name="sellerNip"
             placeholder={t("invoiceForm.sellerNip")}
             type="text"
-            value={input().sellerNip}
+            value={initial().sellerNip}
           />
         </div>
         <div class="divider col-span-2 m-0" />
@@ -188,12 +160,10 @@ export const InvoiceForm: Component<Props> = (props) => {
             class="input input-bordered input-sm grow"
             disabled={props.isLoading}
             id="buyerAddress1"
-            onChange={(event) =>
-              handleChange({ buyerAddress1: event.currentTarget.value })
-            }
+            name="buyerAddress1"
             placeholder={t("invoiceForm.buyerAddress1")}
             type="text"
-            value={input().buyerAddress1}
+            value={initial().buyerAddress1}
           />
         </div>
         <label for="buyerAddress2" class="label label-text font-semibold">
@@ -204,12 +174,10 @@ export const InvoiceForm: Component<Props> = (props) => {
             class="input input-bordered input-sm grow"
             disabled={props.isLoading}
             id="buyerAddress2"
-            onChange={(event) =>
-              handleChange({ buyerAddress2: event.currentTarget.value })
-            }
+            name="buyerAddress2"
             placeholder={t("invoiceForm.buyerAddress2")}
             type="text"
-            value={input().buyerAddress2}
+            value={initial().buyerAddress2}
           />
         </div>
         <label for="buyerName" class="label label-text font-semibold">
@@ -220,12 +188,10 @@ export const InvoiceForm: Component<Props> = (props) => {
             class="input input-bordered input-sm grow"
             disabled={props.isLoading}
             id="buyerName"
-            onChange={(event) =>
-              handleChange({ buyerName: event.currentTarget.value })
-            }
+            name="buyerName"
             placeholder={t("invoiceForm.buyerName")}
             type="text"
-            value={input().buyerName}
+            value={initial().buyerName}
           />
         </div>
         <label for="buyerNip" class="label label-text font-semibold">
@@ -236,12 +202,10 @@ export const InvoiceForm: Component<Props> = (props) => {
             class="input input-bordered input-sm grow"
             disabled={props.isLoading}
             id="buyerNip"
-            onChange={(event) =>
-              handleChange({ buyerNip: event.currentTarget.value })
-            }
+            name="buyerNip"
             placeholder={t("invoiceForm.buyerNip")}
             type="text"
-            value={input().buyerNip}
+            value={initial().buyerNip}
           />
         </div>
         <div class="divider col-span-2 m-0" />
@@ -254,12 +218,10 @@ export const InvoiceForm: Component<Props> = (props) => {
             class="input input-bordered input-sm grow"
             disabled={props.isLoading}
             id="paymentAccount"
-            onChange={(event) =>
-              handleChange({ paymentAccount: event.currentTarget.value })
-            }
+            name="paymentAccount"
             placeholder={t("invoiceForm.paymentAccount")}
             type="text"
-            value={input().paymentAccount}
+            value={initial().paymentAccount}
           />
         </div>
         <label for="paymentBank" class="label label-text font-semibold">
@@ -270,12 +232,10 @@ export const InvoiceForm: Component<Props> = (props) => {
             class="input input-bordered input-sm grow"
             disabled={props.isLoading}
             id="paymentBank"
-            onChange={(event) =>
-              handleChange({ paymentBank: event.currentTarget.value })
-            }
+            name="paymentBank"
             placeholder={t("invoiceForm.paymentBank")}
             type="text"
-            value={input().paymentBank}
+            value={initial().paymentBank}
           />
         </div>
         <div class="divider col-span-2 m-0" />
@@ -288,14 +248,12 @@ export const InvoiceForm: Component<Props> = (props) => {
             class="input input-bordered input-sm grow"
             disabled={props.isLoading}
             id="serviceCount"
-            onChange={(event) =>
-              handleChange({ serviceCount: event.currentTarget.valueAsNumber })
-            }
+            name="serviceCount"
             placeholder={t("invoiceForm.serviceCount")}
             type="number"
             min={0}
             step={1}
-            value={input().serviceCount}
+            value={initial().serviceCount}
           />
         </div>
         <label for="servicePrice" class="label label-text font-semibold">
@@ -306,14 +264,12 @@ export const InvoiceForm: Component<Props> = (props) => {
             class="input input-bordered input-sm grow"
             disabled={props.isLoading}
             id="servicePrice"
-            onChange={(event) =>
-              handleChange({ servicePrice: event.currentTarget.valueAsNumber })
-            }
+            name="servicePrice"
             placeholder={t("invoiceForm.servicePrice")}
             type="number"
             min={0}
             step={1}
-            value={input().servicePrice}
+            value={initial().servicePrice}
           />
         </div>
         <label for="serviceTitle" class="label label-text font-semibold">
@@ -324,12 +280,10 @@ export const InvoiceForm: Component<Props> = (props) => {
             class="input input-bordered input-sm grow"
             disabled={props.isLoading}
             id="serviceTitle"
-            onChange={(event) =>
-              handleChange({ serviceTitle: event.currentTarget.value })
-            }
+            name="serviceTitle"
             placeholder={t("invoiceForm.serviceTitle")}
             type="text"
-            value={input().serviceTitle}
+            value={initial().serviceTitle}
           />
         </div>
         <label for="serviceUnit" class="label label-text font-semibold">
@@ -340,12 +294,10 @@ export const InvoiceForm: Component<Props> = (props) => {
             class="input input-bordered input-sm grow"
             disabled={props.isLoading}
             id="serviceUnit"
-            onChange={(event) =>
-              handleChange({ serviceUnit: event.currentTarget.value })
-            }
+            name="serviceUnit"
             placeholder={t("invoiceForm.serviceUnit")}
             type="text"
-            value={input().serviceUnit}
+            value={initial().serviceUnit}
           />
         </div>
         <div class="divider col-span-2 m-0" />
@@ -358,12 +310,10 @@ export const InvoiceForm: Component<Props> = (props) => {
             class="input input-bordered input-sm grow"
             disabled={props.isLoading}
             id="notes"
-            onChange={(event) =>
-              handleChange({ notes: event.currentTarget.value })
-            }
+            name="notes"
             placeholder={t("invoiceForm.notes")}
             type="text"
-            value={input().notes}
+            value={initial().notes}
           />
         </div>
         <Show when={props.error} keyed>
@@ -373,8 +323,7 @@ export const InvoiceForm: Component<Props> = (props) => {
           <button
             disabled={props.isLoading}
             class={clsx("btn btn-primary", { loading: props.isLoading })}
-            type="button"
-            onClick={handleSubmit}
+            type="submit"
           >
             {t("invoiceForm.save")}
           </button>

@@ -53,7 +53,6 @@ const CopyInvoicePage: Component = () => {
               Form={submit.Form}
               initial={invoice}
               isLoading={false}
-              onSubmit={() => void 0}
             />
           </div>
           <pre>

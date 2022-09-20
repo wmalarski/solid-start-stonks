@@ -11,7 +11,7 @@ export const mockInvoice = (update: Partial<Invoice> = {}): Invoice => {
     buyerName: "string",
     buyerNip: "string",
     city: "string",
-    date: new Date(),
+    date: new Date().toISOString(),
     id: "string",
     invoiceTitle: "string",
     notes: "notes",

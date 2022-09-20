@@ -1,5 +1,5 @@
 import { mockId, mockInvoices } from "~/tests/mocks";
-import { Invoice, ResourceResult } from "./types";
+import { Invoice, ResourceResult, UpdateInvoice } from "./types";
 
 const invoices = mockInvoices(23);
 
@@ -49,14 +49,21 @@ export const insertInvoice = ({ data }: InsertInvoice) => {
   return invoices.push({ ...data, id: mockId() });
 };
 
-type UpdateInvoice = {
-  data: Invoice;
-};
-
-export const updateInvoice = ({ data }: UpdateInvoice) => {
+export const updateInvoice = (data: UpdateInvoice) => {
   const find = invoices.find((invoice) => invoice.id === data.id);
   if (!find) {
     return null;
   }
   Object.assign(find, data);
+};
+
+export const parseUpdateInvoiceForm = async (form: FormData) => {
+  const entries = Object.fromEntries(form.entries());
+  const raw = {
+    ...entries,
+    serviceCount: +entries.serviceCount,
+    servicePrice: +entries.servicePrice,
+  };
+
+  return await UpdateInvoice.parseAsync(raw);
 };
