@@ -1,4 +1,4 @@
-import type { Invoice } from "~/server/types";
+import type { Invoice } from "@prisma/client";
 
 export const mockId = (): string => {
   return `${Math.floor(Math.random() * 1e16)}`;
@@ -11,7 +11,8 @@ export const mockInvoice = (update: Partial<Invoice> = {}): Invoice => {
     buyerName: "string",
     buyerNip: "string",
     city: "string",
-    date: new Date().toISOString(),
+    createdAt: new Date(),
+    date: new Date(),
     id: "string",
     invoiceTitle: "string",
     notes: "notes",
@@ -27,6 +28,7 @@ export const mockInvoice = (update: Partial<Invoice> = {}): Invoice => {
     servicePrice: 50,
     serviceTitle: "string",
     serviceUnit: "string",
+    userId: "",
     ...update,
   };
 };

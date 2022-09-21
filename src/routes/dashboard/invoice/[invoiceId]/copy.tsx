@@ -24,7 +24,7 @@ const CopyInvoicePage: Component = () => {
   const data = useRouteData<typeof routeData>();
 
   const [copy, submit] = createServerAction$(async (form: FormData) => {
-    const invoice = await insertInvoice(form);
+    const invoice = await insertInvoice(form, "");
     return redirect(paths.invoice(invoice.id));
   });
 

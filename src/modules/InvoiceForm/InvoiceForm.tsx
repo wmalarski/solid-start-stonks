@@ -1,4 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
+import type { Invoice } from "@prisma/client";
 import { useI18n } from "@solid-primitives/i18n";
 import clsx from "clsx";
 import {
@@ -10,7 +11,6 @@ import {
 } from "solid-js";
 import { FormProps } from "solid-start";
 import { DatePicker } from "~/components/DatePicker/DatePicker";
-import { Invoice } from "~/server/types";
 
 export type InvoiceFormData = Omit<Invoice, "id">;
 
@@ -20,7 +20,8 @@ const formDefault: InvoiceFormData = {
   buyerName: "",
   buyerNip: "",
   city: "",
-  date: new Date().toISOString(),
+  createdAt: new Date(),
+  date: new Date(),
   invoiceTitle: "",
   notes: "",
   paymentAccount: "",
@@ -35,6 +36,7 @@ const formDefault: InvoiceFormData = {
   servicePrice: 0,
   serviceTitle: "",
   serviceUnit: "",
+  userId: "",
 };
 
 type Props = {

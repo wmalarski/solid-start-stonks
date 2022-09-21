@@ -1,6 +1,6 @@
+import type { Invoice } from "@prisma/client";
 import { useI18n } from "@solid-primitives/i18n";
 import { Component } from "solid-js";
-import type { Invoice } from "~/server/types";
 import { pricePLN } from "~/utils/pricePLN";
 
 type Props = {

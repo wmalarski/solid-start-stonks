@@ -10,7 +10,7 @@ const AddInvoicePage: Component = () => {
   const [t] = useI18n();
 
   const [add, submit] = createServerAction$(async (form: FormData) => {
-    const invoice = await insertInvoice(form);
+    const invoice = await insertInvoice(form, "");
     return redirect(paths.invoice(invoice.id));
   });
 

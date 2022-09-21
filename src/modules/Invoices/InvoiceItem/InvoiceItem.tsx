@@ -1,8 +1,8 @@
+import type { Invoice } from "@prisma/client";
 import { useI18n } from "@solid-primitives/i18n";
 import { Link } from "@solidjs/router";
 import { Component } from "solid-js";
 import { DeleteInvoice } from "~/modules/DeleteInvoice/DeleteInvoice";
-import type { Invoice } from "~/server/types";
 import { paths } from "~/utils/paths";
 import { pricePLN } from "~/utils/pricePLN";
 

@@ -1,31 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { z } from "zod";
-
-export const Invoice = z.object({
-  buyerAddress1: z.string(),
-  buyerAddress2: z.string(),
-  buyerName: z.string(),
-  buyerNip: z.string(),
-  city: z.string(),
-  date: z.string(),
-  id: z.string(),
-  invoiceTitle: z.string(),
-  notes: z.string(),
-  paymentAccount: z.string(),
-  paymentBank: z.string(),
-  paymentMethod: z.union([z.literal("cash"), z.literal("transfer")]),
-  sellerAddress1: z.string(),
-  sellerAddress2: z.string(),
-  sellerName: z.string(),
-  sellerNip: z.string(),
-  serviceCount: z.number().min(0),
-  servicePayed: z.number().min(0),
-  servicePrice: z.number().min(0),
-  serviceTitle: z.string(),
-  serviceUnit: z.string(),
-});
-
-export type Invoice = z.infer<typeof Invoice>;
 
 export type ResourceResult<TData> =
   | {
