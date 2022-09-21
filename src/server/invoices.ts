@@ -50,6 +50,7 @@ const parseInsertInvoiceForm = async (form: FormData) => {
   const raw = {
     ...entries,
     serviceCount: +entries.serviceCount,
+    servicePayed: +entries.servicePayed,
     servicePrice: +entries.servicePrice,
   };
 
@@ -81,6 +82,7 @@ const parseUpdateInvoiceForm = async (form: FormData) => {
   const raw = {
     ...entries,
     serviceCount: +entries.serviceCount,
+    servicePayed: +entries.servicePayed,
     servicePrice: +entries.servicePrice,
   };
 

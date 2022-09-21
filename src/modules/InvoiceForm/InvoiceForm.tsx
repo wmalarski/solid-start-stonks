@@ -1,7 +1,13 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { useI18n } from "@solid-primitives/i18n";
 import clsx from "clsx";
-import { Component, ParentComponent, Show } from "solid-js";
+import {
+  Component,
+  createEffect,
+  createSignal,
+  ParentComponent,
+  Show,
+} from "solid-js";
 import { FormProps } from "solid-start";
 import { DatePicker } from "~/components/DatePicker/DatePicker";
 import { Invoice } from "~/server/types";
@@ -42,9 +48,15 @@ type Props = {
 export const InvoiceForm: Component<Props> = (props) => {
   const [t] = useI18n();
 
+  const [date, setDate] = createSignal(new Date(formDefault.date));
+
   const initial = () => {
-    return props.initial || formDefault;
+    return { ...formDefault, ...props.initial };
   };
+
+  createEffect(() => {
+    setDate(new Date(initial().date));
+  });
 
   return (
     <div class="card shadow-xl">
@@ -52,6 +64,24 @@ export const InvoiceForm: Component<Props> = (props) => {
         <Show when={props.id} keyed>
           {(id) => <input id="id" name="id" type="hidden" value={id} />}
         </Show>
+        <input
+          id="date"
+          name="date"
+          type="hidden"
+          value={date().toISOString()}
+        />
+        <input
+          id="paymentMethod"
+          name="paymentMethod"
+          type="hidden"
+          value={initial().paymentMethod}
+        />
+        <input
+          id="servicePayed"
+          name="servicePayed"
+          type="hidden"
+          value={initial().servicePayed}
+        />
         <h3 class="col-span-2 text-xl">{t("invoiceForm.general")}</h3>
         <label for="city" class="label label-text font-semibold">
           {t("invoiceForm.city")}
@@ -74,8 +104,8 @@ export const InvoiceForm: Component<Props> = (props) => {
           <DatePicker
             disabled={props.isLoading}
             id="date"
-            value={new Date(initial().date)}
-            onChange={() => void 0}
+            value={date()}
+            onChange={(change) => setDate(change)}
           />
         </div>
         <label for="invoiceTitle" class="label label-text font-semibold">
