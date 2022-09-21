@@ -1,6 +1,7 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { Link } from "@solidjs/router";
 import { Component } from "solid-js";
+import { DeleteInvoice } from "~/modules/DeleteInvoice/DeleteInvoice";
 import type { Invoice } from "~/server/types";
 import { paths } from "~/utils/paths";
 import { pricePLN } from "~/utils/pricePLN";
@@ -88,9 +89,25 @@ export const InvoiceItem: Component<Props> = (props) => {
           </table>
         </div>
         <div class="card-actions">
-          <Link href={paths.invoice(props.invoice.id)} class="btn btn-link">
+          <Link
+            href={paths.invoice(props.invoice.id)}
+            class="btn btn-link btn-sm"
+          >
             {t("invoices.more")}
           </Link>
+          <Link
+            href={paths.editInvoice(props.invoice.id)}
+            class="btn btn-link btn-sm"
+          >
+            {t("topbar.editInvoice")}
+          </Link>
+          <Link
+            href={paths.copyInvoice(props.invoice.id)}
+            class="btn btn-link btn-sm"
+          >
+            {t("topbar.copyInvoice")}
+          </Link>
+          <DeleteInvoice invoice={props.invoice} />
         </div>
       </div>
     </div>

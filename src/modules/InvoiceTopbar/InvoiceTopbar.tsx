@@ -3,6 +3,7 @@ import { Link } from "@solidjs/router";
 import { Component, For } from "solid-js";
 import type { Invoice } from "~/server/types";
 import { paths } from "~/utils/paths";
+import { DeleteInvoice } from "../DeleteInvoice/DeleteInvoice";
 
 type Props = {
   invoice: Invoice;
@@ -49,9 +50,7 @@ export const InvoiceTopbar: Component<Props> = (props) => {
         >
           {t("topbar.copyInvoice")}
         </Link>
-        <button class="btn btn-warning btn-ghost btn-sm">
-          {t("topbar.removeInvoice")}
-        </button>
+        <DeleteInvoice invoice={props.invoice} />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { ServerError } from "solid-start/server";
+import { z } from "zod";
 import { mockId, mockInvoices } from "~/tests/mocks";
-import { InsertInvoice, Invoice, ResourceResult, UpdateInvoice } from "./types";
+import { Invoice, ResourceResult } from "./types";
 
 const invoices = mockInvoices(23);
 
@@ -42,6 +43,8 @@ export const findInvoices = {
   key: (args: FindInvoicesArgs): FindInvoices => ["findInvoices", args],
 };
 
+const insertInvoiceSchema = Invoice.omit({ id: undefined });
+
 const parseInsertInvoiceForm = async (form: FormData) => {
   const entries = Object.fromEntries(form.entries());
   const raw = {
@@ -50,7 +53,7 @@ const parseInsertInvoiceForm = async (form: FormData) => {
     servicePrice: +entries.servicePrice,
   };
 
-  const parsed = await InsertInvoice.safeParseAsync(raw);
+  const parsed = await insertInvoiceSchema.safeParseAsync(raw);
 
   if (!parsed.success) {
     throw new ServerError(JSON.stringify(parsed.error.issues));
@@ -68,6 +71,11 @@ export const insertInvoice = async (form: FormData) => {
   return invoice;
 };
 
+const updateInvoiceSchema = z.intersection(
+  Invoice.partial(),
+  z.object({ id: z.string() })
+);
+
 const parseUpdateInvoiceForm = async (form: FormData) => {
   const entries = Object.fromEntries(form.entries());
   const raw = {
@@ -76,7 +84,7 @@ const parseUpdateInvoiceForm = async (form: FormData) => {
     servicePrice: +entries.servicePrice,
   };
 
-  const parsed = await UpdateInvoice.safeParseAsync(raw);
+  const parsed = await updateInvoiceSchema.safeParseAsync(raw);
 
   if (!parsed.success) {
     throw new ServerError(JSON.stringify(parsed.error.issues));
@@ -97,4 +105,26 @@ export const updateInvoice = async (form: FormData) => {
   Object.assign(find, parsed);
 
   return find;
+};
+
+const deleteInvoiceSchema = z.object({ id: z.string() });
+
+const parseDeleteInvoiceForm = async (form: FormData) => {
+  const entries = Object.fromEntries(form.entries());
+
+  const parsed = await deleteInvoiceSchema.safeParseAsync(entries);
+
+  if (!parsed.success) {
+    throw new ServerError(JSON.stringify(parsed.error.issues));
+  }
+
+  return parsed.data;
+};
+
+export const deleteInvoice = async (form: FormData) => {
+  const parsed = await parseDeleteInvoiceForm(form);
+
+  const index = invoices.findIndex((invoice) => invoice.id === parsed.id);
+
+  invoices.splice(index, 1);
 };

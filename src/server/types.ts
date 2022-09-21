@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { z } from "zod";
 
-const InvoiceBase = z.object({
+export const Invoice = z.object({
   buyerAddress1: z.string(),
   buyerAddress2: z.string(),
   buyerName: z.string(),
   buyerNip: z.string(),
   city: z.string(),
   date: z.string(),
+  id: z.string(),
   invoiceTitle: z.string(),
   notes: z.string(),
   paymentAccount: z.string(),
@@ -23,22 +24,6 @@ const InvoiceBase = z.object({
   serviceTitle: z.string(),
   serviceUnit: z.string(),
 });
-
-export const UpdateInvoice = z.intersection(
-  InvoiceBase.partial(),
-  z.object({ id: z.string() })
-);
-
-export type UpdateInvoice = z.infer<typeof UpdateInvoice>;
-
-export const InsertInvoice = InvoiceBase;
-
-export type InsertInvoice = z.infer<typeof InsertInvoice>;
-
-export const Invoice = z.intersection(
-  InvoiceBase,
-  z.object({ id: z.string() })
-);
 
 export type Invoice = z.infer<typeof Invoice>;
 
