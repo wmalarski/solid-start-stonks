@@ -3,16 +3,15 @@ import { Component } from "solid-js";
 import { createServerAction$, redirect } from "solid-start/server";
 import { InvoiceForm } from "~/modules/InvoiceForm/InvoiceForm";
 import { InvoicesTopbar } from "~/modules/InvoicesTopbar/InvoicesTopbar";
+import { insertInvoice } from "~/server/invoices";
 import { paths } from "~/utils/paths";
 
 const AddInvoicePage: Component = () => {
   const [t] = useI18n();
 
-  const [add, submit] = createServerAction$(async (form: FormData, event) => {
-    const id = form.get("id") as string;
-    console.log({ event, id: form.get("id") });
-    await Promise.resolve();
-    return redirect(paths.invoice(id));
+  const [add, submit] = createServerAction$(async (form: FormData) => {
+    const invoice = await insertInvoice(form);
+    return redirect(paths.invoice(invoice.id));
   });
 
   return (
@@ -26,18 +25,6 @@ const AddInvoicePage: Component = () => {
           isLoading={add.pending}
         />
       </div>
-      <pre>
-        {JSON.stringify(
-          {
-            error: add.error,
-            input: add.input,
-            pending: add.pending,
-            result: add.result,
-          },
-          null,
-          2
-        )}
-      </pre>
     </div>
   );
 };

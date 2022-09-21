@@ -1,5 +1,6 @@
+import { ServerError } from "solid-start/server";
 import { mockId, mockInvoices } from "~/tests/mocks";
-import { Invoice, ResourceResult, UpdateInvoice } from "./types";
+import { InsertInvoice, Invoice, ResourceResult, UpdateInvoice } from "./types";
 
 const invoices = mockInvoices(23);
 
@@ -41,29 +42,59 @@ export const findInvoices = {
   key: (args: FindInvoicesArgs): FindInvoices => ["findInvoices", args],
 };
 
-type InsertInvoice = {
-  data: Omit<Invoice, "id">;
-};
-
-export const insertInvoice = ({ data }: InsertInvoice) => {
-  return invoices.push({ ...data, id: mockId() });
-};
-
-export const updateInvoice = (data: UpdateInvoice) => {
-  const find = invoices.find((invoice) => invoice.id === data.id);
-  if (!find) {
-    return null;
-  }
-  Object.assign(find, data);
-};
-
-export const parseUpdateInvoiceForm = async (form: FormData) => {
+const parseInsertInvoiceForm = async (form: FormData) => {
   const entries = Object.fromEntries(form.entries());
   const raw = {
     ...entries,
-    // serviceCount: +entries.serviceCount,
+    serviceCount: +entries.serviceCount,
     servicePrice: +entries.servicePrice,
   };
 
-  return await UpdateInvoice.safeParseAsync(raw);
+  const parsed = await InsertInvoice.safeParseAsync(raw);
+
+  if (!parsed.success) {
+    throw new ServerError(JSON.stringify(parsed.error.issues));
+  }
+
+  return parsed.data;
+};
+
+export const insertInvoice = async (form: FormData) => {
+  const parsed = await parseInsertInvoiceForm(form);
+  const invoice = { ...parsed, id: mockId() };
+
+  invoices.push(invoice);
+
+  return invoice;
+};
+
+const parseUpdateInvoiceForm = async (form: FormData) => {
+  const entries = Object.fromEntries(form.entries());
+  const raw = {
+    ...entries,
+    serviceCount: +entries.serviceCount,
+    servicePrice: +entries.servicePrice,
+  };
+
+  const parsed = await UpdateInvoice.safeParseAsync(raw);
+
+  if (!parsed.success) {
+    throw new ServerError(JSON.stringify(parsed.error.issues));
+  }
+
+  return parsed.data;
+};
+
+export const updateInvoice = async (form: FormData) => {
+  const parsed = await parseUpdateInvoiceForm(form);
+
+  const find = invoices.find((invoice) => invoice.id === parsed.id);
+
+  if (!find) {
+    return null;
+  }
+
+  Object.assign(find, parsed);
+
+  return find;
 };

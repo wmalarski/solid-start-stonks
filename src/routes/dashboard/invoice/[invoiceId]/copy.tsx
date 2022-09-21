@@ -9,7 +9,7 @@ import {
 import { LoadingSwitch } from "~/components/LoadingSwitch/LoadingSwitch";
 import { InvoiceForm } from "~/modules/InvoiceForm/InvoiceForm";
 import { InvoiceTopbar } from "~/modules/InvoiceTopbar/InvoiceTopbar";
-import { findInvoice } from "~/server/invoices";
+import { findInvoice, insertInvoice } from "~/server/invoices";
 import { paths } from "~/utils/paths";
 
 export const routeData = ({ params }: RouteDataArgs) => {
@@ -23,11 +23,9 @@ const CopyInvoicePage: Component = () => {
 
   const data = useRouteData<typeof routeData>();
 
-  const [copy, submit] = createServerAction$(async (form: FormData, event) => {
-    const id = form.get("id") as string;
-    console.log({ event, id: form.get("id") });
-    await Promise.resolve();
-    return redirect(paths.invoice(id));
+  const [copy, submit] = createServerAction$(async (form: FormData) => {
+    const invoice = await insertInvoice(form);
+    return redirect(paths.invoice(invoice.id));
   });
 
   return (
@@ -49,24 +47,12 @@ const CopyInvoicePage: Component = () => {
           <h1 class="px-8 text-3xl font-semibold">{t("copyInvoice.header")}</h1>
           <div class="p-8 pt-0">
             <InvoiceForm
-              error=""
+              error={copy.error as string}
               Form={submit.Form}
               initial={invoice}
-              isLoading={false}
+              isLoading={copy.pending}
             />
           </div>
-          <pre>
-            {JSON.stringify(
-              {
-                error: copy.error,
-                input: copy.input,
-                pending: copy.pending,
-                result: copy.result,
-              },
-              null,
-              2
-            )}
-          </pre>
         </div>
       )}
     </LoadingSwitch>
