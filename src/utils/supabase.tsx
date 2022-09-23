@@ -7,6 +7,7 @@ import {
   onCleanup,
   useContext,
 } from "solid-js";
+import { ServerError } from "solid-start/server";
 import { clientEnv } from "~/env/client";
 
 export const supabase = createClient(
@@ -50,11 +51,13 @@ export const SessionProvider: Component<Props> = (props) => {
 
   const { data } = supabase.auth.onAuthStateChange(async (_event, session) => {
     setSession(session ? { session, status: "auth" } : { status: "anon" });
-    await sendSession(session);
+    if (session) {
+      await sendSession(session);
+    }
   });
 
   onCleanup(() => {
-    data.unsubscribe();
+    data?.unsubscribe();
   });
 
   return (
@@ -74,7 +77,7 @@ export const useSupabaseSession = (): (() => Session) => {
     const state = context();
 
     if (state.status !== "auth") {
-      throw new Error("Session is not defined");
+      throw new ServerError("Session is not defined");
     }
 
     return state.session;

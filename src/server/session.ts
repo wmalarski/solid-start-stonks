@@ -3,7 +3,13 @@ import {
   Session as SupabaseSession,
   User,
 } from "@supabase/supabase-js";
-import { createServerData$, json, redirect } from "solid-start/server";
+import {
+  createServerAction$,
+  createServerData$,
+  json,
+  redirect,
+  ServerError,
+} from "solid-start/server";
 import { createCookieSessionStorage } from "solid-start/session";
 import { serverEnv } from "~/env/server";
 import { AppendArgument } from "~/utils/types";
@@ -72,7 +78,25 @@ export const withUserData = <T, S>(
   return async (source, event) => {
     const data = await getUser(event.request);
     if (!data?.user) {
-      throw new Error("UNAUTHORIZED");
+      throw new ServerError("UNAUTHORIZED");
+    }
+    return fetcher(source, event, data.user);
+  };
+};
+
+type RouteActionFetcher<T, S> = Parameters<typeof createServerAction$<T, S>>[0];
+type RouteUserActionFetcher<T, S> = AppendArgument<
+  RouteActionFetcher<T, S>,
+  User
+>;
+
+export const withUserAction = <T, S>(
+  fetcher: RouteUserActionFetcher<T, S>
+): RouteActionFetcher<T, S> => {
+  return async (source, event) => {
+    const data = await getUser(event.request);
+    if (!data?.user) {
+      throw new ServerError("UNAUTHORIZED");
     }
     return fetcher(source, event, data.user);
   };

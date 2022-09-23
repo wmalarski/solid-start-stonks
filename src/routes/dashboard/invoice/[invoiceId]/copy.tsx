@@ -11,7 +11,7 @@ import { LoadingSwitch } from "~/components/LoadingSwitch/LoadingSwitch";
 import { InvoiceForm } from "~/modules/InvoiceForm/InvoiceForm";
 import { InvoiceTopbar } from "~/modules/InvoiceTopbar/InvoiceTopbar";
 import { findInvoice, FindInvoiceKey, insertInvoice } from "~/server/invoices";
-import { withUserData } from "~/server/session";
+import { withUserAction, withUserData } from "~/server/session";
 import type { ResourceResult } from "~/server/types";
 import { paths } from "~/utils/paths";
 
@@ -27,10 +27,12 @@ const CopyInvoicePage: Component = () => {
 
   const data = useRouteData<typeof routeData>();
 
-  const [copy, submit] = createServerAction$(async (form: FormData) => {
-    const invoice = await insertInvoice(form, "");
-    return redirect(paths.invoice(invoice.id));
-  });
+  const [copy, submit] = createServerAction$(
+    withUserAction(async (form: FormData, _, user) => {
+      const invoice = await insertInvoice(form, user);
+      return redirect(paths.invoice(invoice.id));
+    })
+  );
 
   return (
     <LoadingSwitch

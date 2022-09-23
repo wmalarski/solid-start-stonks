@@ -96,11 +96,11 @@ const parseInsertInvoiceForm = async (form: FormData) => {
   return parsed.data;
 };
 
-export const insertInvoice = async (form: FormData, userId: string) => {
+export const insertInvoice = async (form: FormData, user: User) => {
   const parsed = await parseInsertInvoiceForm(form);
 
   const invoice = await prisma.invoice.create({
-    data: { ...parsed, id: mockId(), userId },
+    data: { ...parsed, id: mockId(), userId: user.id },
   });
 
   return invoice;
@@ -130,15 +130,23 @@ const parseUpdateInvoiceForm = async (form: FormData) => {
   return parsed.data;
 };
 
-export const updateInvoice = async (form: FormData) => {
+export const updateInvoice = async (form: FormData, user: User) => {
   const parsed = await parseUpdateInvoiceForm(form);
 
-  const invoice = await prisma.invoice.update({
+  const invoice = await prisma.invoice.findFirstOrThrow({
+    where: { id: parsed.id },
+  });
+
+  if (invoice.userId !== user.id) {
+    throw new ServerError("UNAUTHORIZED");
+  }
+
+  const updated = await prisma.invoice.update({
     data: parsed,
     where: { id: parsed.id },
   });
 
-  return invoice;
+  return updated;
 };
 
 const deleteInvoiceSchema = z.object({ id: z.string() });
@@ -155,11 +163,11 @@ const parseDeleteInvoiceForm = async (form: FormData) => {
   return parsed.data;
 };
 
-export const deleteInvoice = async (form: FormData) => {
+export const deleteInvoice = async (form: FormData, user: User) => {
   const parsed = await parseDeleteInvoiceForm(form);
 
-  const invoice = await prisma.invoice.delete({
-    where: { id: parsed.id },
+  const invoice = await prisma.invoice.deleteMany({
+    where: { id: parsed.id, userId: user.id },
   });
 
   return invoice;
