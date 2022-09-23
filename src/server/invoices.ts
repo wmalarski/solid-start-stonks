@@ -5,46 +5,43 @@ import { mockId } from "~/tests/mocks";
 import { prisma } from "./prisma";
 import { ResourceResult } from "./types";
 
-type FindInvoice = ["findInvoice", string];
+export type FindInvoiceKey = ["findInvoice", string];
 
-export const findInvoice = {
-  fn: async ([, id]: FindInvoice): Promise<ResourceResult<Invoice>> => {
-    const invoice = await prisma.invoice.findFirst({ where: { id } });
+export const findInvoice = async ([, id]: FindInvoiceKey): Promise<
+  ResourceResult<Invoice>
+> => {
+  const invoice = await prisma.invoice.findFirst({ where: { id } });
 
-    if (!invoice) {
-      return { kind: "error", message: "Not found" };
-    }
-    return { data: invoice, kind: "success" };
-  },
-  key: (id: string): FindInvoice => ["findInvoice", id],
+  if (!invoice) {
+    return { kind: "error", message: "Not found" };
+  }
+  return { data: invoice, kind: "success" };
 };
 
-type FindInvoicesArgs = { skip: number; limit: number };
+export type FindInvoicesArgs = { skip: number; limit: number };
 
-type FindInvoices = ["findInvoices", FindInvoicesArgs];
+export type FindInvoicesKey = ["findInvoices", FindInvoicesArgs];
 
-type FindInvoicesResult = {
+export type FindInvoicesResult = {
   invoices: Invoice[];
   size: number;
 };
 
-export const findInvoices = {
-  fn: async ([, { skip, limit }]: FindInvoices): Promise<
-    ResourceResult<FindInvoicesResult>
-  > => {
-    const [invoices, size] = await Promise.all([
-      prisma.invoice.findMany({
-        skip,
-        take: limit,
-      }),
-      prisma.invoice.count(),
-    ]);
-    return {
-      data: { invoices, size },
-      kind: "success",
-    };
-  },
-  key: (args: FindInvoicesArgs): FindInvoices => ["findInvoices", args],
+export const findInvoices = async ([
+  ,
+  { skip, limit },
+]: FindInvoicesKey): Promise<ResourceResult<FindInvoicesResult>> => {
+  const [invoices, size] = await Promise.all([
+    prisma.invoice.findMany({
+      skip,
+      take: limit,
+    }),
+    prisma.invoice.count(),
+  ]);
+  return {
+    data: { invoices, size },
+    kind: "success",
+  };
 };
 
 export const invoiceSchema = z.object({

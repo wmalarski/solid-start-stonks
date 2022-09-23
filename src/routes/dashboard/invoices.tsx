@@ -7,15 +7,23 @@ import { LoadingSwitch } from "~/components/LoadingSwitch/LoadingSwitch";
 import { Pagination } from "~/components/Pagination/Pagination";
 import { Invoices } from "~/modules/Invoices/Invoices";
 import { InvoicesTopbar } from "~/modules/InvoicesTopbar/InvoicesTopbar";
-import { findInvoices } from "~/server/invoices";
+import {
+  findInvoices,
+  FindInvoicesKey,
+  FindInvoicesResult,
+} from "~/server/invoices";
+import type { ResourceResult } from "~/server/types";
 import { paths } from "~/utils/paths";
 
 const limit = 10;
 
 export const routeData = (args: RouteDataArgs) => {
   const page = () => +args.location.query.page || 0;
-  const invoices = createServerData$((source) => findInvoices.fn(source), {
-    key: () => findInvoices.key({ limit, skip: page() * limit }),
+  const invoices = createServerData$<
+    ResourceResult<FindInvoicesResult>,
+    FindInvoicesKey
+  >((source) => findInvoices(source), {
+    key: () => ["findInvoices", { limit, skip: page() * limit }],
   });
   return { invoices, page };
 };
