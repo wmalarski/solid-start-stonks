@@ -11,12 +11,13 @@ import { LoadingSwitch } from "~/components/LoadingSwitch/LoadingSwitch";
 import { InvoiceForm } from "~/modules/InvoiceForm/InvoiceForm";
 import { InvoiceTopbar } from "~/modules/InvoiceTopbar/InvoiceTopbar";
 import { findInvoice, FindInvoiceKey, insertInvoice } from "~/server/invoices";
+import { withUserData } from "~/server/session";
 import type { ResourceResult } from "~/server/types";
 import { paths } from "~/utils/paths";
 
 export const routeData = ({ params }: RouteDataArgs) => {
   return createServerData$<ResourceResult<Invoice>, FindInvoiceKey>(
-    (source) => findInvoice(source),
+    withUserData((source, _, user) => findInvoice(source, user)),
     { key: () => ["findInvoice", params.invoiceId] }
   );
 };

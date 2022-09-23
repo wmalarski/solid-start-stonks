@@ -1,4 +1,5 @@
 import type { Invoice } from "@prisma/client";
+import { User } from "@supabase/supabase-js";
 import { ServerError } from "solid-start/server";
 import { z } from "zod";
 import { mockId } from "~/tests/mocks";
@@ -7,10 +8,13 @@ import { ResourceResult } from "./types";
 
 export type FindInvoiceKey = ["findInvoice", string];
 
-export const findInvoice = async ([, id]: FindInvoiceKey): Promise<
-  ResourceResult<Invoice>
-> => {
-  const invoice = await prisma.invoice.findFirst({ where: { id } });
+export const findInvoice = async (
+  [, id]: FindInvoiceKey,
+  user: User
+): Promise<ResourceResult<Invoice>> => {
+  const invoice = await prisma.invoice.findFirst({
+    where: { id, userId: user.id },
+  });
 
   if (!invoice) {
     return { kind: "error", message: "Not found" };
@@ -27,16 +31,19 @@ export type FindInvoicesResult = {
   size: number;
 };
 
-export const findInvoices = async ([
-  ,
-  { skip, limit },
-]: FindInvoicesKey): Promise<ResourceResult<FindInvoicesResult>> => {
+export const findInvoices = async (
+  [, { skip, limit }]: FindInvoicesKey,
+  user: User
+): Promise<ResourceResult<FindInvoicesResult>> => {
   const [invoices, size] = await Promise.all([
     prisma.invoice.findMany({
       skip,
       take: limit,
+      where: { userId: user.id },
     }),
-    prisma.invoice.count(),
+    prisma.invoice.count({
+      where: { userId: user.id },
+    }),
   ]);
   return {
     data: { invoices, size },
@@ -50,7 +57,7 @@ export const invoiceSchema = z.object({
   buyerName: z.string(),
   buyerNip: z.string(),
   city: z.string(),
-  date: z.string(),
+  date: z.date(),
   id: z.string(),
   invoiceTitle: z.string(),
   notes: z.string(),

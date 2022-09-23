@@ -1,10 +1,12 @@
 import {
   createClient,
   Session as SupabaseSession,
+  User,
 } from "@supabase/supabase-js";
-import { json, redirect } from "solid-start/server";
+import { createServerData$, json, redirect } from "solid-start/server";
 import { createCookieSessionStorage } from "solid-start/session";
 import { serverEnv } from "~/env/server";
+import { AppendArgument } from "~/utils/types";
 
 const supabase = createClient(
   serverEnv.VITE_SUPABASE_URL,
@@ -59,4 +61,19 @@ export const updateUserSession = async (request: Request) => {
     return destroyUserSession(request);
   }
   return createUserSession(supabaseSession);
+};
+
+type RouteDataFetcher<T, S> = Parameters<typeof createServerData$<T, S>>[0];
+type RouteUserDataFetcher<T, S> = AppendArgument<RouteDataFetcher<T, S>, User>;
+
+export const withUserData = <T, S>(
+  fetcher: RouteUserDataFetcher<T, S>
+): RouteDataFetcher<T, S> => {
+  return async (source, event) => {
+    const data = await getUser(event.request);
+    if (!data?.user) {
+      throw new Error("UNAUTHORIZED");
+    }
+    return fetcher(source, event, data.user);
+  };
 };

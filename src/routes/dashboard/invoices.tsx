@@ -12,6 +12,7 @@ import {
   FindInvoicesKey,
   FindInvoicesResult,
 } from "~/server/invoices";
+import { withUserData } from "~/server/session";
 import type { ResourceResult } from "~/server/types";
 import { paths } from "~/utils/paths";
 
@@ -22,9 +23,10 @@ export const routeData = (args: RouteDataArgs) => {
   const invoices = createServerData$<
     ResourceResult<FindInvoicesResult>,
     FindInvoicesKey
-  >((source) => findInvoices(source), {
-    key: () => ["findInvoices", { limit, skip: page() * limit }],
-  });
+  >(
+    withUserData((source, _, user) => findInvoices(source, user)),
+    { key: () => ["findInvoices", { limit, skip: page() * limit }] }
+  );
   return { invoices, page };
 };
 

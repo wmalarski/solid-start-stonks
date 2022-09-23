@@ -7,12 +7,13 @@ import { LoadingSwitch } from "~/components/LoadingSwitch/LoadingSwitch";
 import { InvoiceDetails } from "~/modules/InvoiceDetails/InvoiceDetails";
 import { InvoiceTopbar } from "~/modules/InvoiceTopbar/InvoiceTopbar";
 import { findInvoice, FindInvoiceKey } from "~/server/invoices";
+import { withUserData } from "~/server/session";
 import type { ResourceResult } from "~/server/types";
 import { paths } from "~/utils/paths";
 
 export const routeData = ({ params }: RouteDataArgs) => {
   return createServerData$<ResourceResult<Invoice>, FindInvoiceKey>(
-    (source) => findInvoice(source),
+    withUserData((source, _, user) => findInvoice(source, user)),
     { key: () => ["findInvoice", params.invoiceId] }
   );
 };
