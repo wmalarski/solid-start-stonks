@@ -14,7 +14,6 @@ import {
 } from "solid-start";
 import "./root.css";
 import { i18n } from "./utils/i18n";
-import { SessionProvider } from "./utils/supabase";
 
 const Root = (): JSX.Element => {
   return (
@@ -28,11 +27,9 @@ const Root = (): JSX.Element => {
         <Suspense>
           <ErrorBoundary>
             <I18nContext.Provider value={i18n}>
-              <SessionProvider>
-                <Routes>
-                  <FileRoutes />
-                </Routes>
-              </SessionProvider>
+              <Routes>
+                <FileRoutes />
+              </Routes>
             </I18nContext.Provider>
           </ErrorBoundary>
         </Suspense>

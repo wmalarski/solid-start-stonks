@@ -18,7 +18,7 @@ const Callback: Component = () => {
   const [action, submit] = createServerAction$(
     async (session: Partial<SupabaseSession>) => {
       const cookie = await getUserSessionCookie(session);
-      console.log(cookie);
+      console.log({ cookie, session });
       return redirect(paths.invoices(), {
         headers: { "Set-Cookie": cookie },
         status: 200,

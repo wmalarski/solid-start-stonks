@@ -38,6 +38,7 @@ export const getUserSession = (request: Request) => {
 export const getUser = async (request: Request) => {
   const session = await getUserSession(request);
   const accessToken = session.get("access_token");
+
   if (!accessToken) {
     return null;
   }
