@@ -10,7 +10,6 @@ import { paths } from "~/utils/paths";
 export const routeData = () => {
   return createServerData$(async (_source, { request }) => {
     const user = await getUser(request);
-    console.log({ user });
     if (user) {
       return redirect(paths.invoices());
     }

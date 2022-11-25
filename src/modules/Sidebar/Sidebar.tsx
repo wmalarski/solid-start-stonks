@@ -1,16 +1,19 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { Component } from "solid-js";
 import { A } from "solid-start";
+import { createServerAction$, redirect } from "solid-start/server";
+import { getUserDestroyCookie } from "~/server/session";
 import { paths } from "~/utils/paths";
-import { supabase } from "~/utils/supabase";
 
 export const Sidebar: Component = () => {
   const [t] = useI18n();
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    // TODO show toast
-  };
+  const [, { Form }] = createServerAction$(
+    async (_form: FormData, { request }) => {
+      const destroyed = await getUserDestroyCookie(request);
+      return redirect(paths.login, { headers: { "Set-Cookie": destroyed } });
+    }
+  );
 
   return (
     <div
@@ -26,9 +29,11 @@ export const Sidebar: Component = () => {
       </ul>
       <ul class="menu w-56 p-2 ">
         <li>
-          <button class="text-sm" onClick={handleLogout}>
-            {t("sidebar.logout")}
-          </button>
+          <Form>
+            <button type="submit" class="text-sm">
+              {t("sidebar.logout")}
+            </button>
+          </Form>
         </li>
       </ul>
     </div>

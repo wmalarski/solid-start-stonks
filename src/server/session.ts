@@ -70,7 +70,12 @@ export const getUserSessionCookie = async (
   session.set("refresh_token", supabaseSession?.refresh_token);
   session.set("expires_at", supabaseSession?.expires_at);
   session.set("expires_in", supabaseSession?.expires_in);
-  return await storage.commitSession(session);
+  return storage.commitSession(session);
+};
+
+export const getUserDestroyCookie = async (request: Request) => {
+  const session = await getUserSession(request);
+  return storage.destroySession(session);
 };
 
 export const updateUserSession = async (request: Request) => {
