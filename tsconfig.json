@@ -6,6 +6,8 @@
     "module": "ESNext",
     "moduleResolution": "node",
     "jsxImportSource": "solid-js",
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
     "jsx": "preserve",
     "types": [
       "vite/client"

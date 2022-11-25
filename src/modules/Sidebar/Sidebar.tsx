@@ -1,6 +1,6 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { Component } from "solid-js";
-import { NavLink } from "solid-start";
+import { A } from "solid-start";
 import { paths } from "~/utils/paths";
 import { supabase } from "~/utils/supabase";
 
@@ -19,9 +19,9 @@ export const Sidebar: Component = () => {
     >
       <ul class="menu w-56 p-2 ">
         <li>
-          <NavLink class="text-sm" activeClass="active" href={paths.index}>
+          <A class="text-sm" activeClass="active" href={paths.index}>
             {t("sidebar.home")}
-          </NavLink>
+          </A>
         </li>
       </ul>
       <ul class="menu w-56 p-2 ">
