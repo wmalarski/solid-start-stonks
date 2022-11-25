@@ -1,6 +1,6 @@
 import { type Session as SupabaseSession } from "@supabase/supabase-js";
 import { Component, createEffect, onMount } from "solid-js";
-import { createRouteData, redirect } from "solid-start";
+import { createRouteData, redirect, useNavigate } from "solid-start";
 import { createServerAction$ } from "solid-start/server";
 import { getUser, getUserSessionCookie } from "~/server/session";
 import { paths } from "~/utils/paths";
@@ -15,10 +15,11 @@ export const routeData = () => {
 };
 
 const Callback: Component = () => {
+  const navigate = useNavigate();
+
   const [action, submit] = createServerAction$(
     async (session: Partial<SupabaseSession>) => {
       const cookie = await getUserSessionCookie(session);
-      console.log({ cookie, session });
       return redirect(paths.invoices(), {
         headers: { "Set-Cookie": cookie },
         status: 200,
@@ -37,8 +38,6 @@ const Callback: Component = () => {
     const expiresIn = params.get("expires_in");
     const refreshToken = params.get("refresh_token");
 
-    console.log({ accessToken, expiresIn, refreshToken });
-
     // TODO: zod
     if (!accessToken || !expiresIn || !refreshToken) {
       return;
@@ -52,7 +51,9 @@ const Callback: Component = () => {
   });
 
   createEffect(() => {
-    console.log("effect", action.error, action.pending, action.result);
+    if (action.result) {
+      navigate(paths.invoices());
+    }
   });
 
   return <span>Loading</span>;
