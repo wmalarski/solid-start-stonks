@@ -61,6 +61,17 @@ const createUserSession = async (supabaseSession?: SupabaseSession) => {
   return json({}, { headers: { "Set-Cookie": committed }, status: 200 });
 };
 
+export const getUserSessionCookie = async (
+  supabaseSession: Partial<SupabaseSession>
+) => {
+  const session = await storage.getSession();
+  session.set("access_token", supabaseSession?.access_token);
+  session.set("refresh_token", supabaseSession?.refresh_token);
+  session.set("expires_at", supabaseSession?.expires_at);
+  session.set("expires_in", supabaseSession?.expires_in);
+  return await storage.commitSession(session);
+};
+
 export const updateUserSession = async (request: Request) => {
   const supabaseSession = await request.json();
   if (!supabaseSession) {
@@ -100,4 +111,17 @@ export const withUserAction = <T, S>(
     }
     return fetcher(source, event, result.data.user);
   };
+};
+
+type SignInWithOtp = {
+  email: string;
+  redirectTo: string;
+};
+
+export const signInWithOtp = async ({ email, redirectTo }: SignInWithOtp) => {
+  const result = await supabase.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: redirectTo },
+  });
+  return result;
 };

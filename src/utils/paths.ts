@@ -1,5 +1,6 @@
 export const paths = {
   addInvoice: "/dashboard/add",
+  callback: "/auth/callback",
   copyInvoice: (id: string) => `/dashboard/invoice/${id}/copy`,
   editInvoice: (id: string) => `/dashboard/invoice/${id}/edit`,
   index: "/",
