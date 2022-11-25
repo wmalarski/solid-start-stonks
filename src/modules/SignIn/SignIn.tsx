@@ -15,7 +15,10 @@ export const SignIn: Component = () => {
 
     const redirectTo = getBaseUrl();
 
-    const result = await supabase.auth.signIn({ email }, { redirectTo });
+    const result = await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: redirectTo },
+    });
 
     if (result.error) {
       setStatus({

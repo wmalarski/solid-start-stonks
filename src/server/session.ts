@@ -41,7 +41,7 @@ export const getUser = async (request: Request) => {
   if (!accessToken) {
     return null;
   }
-  const user = await supabase.auth.api.getUser(accessToken);
+  const user = await supabase.auth.getUser(accessToken);
   return user;
 };
 
@@ -76,11 +76,11 @@ export const withUserData = <T, S>(
   fetcher: RouteUserDataFetcher<T, S>
 ): RouteDataFetcher<T, S> => {
   return async (source, event) => {
-    const data = await getUser(event.request);
-    if (!data?.user) {
+    const result = await getUser(event.request);
+    if (!result?.data.user) {
       throw new ServerError("UNAUTHORIZED");
     }
-    return fetcher(source, event, data.user);
+    return fetcher(source, event, result.data.user);
   };
 };
 
@@ -94,10 +94,10 @@ export const withUserAction = <T, S>(
   fetcher: RouteUserActionFetcher<T, S>
 ): RouteActionFetcher<T, S> => {
   return async (source, event) => {
-    const data = await getUser(event.request);
-    if (!data?.user) {
+    const result = await getUser(event.request);
+    if (!result?.data.user) {
       throw new ServerError("UNAUTHORIZED");
     }
-    return fetcher(source, event, data.user);
+    return fetcher(source, event, result.data.user);
   };
 };

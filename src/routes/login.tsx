@@ -1,22 +1,20 @@
-import { Component, Show } from "solid-js";
-import { Navigate } from "solid-start";
+import { Component } from "solid-js";
+import { createRouteData, redirect } from "solid-start";
 import { SignIn } from "~/modules/SignIn/SignIn";
+import { getUser } from "~/server/session";
 import { paths } from "~/utils/paths";
-import { useSessionStatus } from "~/utils/supabase";
+
+export const routeData = () => {
+  return createRouteData(async (_source, { request }) => {
+    const user = await getUser(request);
+    if (user) {
+      return redirect(paths.invoices());
+    }
+  });
+};
 
 const Login: Component = () => {
-  const status = useSessionStatus();
-
-  return (
-    <Show when={status() !== "loading"}>
-      <Show
-        when={status() === "anon"}
-        fallback={<Navigate href={paths.invoices()} />}
-      >
-        <SignIn />
-      </Show>
-    </Show>
-  );
+  return <SignIn />;
 };
 
 export default Login;

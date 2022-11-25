@@ -30,7 +30,7 @@ type SessionState =
 type SessionStateAccessor = () => SessionState;
 
 const SessionContext = createContext<SessionStateAccessor>(() => ({
-  status: "loading",
+  status: "loading" as const,
 }));
 
 type Props = {
@@ -57,7 +57,7 @@ export const SessionProvider: Component<Props> = (props) => {
   });
 
   onCleanup(() => {
-    data?.unsubscribe();
+    data?.subscription.unsubscribe();
   });
 
   return (
