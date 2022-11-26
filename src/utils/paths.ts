@@ -9,6 +9,6 @@ export const paths = {
     `/dashboard/invoices?${new URLSearchParams({
       page: `${page}`,
     })}`,
-  login: "/login",
+  login: "/auth/login",
   notFound: "/notFound",
 };

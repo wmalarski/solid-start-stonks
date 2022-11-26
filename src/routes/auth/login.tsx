@@ -3,13 +3,13 @@ import clsx from "clsx";
 import { Component, Show } from "solid-js";
 import { redirect } from "solid-start";
 import { createServerAction$, createServerData$ } from "solid-start/server";
-import { getUser, signInWithOtp } from "~/server/session";
+import { getUserSafe, signInWithOtp } from "~/server/session";
 import { getBaseUrl } from "~/utils/baseUrl";
 import { paths } from "~/utils/paths";
 
 export const routeData = () => {
   return createServerData$(async (_source, { request }) => {
-    const user = await getUser(request);
+    const user = await getUserSafe(request);
     if (user) {
       return redirect(paths.invoices());
     }

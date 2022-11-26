@@ -2,12 +2,12 @@ import { type Session as SupabaseSession } from "@supabase/supabase-js";
 import { Component, createEffect, onMount } from "solid-js";
 import { createRouteData, redirect, useNavigate } from "solid-start";
 import { createServerAction$ } from "solid-start/server";
-import { getUser, getUserSessionCookie } from "~/server/session";
+import { getUserSafe, getUserSessionCookie } from "~/server/session";
 import { paths } from "~/utils/paths";
 
 export const routeData = () => {
   return createRouteData(async (_source, { request }) => {
-    const user = await getUser(request);
+    const user = await getUserSafe(request);
     if (user) {
       return redirect(paths.invoices());
     }

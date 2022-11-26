@@ -4,17 +4,18 @@ import { createServerAction$, redirect } from "solid-start/server";
 import { InvoiceForm } from "~/modules/InvoiceForm/InvoiceForm";
 import { InvoicesTopbar } from "~/modules/InvoicesTopbar/InvoicesTopbar";
 import { insertInvoice } from "~/server/invoices";
-import { withUserAction } from "~/server/session";
+import { getUser } from "~/server/session";
 import { paths } from "~/utils/paths";
 
 const AddInvoicePage: Component = () => {
   const [t] = useI18n();
 
   const [add, submit] = createServerAction$(
-    withUserAction(async (form: FormData, _, user) => {
+    async (form: FormData, { request }) => {
+      const user = await getUser(request);
       const invoice = await insertInvoice(form, user);
       return redirect(paths.invoice(invoice.id));
-    })
+    }
   );
 
   return (

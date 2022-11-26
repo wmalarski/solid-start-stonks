@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { Component } from "solid-js";
 import { createServerAction$, redirect } from "solid-start/server";
 import { deleteInvoice } from "~/server/invoices";
-import { withUserAction } from "~/server/session";
+import { getUser } from "~/server/session";
 import { paths } from "~/utils/paths";
 
 type Props = {
@@ -15,10 +15,11 @@ export const DeleteInvoice: Component<Props> = (props) => {
   const [t] = useI18n();
 
   const [remove, submit] = createServerAction$(
-    withUserAction(async (form: FormData, _, user) => {
+    async (form: FormData, { request }) => {
+      const user = await getUser(request);
       await deleteInvoice(form, user);
       return redirect(paths.invoices());
-    })
+    }
   );
 
   return (

@@ -2,7 +2,6 @@ import { useI18n } from "@solid-primitives/i18n";
 import { useNavigate } from "@solidjs/router";
 import { Component } from "solid-js";
 import { Navigate, RouteDataArgs, useRouteData } from "solid-start";
-import { createServerData$ } from "solid-start/server";
 import { LoadingSwitch } from "~/components/LoadingSwitch/LoadingSwitch";
 import { Pagination } from "~/components/Pagination/Pagination";
 import { Invoices } from "~/modules/Invoices/Invoices";
@@ -12,7 +11,7 @@ import {
   FindInvoicesKey,
   FindInvoicesResult,
 } from "~/server/invoices";
-import { withUserData } from "~/server/session";
+import { createServerDataWithUser$ } from "~/server/session";
 import type { ResourceResult } from "~/server/types";
 import { paths } from "~/utils/paths";
 
@@ -20,13 +19,12 @@ const limit = 10;
 
 export const routeData = (args: RouteDataArgs) => {
   const page = () => +args.location.query.page || 0;
-  const invoices = createServerData$<
+  const invoices = createServerDataWithUser$<
     ResourceResult<FindInvoicesResult>,
     FindInvoicesKey
-  >(
-    withUserData((source, _, user) => findInvoices(source, user)),
-    { key: () => ["findInvoices", { limit, skip: page() * limit }] }
-  );
+  >((source, { user }) => findInvoices(source, user), {
+    key: () => ["findInvoices", { limit, skip: page() * limit }],
+  });
   return { invoices, page };
 };
 
