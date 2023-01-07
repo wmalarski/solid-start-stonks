@@ -66,12 +66,10 @@ const dict = {
       header: "Faktury",
       more: "Więcej",
     },
-    magicLink: {
-      button: "Send magic link to your email!",
-      header: "Send magic link",
-      subheader:
-        "To log in, or register. Use the form below to get a magic link to your email.",
-      success: "An email should arrive in your inbox shortly",
+    login: {
+      button: "Login with Google",
+      header: "Login",
+      subheader: "To log in, or register. Login with provider.",
     },
     notFound: {
       header: "Not found",

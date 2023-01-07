@@ -1,19 +1,15 @@
+import { signOut } from "@auth/solid-start/client";
 import { useI18n } from "@solid-primitives/i18n";
 import { Component } from "solid-js";
 import { A } from "solid-start";
-import { createServerAction$, redirect } from "solid-start/server";
-import { getUserDestroyCookie } from "~/server/session";
 import { paths } from "~/utils/paths";
 
 export const Sidebar: Component = () => {
   const [t] = useI18n();
 
-  const [, { Form }] = createServerAction$(
-    async (_form: FormData, { request }) => {
-      const destroyed = await getUserDestroyCookie(request);
-      return redirect(paths.login, { headers: { "Set-Cookie": destroyed } });
-    }
-  );
+  const handleClick = () => {
+    signOut();
+  };
 
   return (
     <div
@@ -29,11 +25,9 @@ export const Sidebar: Component = () => {
       </ul>
       <ul class="menu w-56 p-2 ">
         <li>
-          <Form>
-            <button type="submit" class="text-sm">
-              {t("sidebar.logout")}
-            </button>
-          </Form>
+          <button onClick={handleClick} class="text-sm">
+            {t("sidebar.logout")}
+          </button>
         </li>
       </ul>
     </div>

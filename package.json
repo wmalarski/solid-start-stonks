@@ -42,7 +42,6 @@
     "@solid-primitives/i18n": "^1.1.2",
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.6.0",
-    "@supabase/supabase-js": "^2.2.3",
     "clsx": "^1.2.1",
     "daisyui": "^2.46.1",
     "prisma": "^4.8.1",

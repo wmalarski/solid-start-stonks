@@ -1,20 +1,14 @@
-import type { Invoice } from "@prisma/client";
 import { useI18n } from "@solid-primitives/i18n";
 import { Component } from "solid-js";
 import { Navigate, RouteDataArgs, useRouteData } from "solid-start";
 import { LoadingSwitch } from "~/components/LoadingSwitch/LoadingSwitch";
 import { InvoiceDetails } from "~/modules/InvoiceDetails/InvoiceDetails";
 import { InvoiceTopbar } from "~/modules/InvoiceTopbar/InvoiceTopbar";
-import { findInvoice, FindInvoiceKey } from "~/server/invoices";
-import { createServerDataWithUser$ } from "~/server/session";
-import type { ResourceResult } from "~/server/types";
+import { createInvoiceData$ } from "~/server/invoices";
 import { paths } from "~/utils/paths";
 
 export const routeData = ({ params }: RouteDataArgs) => {
-  return createServerDataWithUser$<ResourceResult<Invoice>, FindInvoiceKey>(
-    (source, { user }) => findInvoice(source, user),
-    { key: () => ["findInvoice", params.invoiceId] }
-  );
+  return createInvoiceData$(() => ["findInvoice", params.invoiceId]);
 };
 
 const InvoicePage: Component = () => {

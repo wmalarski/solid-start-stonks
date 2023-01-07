@@ -3,8 +3,8 @@ import { useI18n } from "@solid-primitives/i18n";
 import clsx from "clsx";
 import { Component } from "solid-js";
 import { createServerAction$, redirect } from "solid-start/server";
+import { getUser } from "~/server/auth";
 import { deleteInvoice } from "~/server/invoices";
-import { getUser } from "~/server/session";
 import { paths } from "~/utils/paths";
 
 type Props = {
@@ -17,7 +17,7 @@ export const DeleteInvoice: Component<Props> = (props) => {
   const [remove, submit] = createServerAction$(
     async (form: FormData, { request }) => {
       const user = await getUser(request);
-      await deleteInvoice(form, user);
+      await deleteInvoice(form, user.id);
       return redirect(paths.invoices());
     }
   );
