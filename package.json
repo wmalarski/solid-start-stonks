@@ -36,6 +36,8 @@
     "vite-plugin-solid": "^2.5.0"
   },
   "dependencies": {
+    "@auth/core": "^0.2.5",
+    "@auth/solid-start": "^0.1.0",
     "@prisma/client": "4.8.1",
     "@solid-primitives/i18n": "^1.1.2",
     "@solidjs/meta": "^0.28.2",
