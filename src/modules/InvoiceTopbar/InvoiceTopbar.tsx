@@ -1,4 +1,4 @@
-import { Invoice } from "@prisma/client";
+import type { Invoice } from "@prisma/client";
 import { useI18n } from "@solid-primitives/i18n";
 import { Link } from "@solidjs/router";
 import { Component, For } from "solid-js";

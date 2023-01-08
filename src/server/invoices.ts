@@ -1,8 +1,6 @@
 import type { Invoice } from "@prisma/client";
-import { createServerData$, ServerError } from "solid-start/server";
+import { ServerError } from "solid-start/server";
 import { z } from "zod";
-import { mockId } from "~/tests/mocks";
-import { getUser } from "./auth";
 import { prisma } from "./prisma";
 import { ResourceResult } from "./types";
 
@@ -20,16 +18,6 @@ export const findInvoice = async (
     return { kind: "error", message: "Not found" };
   }
   return { data: invoice, kind: "success" };
-};
-
-export const createInvoiceData$ = (key: () => FindInvoiceKey) => {
-  return createServerData$<ResourceResult<Invoice>, FindInvoiceKey>(
-    async (source, { request }) => {
-      const user = await getUser(request);
-      return findInvoice(source, user.id);
-    },
-    { key }
-  );
 };
 
 export type FindInvoicesArgs = { skip: number; limit: number };
@@ -110,7 +98,7 @@ export const insertInvoice = async (form: FormData, userId: string) => {
   const parsed = await parseInsertInvoiceForm(form);
 
   const invoice = await prisma.invoice.create({
-    data: { ...parsed, id: mockId(), userId },
+    data: { ...parsed, userId },
   });
 
   return invoice;
