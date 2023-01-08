@@ -8,7 +8,9 @@
     "lint": "eslint src --fix --ext .tsx,.ts",
     "prettier": "prettier 'src/**/*.(ts|tsx)' --write",
     "tsc": "tsc --noEmit",
-    "code-check": "yarn lint --max-warnings=0 && yarn tsc"
+    "code-check": "yarn lint --max-warnings=0 && yarn tsc",
+    "=== HOOKS ===": "",
+    "postinstall": "prisma generate"
   },
   "type": "module",
   "devDependencies": {
