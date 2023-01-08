@@ -29,7 +29,14 @@ export const authOptions: SolidAuthConfig = {
 };
 
 export const getSession = (request: Request) => {
-  return getAuthSession(request, authOptions);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const unsafeRequest = request as any;
+
+  if (!unsafeRequest.sessionPromise) {
+    unsafeRequest.sessionPromise = getAuthSession(request, authOptions);
+  }
+
+  return unsafeRequest.sessionPromise;
 };
 
 export const getUser = async (request: Request) => {
