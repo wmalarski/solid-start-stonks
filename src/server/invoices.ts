@@ -165,7 +165,7 @@ export const deleteInvoice = async (form: FormData, userId: string) => {
   const parsed = await parseDeleteInvoiceForm(form);
 
   const invoice = await prisma.invoice.deleteMany({
-    where: { id: parsed.id, userId: userId },
+    where: { id: parsed.id, userId },
   });
 
   return invoice;

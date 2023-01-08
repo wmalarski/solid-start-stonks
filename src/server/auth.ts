@@ -3,10 +3,13 @@ import {
   getSession as getAuthSession,
   type SolidAuthConfig,
 } from "@auth/solid-start";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { ServerError } from "solid-start";
 import { serverEnv } from "./env";
+import { prisma } from "./prisma";
 
 export const authOptions: SolidAuthConfig = {
+  adapter: PrismaAdapter(prisma),
   callbacks: {
     session({ session, user }) {
       if (session.user) {
