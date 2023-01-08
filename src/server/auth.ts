@@ -1,7 +1,10 @@
 import Google from "@auth/core/providers/google";
-import { getSession, type SolidAuthConfig } from "@auth/solid-start";
+import {
+  getSession as getAuthSession,
+  type SolidAuthConfig,
+} from "@auth/solid-start";
 import { ServerError } from "solid-start";
-import { serverEnv } from "~/env/server";
+import { serverEnv } from "./env";
 
 export const authOptions: SolidAuthConfig = {
   callbacks: {
@@ -22,8 +25,12 @@ export const authOptions: SolidAuthConfig = {
   ],
 };
 
+export const getSession = (request: Request) => {
+  return getAuthSession(request, authOptions);
+};
+
 export const getUser = async (request: Request) => {
-  const session = await getSession(request, authOptions);
+  const session = await getSession(request);
   if (!session?.user) {
     throw new ServerError("UNAUTHORIZED");
   }

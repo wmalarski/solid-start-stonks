@@ -1,6 +1,19 @@
 import { Component } from "solid-js";
 import { Outlet } from "solid-start";
+import { createServerData$, redirect } from "solid-start/server";
 import { Sidebar } from "~/modules/Sidebar/Sidebar";
+import { getSession } from "~/server/auth";
+import { paths } from "~/utils/paths";
+
+export const routeData = () => {
+  return createServerData$(async (_source, { request }) => {
+    const session = await getSession(request);
+
+    if (!session) {
+      return redirect(paths.login);
+    }
+  });
+};
 
 const Dashboard: Component = () => {
   return (
