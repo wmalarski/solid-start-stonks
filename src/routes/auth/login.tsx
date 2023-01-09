@@ -20,7 +20,6 @@ const Login: Component = () => {
   const [t] = useI18n();
 
   const handleClick = () => {
-    console.log("hanleClick");
     signIn("google");
   };
 
