@@ -2,7 +2,7 @@
   "name": "solid-start-stonks",
   "scripts": {
     "dev": "solid-start dev",
-    "build": "solid-start build && cp prisma/schema.prisma .vercel/output/functions/render.func/ && cp prisma/schema.prisma .vercel/output/functions/api.func/",
+    "build": "solid-start build && cp node_modules/@prisma/engines/*query* .vercel/output/functions/api.func/ && cp node_modules/@prisma/engines/*query* .vercel/output/functions/render.func/ && cp prisma/schema.prisma .vercel/output/functions/render.func/ && cp prisma/schema.prisma .vercel/output/functions/api.func/",
     "start": "solid-start start",
     "=== LINTERS ===": "",
     "lint": "eslint src --fix --ext .tsx,.ts",
