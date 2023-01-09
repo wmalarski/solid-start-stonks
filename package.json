@@ -2,7 +2,7 @@
   "name": "solid-start-stonks",
   "scripts": {
     "dev": "solid-start dev",
-    "build": "solid-start build",
+    "build": "solid-start build && cp prisma/schema.prisma .vercel/output/functions/render.func/",
     "start": "solid-start start",
     "=== LINTERS ===": "",
     "lint": "eslint src --fix --ext .tsx,.ts",
