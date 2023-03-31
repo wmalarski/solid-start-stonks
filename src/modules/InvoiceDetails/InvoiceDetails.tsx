@@ -122,7 +122,9 @@ export const InvoiceDetails: Component<Props> = (props) => {
         <tbody>
           <tr class="border text-xs">
             <td>1</td>
-            <td>{props.invoice.serviceTitle}</td>
+            <td class="whitespace-break-spaces">
+              {props.invoice.serviceTitle}
+            </td>
             <td>{props.invoice.serviceUnit}</td>
             <td>{props.invoice.serviceCount}</td>
             <td>{props.invoice.servicePrice}</td>

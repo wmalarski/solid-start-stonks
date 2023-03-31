@@ -56,7 +56,7 @@ export const invoiceSchema = z.object({
   buyerNip: z.string(),
   city: z.string(),
   date: z.date(),
-  id: z.string(),
+  id: z.string().optional(),
   invoiceTitle: z.string(),
   notes: z.string(),
   paymentAccount: z.string(),
@@ -66,9 +66,9 @@ export const invoiceSchema = z.object({
   sellerAddress2: z.string(),
   sellerName: z.string(),
   sellerNip: z.string(),
-  serviceCount: z.number().min(0),
-  servicePayed: z.number().min(0),
-  servicePrice: z.number().min(0),
+  serviceCount: z.coerce.number().min(0),
+  servicePayed: z.coerce.number().min(0),
+  servicePrice: z.coerce.number().min(0),
   serviceTitle: z.string(),
   serviceUnit: z.string(),
 });
@@ -80,12 +80,11 @@ const parseInsertInvoiceForm = async (form: FormData) => {
   const raw = {
     ...entries,
     date: entries.date ? new Date(entries.date as string) : undefined,
-    serviceCount: +entries.serviceCount,
-    servicePayed: +entries.servicePayed,
-    servicePrice: +entries.servicePrice,
   };
 
   const parsed = await insertInvoiceSchema.safeParseAsync(raw);
+
+  console.log({ parsed, entries, raw });
 
   if (!parsed.success) {
     throw new ServerError(JSON.stringify(parsed.error.issues));
@@ -114,9 +113,6 @@ const parseUpdateInvoiceForm = async (form: FormData) => {
   const raw = {
     ...entries,
     date: entries.date ? new Date(entries.date as string) : undefined,
-    serviceCount: +entries.serviceCount,
-    servicePayed: +entries.servicePayed,
-    servicePrice: +entries.servicePrice,
   };
 
   const parsed = await updateInvoiceSchema.safeParseAsync(raw);
