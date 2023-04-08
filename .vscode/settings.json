@@ -2,11 +2,13 @@
   "cSpell.words": [
     "clsx",
     "daisyui",
+    "datetime",
     "solidauth",
     "solidjs",
     "SUPABASE",
     "tailwindcss",
     "Topbar",
-    "trpc"
+    "trpc",
+    "undici"
   ]
 }
