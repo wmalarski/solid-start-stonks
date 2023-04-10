@@ -4,6 +4,7 @@ specifiers:
   '@auth/core': ^0.5.1
   '@auth/solid-start': ^0.1.1
   '@paralleldrive/cuid2': ^2.2.0
+  '@planetscale/database': ^1.7.0
   '@solid-primitives/i18n': ^1.2.4
   '@solidjs/meta': ^0.28.4
   '@solidjs/router': ^0.8.2
@@ -43,12 +44,13 @@ dependencies:
   '@auth/core': 0.5.1
   '@auth/solid-start': 0.1.1_fibcykerjowyfhp2xtdk77xanm
   '@paralleldrive/cuid2': 2.2.0
+  '@planetscale/database': 1.7.0
   '@solid-primitives/i18n': 1.2.4_solid-js@1.7.3
   '@solidjs/meta': 0.28.4_solid-js@1.7.3
   '@solidjs/router': 0.8.2_solid-js@1.7.3
   clsx: 1.2.1
   daisyui: 2.51.5_j7yt3jd32cwenjqavrrga47yr4
-  drizzle-orm: 0.23.8
+  drizzle-orm: 0.23.8_x5zvu6yhqtclhr76ddvo6x3wgi
   solid-js: 1.7.3
   solid-start: 0.2.26_gm4kotxod2e4pnudq2z6hbgeuq
   undici: 5.21.0
@@ -1571,6 +1573,11 @@ packages:
       tslib: 2.5.0
     dev: true
 
+  /@planetscale/database/1.7.0:
+    resolution: {integrity: sha512-lWR6biXChUyQnxsT4RT1CIeR3ZJvwTQXiQ+158MnY3VjLwjHEGakDzdH9kwUGPk6CHvu6UeqRXp1DgUOVHJFTw==}
+    engines: {node: '>=16'}
+    dev: false
+
   /@polka/url/1.0.0-next.21:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
 
@@ -2567,7 +2574,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm/0.23.8:
+  /drizzle-orm/0.23.8_x5zvu6yhqtclhr76ddvo6x3wgi:
     resolution: {integrity: sha512-jdqS8+aiYWGI5ub4rhc2dEVqCeuYGF78m3XCVYVLaI2UzsKfhp/l3pretOsRMrzOSOM6naTB1BJugMY70VLv/w==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -2622,6 +2629,8 @@ packages:
         optional: true
       sqlite3:
         optional: true
+    dependencies:
+      '@planetscale/database': 1.7.0
     dev: false
 
   /ee-first/1.1.1:

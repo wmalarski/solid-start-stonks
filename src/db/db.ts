@@ -1,23 +1,11 @@
-import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
+import { connect } from "@planetscale/database";
+import { drizzle } from "drizzle-orm/planetscale-serverless";
 
-declare global {
-  // eslint-disable-next-line no-var
-  var db: NodePgDatabase | undefined;
-}
+// Create the connection.
+const connection = connect({
+  host: process.env.DB_HOST,
+  password: process.env.DB_PASSWORD,
+  username: process.env.DB_USERNAME,
+});
 
-export const createDrizzle = () => {
-  const pool = new Pool({
-    connectionString: env.DATABASE_URL,
-  });
-
-  return drizzle(pool);
-};
-
-export const db =
-  typeof global !== "undefined"
-    ? global.db || createDrizzle()
-    : createDrizzle();
-
-if (process.env.NODE_ENV !== "production" && typeof global !== "undefined") {
-  global.db = db;
-}
+export const db = drizzle(connection);

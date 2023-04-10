@@ -4,11 +4,12 @@ import {
   type SolidAuthConfig,
 } from "@auth/solid-start";
 import { ServerError } from "solid-start";
+import { db } from "~/db/db";
+import { createDrizzleAdapter } from "./adapters/drizzleOrm";
 import { serverEnv } from "./env";
-import { prisma } from "./prisma";
 
 export const authOptions: SolidAuthConfig = {
-  adapter: PrismaAdapter(prisma),
+  adapter: createDrizzleAdapter(db),
   callbacks: {
     session({ session, user }) {
       if (session.user) {
