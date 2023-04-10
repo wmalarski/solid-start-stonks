@@ -3,6 +3,8 @@
     "clsx",
     "daisyui",
     "datetime",
+    "paralleldrive",
+    "planetscale",
     "solidauth",
     "solidjs",
     "SUPABASE",

@@ -3,7 +3,6 @@ import {
   getSession as getAuthSession,
   type SolidAuthConfig,
 } from "@auth/solid-start";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { ServerError } from "solid-start";
 import { serverEnv } from "./env";
 import { prisma } from "./prisma";
