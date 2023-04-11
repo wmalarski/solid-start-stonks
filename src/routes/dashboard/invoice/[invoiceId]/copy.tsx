@@ -7,22 +7,21 @@ import {
   redirect,
 } from "solid-start/server";
 import { LoadingSwitch } from "~/components/LoadingSwitch/LoadingSwitch";
-import { insertInvoice, invoiceSchema, type Invoice } from "~/db/invoices";
+import { insertInvoice, invoiceSchema, selectInvoiceById } from "~/db/invoices";
 import { InvoiceForm } from "~/modules/InvoiceForm/InvoiceForm";
 import { InvoiceTopbar } from "~/modules/InvoiceTopbar/InvoiceTopbar";
 import { getUser } from "~/server/auth";
-import { FindInvoiceKey, findInvoice } from "~/server/invoices";
-import { ResourceResult } from "~/server/types";
+import { selectInvoiceKey } from "~/server/invoices";
 import { zodFormParse } from "~/server/utils";
 import { paths } from "~/utils/paths";
 
 export const routeData = ({ params }: RouteDataArgs) => {
-  return createServerData$<ResourceResult<Invoice>, FindInvoiceKey>(
-    async (source, { request }) => {
+  return createServerData$(
+    async ([, { id }], { request }) => {
       const user = await getUser(request);
-      return findInvoice(source, user.id);
+      return selectInvoiceById({ id, userId: user.id });
     },
-    { key: () => ["findInvoice", params.invoiceId] }
+    { key: () => selectInvoiceKey({ id: params.invoiceId }) }
   );
 };
 

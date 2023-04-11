@@ -1,28 +1,29 @@
+import { createServerData$ } from "solid-start/server";
 import {
   Invoice,
   selectInvoiceById,
   selectInvoicesByUserId,
 } from "~/db/invoices";
+import { getUser } from "./auth";
 
-type FindInvoiceArgs = {
+type SelectInvoiceKeyArgs = {
   id: string;
-  userId: string;
 };
 
-export const findInvoiceKey = (args: FindInvoiceArgs) => {
-  return ["findInvoice", args] as const;
+export const selectInvoiceKey = (args: SelectInvoiceKeyArgs) => {
+  return ["selectInvoice", args] as const;
 };
 
-export const findInvoice = async (
-  [, args]: ReturnType<typeof findInvoiceKey>,
-  userId: string
+export const createInvoiceServerData = (
+  key: () => ReturnType<typeof selectInvoiceKey>
 ) => {
-  const invoice = await selectInvoiceById({ id: args.id, userId });
-
-  if (!invoice) {
-    return { kind: "error", message: "Not found" };
-  }
-  return { data: invoice, kind: "success" };
+  return createServerData$(
+    async ([, { id }], { request }) => {
+      const user = await getUser(request);
+      return selectInvoiceById({ id, userId: user.id });
+    },
+    { key }
+  );
 };
 
 export type FindInvoicesArgs = {
