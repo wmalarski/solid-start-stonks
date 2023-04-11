@@ -1,8 +1,8 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { useNavigate } from "@solidjs/router";
-import { Component } from "solid-js";
+import { Component, ErrorBoundary, Show, Suspense } from "solid-js";
 import { Navigate, RouteDataArgs, useRouteData } from "solid-start";
-import { LoadingSwitch } from "~/components/LoadingSwitch/LoadingSwitch";
+import { LoadingSpinner } from "~/components/LoadingSpinner/LoadingSpinner";
 import { Pagination } from "~/components/Pagination/Pagination";
 import { Invoices } from "~/modules/Invoices/Invoices";
 import { InvoicesTopbar } from "~/modules/InvoicesTopbar/InvoicesTopbar";
@@ -28,25 +28,26 @@ const InvoicesPage: Component = () => {
   const navigate = useNavigate();
 
   return (
-    <LoadingSwitch
-      resource={data.invoices}
-      fallback={<Navigate href={paths.notFound} />}
-    >
-      {(result) => (
-        <div class="grid w-full grid-cols-1 grid-rows-[auto_1fr] items-start">
-          <InvoicesTopbar />
-          <div class="flex justify-between px-8">
-            <h1 class="text-3xl font-semibold">{t("invoices.header")}</h1>
-            <Pagination
-              current={data.page()}
-              max={Math.ceil(result.size / limit)}
-              onChange={(page) => navigate(paths.invoices(page))}
-            />
-          </div>
-          <Invoices invoices={result.invoices} />;
-        </div>
-      )}
-    </LoadingSwitch>
+    <ErrorBoundary fallback={<Navigate href={paths.notFound} />}>
+      <Suspense fallback={<LoadingSpinner />}>
+        <Show when={data.invoices()}>
+          {(invoices) => (
+            <div class="grid w-full grid-cols-1 grid-rows-[auto_1fr] items-start">
+              <InvoicesTopbar />
+              <div class="flex justify-between px-8">
+                <h1 class="text-3xl font-semibold">{t("invoices.header")}</h1>
+                <Pagination
+                  current={data.page()}
+                  max={Math.ceil(invoices().total / limit)}
+                  onChange={(page) => navigate(paths.invoices(page))}
+                />
+              </div>
+              <Invoices invoices={invoices().collection} />;
+            </div>
+          )}
+        </Show>
+      </Suspense>
+    </ErrorBoundary>
   );
 };
 
