@@ -1,18 +1,25 @@
-import type { Invoice } from "@prisma/client";
 import { ServerError } from "solid-start/server";
 import { z } from "zod";
-import { prisma } from "./prisma";
-import { ResourceResult } from "./types";
+import {
+  insertInvoice,
+  selectInvoiceById,
+  selectInvoicesByUserId,
+} from "~/db/invoices";
 
-export type FindInvoiceKey = ["findInvoice", string];
+type FindInvoiceArgs = {
+  id: string;
+  userId: string;
+};
+
+export const findInvoiceKey = (args: FindInvoiceArgs) => {
+  return ["findInvoice", args] as const;
+};
 
 export const findInvoice = async (
-  [, id]: FindInvoiceKey,
+  [, args]: ReturnType<typeof findInvoiceKey>,
   userId: string
-): Promise<ResourceResult<Invoice>> => {
-  const invoice = await prisma.invoice.findFirst({
-    where: { id, userId },
-  });
+) => {
+  const invoice = await selectInvoiceById({ id: args.id, userId });
 
   if (!invoice) {
     return { kind: "error", message: "Not found" };
@@ -20,31 +27,31 @@ export const findInvoice = async (
   return { data: invoice, kind: "success" };
 };
 
-export type FindInvoicesArgs = { skip: number; limit: number };
+export type FindInvoicesArgs = {
+  offset: number;
+  limit: number;
+  userId: string;
+};
 
-export type FindInvoicesKey = ["findInvoices", FindInvoicesArgs];
+export const findInvoicesKey = (args: FindInvoicesArgs) => {
+  return ["findInvoices", args] as const;
+};
 
 export type FindInvoicesResult = {
   invoices: Invoice[];
   size: number;
 };
 
-export const findInvoices = async (
-  [, { skip, limit }]: FindInvoicesKey,
-  userId: string
-): Promise<ResourceResult<FindInvoicesResult>> => {
-  const [invoices, size] = await Promise.all([
-    prisma.invoice.findMany({
-      skip,
-      take: limit,
-      where: { userId },
-    }),
-    prisma.invoice.count({
-      where: { userId },
-    }),
-  ]);
+export const findInvoices = async ([, { offset, limit, userId }]: ReturnType<
+  typeof findInvoicesKey
+>) => {
+  const { collection, total } = await selectInvoicesByUserId({
+    limit,
+    offset,
+    userId,
+  });
   return {
-    data: { invoices, size },
+    data: { collection, total },
     kind: "success",
   };
 };
@@ -93,11 +100,12 @@ const parseInsertInvoiceForm = async (form: FormData) => {
   return parsed.data;
 };
 
-export const insertInvoice = async (form: FormData, userId: string) => {
+export const parseAndInsertInvoice = async (form: FormData, userId: string) => {
   const parsed = await parseInsertInvoiceForm(form);
 
-  const invoice = await prisma.invoice.create({
-    data: { ...parsed, userId },
+  const invoice = await insertInvoice({
+    ...parsed,
+    user_id: userId,
   });
 
   return invoice;
@@ -124,7 +132,7 @@ const parseUpdateInvoiceForm = async (form: FormData) => {
   return parsed.data;
 };
 
-export const updateInvoice = async (form: FormData, userId: string) => {
+export const parseAndUpdateInvoice = async (form: FormData, userId: string) => {
   const parsed = await parseUpdateInvoiceForm(form);
 
   const invoice = await prisma.invoice.findFirstOrThrow({

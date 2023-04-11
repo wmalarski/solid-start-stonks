@@ -11,7 +11,11 @@ import { LoadingSwitch } from "~/components/LoadingSwitch/LoadingSwitch";
 import { InvoiceForm } from "~/modules/InvoiceForm/InvoiceForm";
 import { InvoiceTopbar } from "~/modules/InvoiceTopbar/InvoiceTopbar";
 import { getUser } from "~/server/auth";
-import { findInvoice, FindInvoiceKey, updateInvoice } from "~/server/invoices";
+import {
+  FindInvoiceKey,
+  findInvoice,
+  parseAndUpdateInvoice,
+} from "~/server/invoices";
 import type { ResourceResult } from "~/server/types";
 import { paths } from "~/utils/paths";
 
@@ -33,7 +37,7 @@ const EditInvoicePage: Component = () => {
   const [edit, submit] = createServerAction$(
     async (form: FormData, { request }) => {
       const user = await getUser(request);
-      const invoice = await updateInvoice(form, user.id);
+      const invoice = await parseAndUpdateInvoice(form, user.id);
       return redirect(invoice ? paths.invoice(invoice.id) : paths.notFound);
     }
   );
