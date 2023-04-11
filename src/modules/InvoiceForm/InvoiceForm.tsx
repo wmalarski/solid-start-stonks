@@ -1,5 +1,4 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import type { Invoice } from "@prisma/client";
 import { useI18n } from "@solid-primitives/i18n";
 import clsx from "clsx";
 import {
@@ -11,32 +10,34 @@ import {
 } from "solid-js";
 import { FormProps } from "solid-start";
 import { DatePicker } from "~/components/DatePicker/DatePicker";
+import { Invoice } from "~/db/invoices";
 
 export type InvoiceFormData = Omit<Invoice, "id">;
 
 const formDefault: InvoiceFormData = {
-  buyerAddress1: "",
-  buyerAddress2: "",
-  buyerName: "",
-  buyerNip: "",
+  buyer_address_1: "",
+  buyer_address_2: "",
+  buyer_name: "",
+  buyer_nip: "",
   city: "",
-  createdAt: new Date(),
+  created_at: new Date(),
   date: new Date(),
-  invoiceTitle: "",
+  invoice_title: "",
   notes: "",
-  paymentAccount: "",
-  paymentBank: "",
-  paymentMethod: "transfer",
-  sellerAddress1: "",
-  sellerAddress2: "",
-  sellerName: "",
-  sellerNip: "",
-  serviceCount: 0,
-  servicePayed: 0,
-  servicePrice: 0,
-  serviceTitle: "",
-  serviceUnit: "",
-  userId: "",
+  payment_account: "",
+  payment_bank: "",
+  payment_method: "transfer",
+  seller_address1: "",
+  seller_address2: "",
+  seller_name: "",
+  seller_nip: "",
+  service_count: 0,
+  service_payed: 0,
+  service_price: 0,
+  service_title: "",
+  service_unit: "",
+  updated_at: new Date(),
+  user_id: "",
 };
 
 type Props = {
@@ -76,13 +77,13 @@ export const InvoiceForm: Component<Props> = (props) => {
           id="paymentMethod"
           name="paymentMethod"
           type="hidden"
-          value={initial().paymentMethod}
+          value={initial().payment_method}
         />
         <input
           id="servicePayed"
           name="servicePayed"
           type="hidden"
-          value={initial().servicePayed}
+          value={initial().service_payed}
         />
         <h3 class="col-span-2 text-xl">{t("invoiceForm.general")}</h3>
         <label for="city" class="label label-text font-semibold">
@@ -121,7 +122,7 @@ export const InvoiceForm: Component<Props> = (props) => {
             name="invoiceTitle"
             placeholder={t("invoiceForm.invoiceTitle")}
             type="text"
-            value={initial().invoiceTitle}
+            value={initial().invoice_title}
           />
         </div>
         <div class="divider col-span-2 m-0" />
@@ -137,7 +138,7 @@ export const InvoiceForm: Component<Props> = (props) => {
             name="sellerAddress1"
             placeholder={t("invoiceForm.sellerAddress1")}
             type="text"
-            value={initial().sellerAddress1}
+            value={initial().seller_address1}
           />
         </div>
         <label for="sellerAddress2" class="label label-text font-semibold">
@@ -151,7 +152,7 @@ export const InvoiceForm: Component<Props> = (props) => {
             name="sellerAddress2"
             placeholder={t("invoiceForm.sellerAddress2")}
             type="text"
-            value={initial().sellerAddress2}
+            value={initial().seller_address2}
           />
         </div>
         <label for="sellerName" class="label label-text font-semibold">
@@ -165,7 +166,7 @@ export const InvoiceForm: Component<Props> = (props) => {
             name="sellerName"
             placeholder={t("invoiceForm.sellerName")}
             type="text"
-            value={initial().sellerName}
+            value={initial().seller_name}
           />
         </div>
         <label for="sellerNip" class="label label-text font-semibold">
@@ -179,7 +180,7 @@ export const InvoiceForm: Component<Props> = (props) => {
             name="sellerNip"
             placeholder={t("invoiceForm.sellerNip")}
             type="text"
-            value={initial().sellerNip}
+            value={initial().seller_nip}
           />
         </div>
         <div class="divider col-span-2 m-0" />
@@ -195,7 +196,7 @@ export const InvoiceForm: Component<Props> = (props) => {
             name="buyerAddress1"
             placeholder={t("invoiceForm.buyerAddress1")}
             type="text"
-            value={initial().buyerAddress1}
+            value={initial().buyer_address_1}
           />
         </div>
         <label for="buyerAddress2" class="label label-text font-semibold">
@@ -209,7 +210,7 @@ export const InvoiceForm: Component<Props> = (props) => {
             name="buyerAddress2"
             placeholder={t("invoiceForm.buyerAddress2")}
             type="text"
-            value={initial().buyerAddress2}
+            value={initial().buyer_address_2}
           />
         </div>
         <label for="buyerName" class="label label-text font-semibold">
@@ -223,7 +224,7 @@ export const InvoiceForm: Component<Props> = (props) => {
             name="buyerName"
             placeholder={t("invoiceForm.buyerName")}
             type="text"
-            value={initial().buyerName}
+            value={initial().buyer_name}
           />
         </div>
         <label for="buyerNip" class="label label-text font-semibold">
@@ -237,7 +238,7 @@ export const InvoiceForm: Component<Props> = (props) => {
             name="buyerNip"
             placeholder={t("invoiceForm.buyerNip")}
             type="text"
-            value={initial().buyerNip}
+            value={initial().buyer_nip}
           />
         </div>
         <div class="divider col-span-2 m-0" />
@@ -253,7 +254,7 @@ export const InvoiceForm: Component<Props> = (props) => {
             name="paymentAccount"
             placeholder={t("invoiceForm.paymentAccount")}
             type="text"
-            value={initial().paymentAccount}
+            value={initial().payment_account}
           />
         </div>
         <label for="paymentBank" class="label label-text font-semibold">
@@ -267,7 +268,7 @@ export const InvoiceForm: Component<Props> = (props) => {
             name="paymentBank"
             placeholder={t("invoiceForm.paymentBank")}
             type="text"
-            value={initial().paymentBank}
+            value={initial().payment_bank}
           />
         </div>
         <div class="divider col-span-2 m-0" />
@@ -285,7 +286,7 @@ export const InvoiceForm: Component<Props> = (props) => {
             type="number"
             min={0}
             step={1}
-            value={initial().serviceCount}
+            value={initial().service_count}
           />
         </div>
         <label for="servicePrice" class="label label-text font-semibold">
@@ -301,7 +302,7 @@ export const InvoiceForm: Component<Props> = (props) => {
             type="number"
             min={0}
             step={1}
-            value={initial().servicePrice}
+            value={initial().service_price}
           />
         </div>
         <label for="serviceTitle" class="label label-text font-semibold">
@@ -315,7 +316,7 @@ export const InvoiceForm: Component<Props> = (props) => {
             name="serviceTitle"
             placeholder={t("invoiceForm.serviceTitle")}
             type="text"
-            value={initial().serviceTitle}
+            value={initial().service_title}
           />
         </div>
         <label for="serviceUnit" class="label label-text font-semibold">
@@ -329,7 +330,7 @@ export const InvoiceForm: Component<Props> = (props) => {
             name="serviceUnit"
             placeholder={t("invoiceForm.serviceUnit")}
             type="text"
-            value={initial().serviceUnit}
+            value={initial().service_unit}
           />
         </div>
         <div class="divider col-span-2 m-0" />

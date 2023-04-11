@@ -1,7 +1,7 @@
-import type { Invoice } from "@prisma/client";
 import { useI18n } from "@solid-primitives/i18n";
 import { Link } from "@solidjs/router";
 import { Component, For } from "solid-js";
+import { Invoice } from "~/db/invoices";
 import { paths } from "~/utils/paths";
 import { DeleteInvoice } from "../DeleteInvoice/DeleteInvoice";
 
@@ -18,7 +18,7 @@ export const InvoiceTopbar: Component<Props> = (props) => {
       { path: paths.invoices(), text: t("topbar.home") },
       {
         path: paths.invoice(props.invoice.id),
-        text: props.invoice.invoiceTitle,
+        text: props.invoice.invoice_title,
       },
       ...(props.breadcrumbs || []),
     ];

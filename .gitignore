@@ -5,7 +5,6 @@ dist
 .vercel
 .netlify
 netlify
-prisma/dev.db
 
 # dependencies
 /node_modules

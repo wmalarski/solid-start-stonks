@@ -1,7 +1,7 @@
-import type { Invoice } from "@prisma/client";
 import { useI18n } from "@solid-primitives/i18n";
 import { Link } from "@solidjs/router";
 import { Component } from "solid-js";
+import { Invoice } from "~/db/invoices";
 import { DeleteInvoice } from "~/modules/DeleteInvoice/DeleteInvoice";
 import { paths } from "~/utils/paths";
 import { pricePLN } from "~/utils/pricePLN";
@@ -25,7 +25,7 @@ export const InvoiceItem: Component<Props> = (props) => {
   };
 
   const sum = () => {
-    return props.invoice.serviceCount * props.invoice.servicePrice;
+    return props.invoice.service_count * props.invoice.service_price;
   };
 
   return (
@@ -33,7 +33,7 @@ export const InvoiceItem: Component<Props> = (props) => {
       <div class="card-body bg-base-100">
         <div class="flex justify-between">
           <h2 class="card-title text-2xl font-extrabold">
-            {t("invoice.title", { title: props.invoice.invoiceTitle })}
+            {t("invoice.title", { title: props.invoice.invoice_title })}
           </h2>
           <span class="col-span-2 text-right text-sm">
             {t("invoice.header", {
@@ -46,21 +46,21 @@ export const InvoiceItem: Component<Props> = (props) => {
           <div>
             <p class="text-xl font-extrabold">{t("invoice.seller")}</p>
             <div class="divider m-0" />
-            <p class="font-bold">{props.invoice.sellerName}</p>
-            <p class="text-sm">{props.invoice.sellerAddress1}</p>
-            <p class="text-sm">{props.invoice.sellerAddress2}</p>
+            <p class="font-bold">{props.invoice.seller_name}</p>
+            <p class="text-sm">{props.invoice.seller_address1}</p>
+            <p class="text-sm">{props.invoice.seller_address2}</p>
             <p class="mt-2 text-sm">
-              {t("invoice.nip", { nip: props.invoice.sellerNip })}
+              {t("invoice.nip", { nip: props.invoice.seller_nip })}
             </p>
           </div>
           <div>
             <p class="text-xl font-extrabold">{t("invoice.buyer")}</p>
             <div class="divider m-0" />
-            <p class="font-bold">{props.invoice.buyerName}</p>
-            <p class="text-sm">{props.invoice.buyerAddress1}</p>
-            <p class="text-sm">{props.invoice.buyerAddress2}</p>
+            <p class="font-bold">{props.invoice.buyer_name}</p>
+            <p class="text-sm">{props.invoice.buyer_address_1}</p>
+            <p class="text-sm">{props.invoice.buyer_address_2}</p>
             <p class="mt-2 text-sm">
-              {t("invoice.nip", { nip: props.invoice.buyerNip })}
+              {t("invoice.nip", { nip: props.invoice.buyer_nip })}
             </p>
           </div>
           <div class="divider col-span-2 m-0" />
@@ -76,13 +76,13 @@ export const InvoiceItem: Component<Props> = (props) => {
               <tr>
                 <td>{t("invoice.payed")}</td>
                 <td class="text-right">
-                  {currencyFormatter(props.invoice.servicePayed)}
+                  {currencyFormatter(props.invoice.service_payed)}
                 </td>
               </tr>
               <tr>
                 <td>{t("invoice.leftToPay")}</td>
                 <td class="text-right">
-                  {currencyFormatter(sum() - props.invoice.servicePayed)}
+                  {currencyFormatter(sum() - props.invoice.service_payed)}
                 </td>
               </tr>
             </tbody>

@@ -1,6 +1,6 @@
-import type { Invoice } from "@prisma/client";
 import { useI18n } from "@solid-primitives/i18n";
 import { Component } from "solid-js";
+import { Invoice } from "~/db/invoices";
 import { pricePLN } from "~/utils/pricePLN";
 
 type Props = {
@@ -28,7 +28,7 @@ export const InvoiceDetails: Component<Props> = (props) => {
   };
 
   const sum = () => {
-    return props.invoice.serviceCount * props.invoice.servicePrice;
+    return props.invoice.service_count * props.invoice.service_price;
   };
 
   const dueDate = () => {
@@ -48,26 +48,26 @@ export const InvoiceDetails: Component<Props> = (props) => {
       <div>
         <p class="text-xl font-extrabold">{t("invoice.seller")}</p>
         <div class="divider m-0" />
-        <p class="font-bold">{props.invoice.sellerName}</p>
-        <p class="text-sm">{props.invoice.sellerAddress1}</p>
-        <p class="text-sm">{props.invoice.sellerAddress2}</p>
+        <p class="font-bold">{props.invoice.seller_name}</p>
+        <p class="text-sm">{props.invoice.seller_address1}</p>
+        <p class="text-sm">{props.invoice.seller_address2}</p>
         <p class="mt-2 text-sm">
-          {t("invoice.nip", { nip: props.invoice.sellerNip })}
+          {t("invoice.nip", { nip: props.invoice.seller_nip })}
         </p>
       </div>
       <div>
         <p class="text-xl font-extrabold">{t("invoice.buyer")}</p>
         <div class="divider m-0" />
-        <p class="font-bold">{props.invoice.buyerName}</p>
-        <p class="text-sm">{props.invoice.buyerAddress1}</p>
-        <p class="text-sm">{props.invoice.buyerAddress2}</p>
+        <p class="font-bold">{props.invoice.buyer_name}</p>
+        <p class="text-sm">{props.invoice.buyer_address_1}</p>
+        <p class="text-sm">{props.invoice.buyer_address_2}</p>
         <p class="mt-2 text-sm">
-          {t("invoice.nip", { nip: props.invoice.buyerNip })}
+          {t("invoice.nip", { nip: props.invoice.buyer_nip })}
         </p>
       </div>
       <div class="col-span-2">
         <p class="m-1 text-center text-2xl font-extrabold">
-          {t("invoice.title", { title: props.invoice.invoiceTitle })}
+          {t("invoice.title", { title: props.invoice.invoice_title })}
         </p>
         <div class="divider m-0" />
       </div>
@@ -78,14 +78,14 @@ export const InvoiceDetails: Component<Props> = (props) => {
             <input
               type="radio"
               class="radio radio-xs"
-              checked={props.invoice.paymentMethod === "cash"}
+              checked={props.invoice.payment_method === "cash"}
               onChange={() => void 0}
             />
             <span>{t("invoice.cash")}</span>
             <input
               type="radio"
               class="radio radio-xs"
-              checked={props.invoice.paymentMethod === "transfer"}
+              checked={props.invoice.payment_method === "transfer"}
               onChange={() => void 0}
             />
             <span>{t("invoice.transfer")}</span>
@@ -99,11 +99,11 @@ export const InvoiceDetails: Component<Props> = (props) => {
             </tr>
             <tr>
               <td class="text-right">{t("invoice.bankName")}</td>
-              <td>{props.invoice.paymentBank}</td>
+              <td>{props.invoice.payment_bank}</td>
             </tr>
             <tr>
               <td class="text-right">{t("invoice.account")}</td>
-              <td>{props.invoice.paymentAccount}</td>
+              <td>{props.invoice.payment_account}</td>
             </tr>
           </tbody>
         </table>
@@ -123,11 +123,11 @@ export const InvoiceDetails: Component<Props> = (props) => {
           <tr class="border text-xs">
             <td>1</td>
             <td class="whitespace-break-spaces">
-              {props.invoice.serviceTitle}
+              {props.invoice.service_title}
             </td>
-            <td>{props.invoice.serviceUnit}</td>
-            <td>{props.invoice.serviceCount}</td>
-            <td>{props.invoice.servicePrice}</td>
+            <td>{props.invoice.service_unit}</td>
+            <td>{props.invoice.service_count}</td>
+            <td>{props.invoice.service_price}</td>
             <td>{numberFormatter(sum())}</td>
           </tr>
         </tbody>
@@ -144,13 +144,13 @@ export const InvoiceDetails: Component<Props> = (props) => {
           <tr>
             <td>{t("invoice.payed")}</td>
             <td class="text-right">
-              {currencyFormatter(props.invoice.servicePayed)}
+              {currencyFormatter(props.invoice.service_payed)}
             </td>
           </tr>
           <tr>
             <td>{t("invoice.leftToPay")}</td>
             <td class="text-right">
-              {currencyFormatter(sum() - props.invoice.servicePayed)}
+              {currencyFormatter(sum() - props.invoice.service_payed)}
             </td>
           </tr>
         </tbody>

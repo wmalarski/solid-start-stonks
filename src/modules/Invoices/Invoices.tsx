@@ -1,5 +1,5 @@
-import type { Invoice } from "@prisma/client";
 import { Component, For } from "solid-js";
+import { Invoice } from "~/db/invoices";
 import { InvoiceItem } from "./InvoiceItem/InvoiceItem";
 
 type Props = {
