@@ -14,7 +14,7 @@ import { getUser } from "~/server/auth";
 import {
   FindInvoiceKey,
   findInvoice,
-  parseAndInsertInvoice,
+  handleInsertInvoiceAction,
 } from "~/server/invoices";
 import { ResourceResult } from "~/server/types";
 import { paths } from "~/utils/paths";
@@ -37,7 +37,7 @@ const CopyInvoicePage: Component = () => {
   const [copy, submit] = createServerAction$(
     async (form: FormData, { request }) => {
       const user = await getUser(request);
-      const invoice = await parseAndInsertInvoice(form, user.id);
+      const invoice = await handleInsertInvoiceAction(form, user.id);
       return redirect(paths.invoice(invoice.id));
     }
   );

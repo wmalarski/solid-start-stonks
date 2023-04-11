@@ -4,7 +4,7 @@ import { createServerAction$, redirect } from "solid-start/server";
 import { InvoiceForm } from "~/modules/InvoiceForm/InvoiceForm";
 import { InvoicesTopbar } from "~/modules/InvoicesTopbar/InvoicesTopbar";
 import { getUser } from "~/server/auth";
-import { parseAndInsertInvoice } from "~/server/invoices";
+import { handleInsertInvoiceAction } from "~/server/invoices";
 import { paths } from "~/utils/paths";
 
 const AddInvoicePage: Component = () => {
@@ -13,7 +13,7 @@ const AddInvoicePage: Component = () => {
   const [add, submit] = createServerAction$(
     async (form: FormData, { request }) => {
       const user = await getUser(request);
-      const invoice = await parseAndInsertInvoice(form, user.id);
+      const invoice = await handleInsertInvoiceAction(form, user.id);
       return redirect(paths.invoice(invoice.id));
     }
   );

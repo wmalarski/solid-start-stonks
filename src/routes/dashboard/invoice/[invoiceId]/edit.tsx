@@ -14,7 +14,7 @@ import { getUser } from "~/server/auth";
 import {
   FindInvoiceKey,
   findInvoice,
-  parseAndUpdateInvoice,
+  handleUpdateInvoiceAction,
 } from "~/server/invoices";
 import type { ResourceResult } from "~/server/types";
 import { paths } from "~/utils/paths";
@@ -37,7 +37,7 @@ const EditInvoicePage: Component = () => {
   const [edit, submit] = createServerAction$(
     async (form: FormData, { request }) => {
       const user = await getUser(request);
-      const invoice = await parseAndUpdateInvoice(form, user.id);
+      const invoice = await handleUpdateInvoiceAction(form, user.id);
       return redirect(invoice ? paths.invoice(invoice.id) : paths.notFound);
     }
   );

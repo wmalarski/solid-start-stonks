@@ -1,10 +1,13 @@
-import { ServerError } from "solid-start/server";
 import { z } from "zod";
 import {
+  Invoice,
+  deleteInvoice,
   insertInvoice,
   selectInvoiceById,
   selectInvoicesByUserId,
+  updateInvoice,
 } from "~/db/invoices";
+import { zodFormParse } from "./utils";
 
 type FindInvoiceArgs = {
   id: string;
@@ -57,51 +60,36 @@ export const findInvoices = async ([, { offset, limit, userId }]: ReturnType<
 };
 
 export const invoiceSchema = z.object({
-  buyerAddress1: z.string(),
-  buyerAddress2: z.string(),
-  buyerName: z.string(),
-  buyerNip: z.string(),
+  buyer_address1: z.string(),
+  buyer_address2: z.string(),
+  buyer_name: z.string(),
+  buyer_nip: z.string(),
   city: z.string(),
   date: z.date(),
   id: z.string().optional(),
-  invoiceTitle: z.string(),
+  invoice_title: z.string(),
   notes: z.string(),
-  paymentAccount: z.string(),
-  paymentBank: z.string(),
-  paymentMethod: z.union([z.literal("cash"), z.literal("transfer")]),
-  sellerAddress1: z.string(),
-  sellerAddress2: z.string(),
-  sellerName: z.string(),
-  sellerNip: z.string(),
-  serviceCount: z.coerce.number().min(0),
-  servicePayed: z.coerce.number().min(0),
-  servicePrice: z.coerce.number().min(0),
-  serviceTitle: z.string(),
-  serviceUnit: z.string(),
+  payment_account: z.string(),
+  payment_bank: z.string(),
+  payment_method: z.union([z.literal("cash"), z.literal("transfer")]),
+  seller_address1: z.string(),
+  seller_address2: z.string(),
+  seller_name: z.string(),
+  seller_nip: z.string(),
+  service_count: z.coerce.number().min(0),
+  service_payed: z.coerce.number().min(0),
+  service_price: z.coerce.number().min(0),
+  service_title: z.string(),
+  service_unit: z.string(),
 });
 
 const insertInvoiceSchema = invoiceSchema.omit({ id: undefined });
 
-const parseInsertInvoiceForm = async (form: FormData) => {
-  const entries = Object.fromEntries(form.entries());
-  const raw = {
-    ...entries,
-    date: entries.date ? new Date(entries.date as string) : undefined,
-  };
-
-  const parsed = await insertInvoiceSchema.safeParseAsync(raw);
-
-  console.log({ parsed, entries, raw });
-
-  if (!parsed.success) {
-    throw new ServerError(JSON.stringify(parsed.error.issues));
-  }
-
-  return parsed.data;
-};
-
-export const parseAndInsertInvoice = async (form: FormData, userId: string) => {
-  const parsed = await parseInsertInvoiceForm(form);
+export const handleInsertInvoiceAction = async (
+  form: FormData,
+  userId: string
+) => {
+  const parsed = await zodFormParse({ form, schema: insertInvoiceSchema });
 
   const invoice = await insertInvoice({
     ...parsed,
@@ -116,61 +104,22 @@ const updateInvoiceSchema = z.intersection(
   z.object({ id: z.string() })
 );
 
-const parseUpdateInvoiceForm = async (form: FormData) => {
-  const entries = Object.fromEntries(form.entries());
-  const raw = {
-    ...entries,
-    date: entries.date ? new Date(entries.date as string) : undefined,
-  };
+export const handleUpdateInvoiceAction = async (
+  form: FormData,
+  userId: string
+) => {
+  const parsed = await zodFormParse({ form, schema: updateInvoiceSchema });
 
-  const parsed = await updateInvoiceSchema.safeParseAsync(raw);
-
-  if (!parsed.success) {
-    throw new ServerError(JSON.stringify(parsed.error.issues));
-  }
-
-  return parsed.data;
-};
-
-export const parseAndUpdateInvoice = async (form: FormData, userId: string) => {
-  const parsed = await parseUpdateInvoiceForm(form);
-
-  const invoice = await prisma.invoice.findFirstOrThrow({
-    where: { id: parsed.id },
-  });
-
-  if (invoice.userId !== userId) {
-    throw new ServerError("UNAUTHORIZED");
-  }
-
-  const updated = await prisma.invoice.update({
-    data: parsed,
-    where: { id: parsed.id },
-  });
-
-  return updated;
+  return updateInvoice({ change: parsed, id: parsed.id, userId });
 };
 
 const deleteInvoiceSchema = z.object({ id: z.string() });
 
-const parseDeleteInvoiceForm = async (form: FormData) => {
-  const entries = Object.fromEntries(form.entries());
+export const handleDeleteInvoiceAction = async (
+  form: FormData,
+  userId: string
+) => {
+  const data = await zodFormParse({ form, schema: deleteInvoiceSchema });
 
-  const parsed = await deleteInvoiceSchema.safeParseAsync(entries);
-
-  if (!parsed.success) {
-    throw new ServerError(JSON.stringify(parsed.error.issues));
-  }
-
-  return parsed.data;
-};
-
-export const deleteInvoice = async (form: FormData, userId: string) => {
-  const parsed = await parseDeleteInvoiceForm(form);
-
-  const invoice = await prisma.invoice.deleteMany({
-    where: { id: parsed.id, userId },
-  });
-
-  return invoice;
+  return deleteInvoice({ id: data.id, userId });
 };

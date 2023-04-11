@@ -3,6 +3,8 @@ import { and, eq } from "drizzle-orm/expressions";
 import { db } from "./db";
 import { invoices } from "./schema";
 
+export type Invoice = InferModel<typeof invoices>;
+
 export type SelectInvoiceByIdArgs = {
   id: string;
   userId: string;
@@ -24,26 +26,29 @@ export type SelectInvoicesByUserIdArgs = {
   offset: number;
 };
 
-export const selectInvoicesByUserId = async (
-  args: SelectInvoicesByUserIdArgs
+export const selectInvoicesByUserId = (args: SelectInvoicesByUserIdArgs) => {
+  return db
+    .select()
+    .from(invoices)
+    .where(eq(invoices.user_id, args.userId))
+    .offset(args.offset)
+    .limit(args.limit);
+};
+
+export type CountInvoicesByUserIdArgs = {
+  userId: string;
+};
+
+export const countInvoicesByUserId = async (
+  args: CountInvoicesByUserIdArgs
 ) => {
-  const [collection, counts] = await Promise.all([
-    db
-      .select()
-      .from(invoices)
-      .where(eq(invoices.user_id, args.userId))
-      .offset(args.offset)
-      .limit(args.limit),
-    db
-      .select({ count: sql<number>`count(${invoices.user_id})` })
-      .from(invoices)
-      .where(eq(invoices.user_id, args.userId))
-      .groupBy(invoices.user_id),
-  ]);
+  const counts = await db
+    .select({ count: sql<number>`count(${invoices.user_id})` })
+    .from(invoices)
+    .where(eq(invoices.user_id, args.userId))
+    .groupBy(invoices.user_id);
 
-  const total = counts.at(0)?.count || 0;
-
-  return { collection, total };
+  return counts.at(0)?.count || 0;
 };
 
 export type InsertInvoiceArgs = InferModel<typeof invoices, "insert">;
@@ -55,7 +60,7 @@ export const insertInvoice = (args: InsertInvoiceArgs) => {
 export type UpdateInvoiceArgs = {
   id: string;
   userId: string;
-  change: Omit<Partial<InferModel<typeof invoices>>, "id" | "user_id">;
+  change: Omit<Partial<Invoice>, "id" | "user_id">;
 };
 
 export const updateInvoice = (args: UpdateInvoiceArgs) => {
