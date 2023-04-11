@@ -1,10 +1,11 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { Component } from "solid-js";
 import { createServerAction$, redirect } from "solid-start/server";
+import { insertInvoice, invoiceSchema } from "~/db/invoices";
 import { InvoiceForm } from "~/modules/InvoiceForm/InvoiceForm";
 import { InvoicesTopbar } from "~/modules/InvoicesTopbar/InvoicesTopbar";
 import { getUser } from "~/server/auth";
-import { handleInsertInvoiceAction } from "~/server/invoices";
+import { zodFormParse } from "~/server/utils";
 import { paths } from "~/utils/paths";
 
 const AddInvoicePage: Component = () => {
@@ -13,8 +14,11 @@ const AddInvoicePage: Component = () => {
   const [add, submit] = createServerAction$(
     async (form: FormData, { request }) => {
       const user = await getUser(request);
-      const invoice = await handleInsertInvoiceAction(form, user.id);
-      return redirect(paths.invoice(invoice.id));
+
+      const parsed = await zodFormParse({ form, schema: invoiceSchema });
+      const invoice = await insertInvoice({ ...parsed, user_id: user.id });
+
+      return redirect(paths.invoice(invoice.insertId));
     }
   );
 

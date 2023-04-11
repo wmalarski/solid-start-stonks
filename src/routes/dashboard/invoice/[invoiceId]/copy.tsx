@@ -1,4 +1,3 @@
-import type { Invoice } from "@prisma/client";
 import { useI18n } from "@solid-primitives/i18n";
 import { Component } from "solid-js";
 import { Navigate, RouteDataArgs, useRouteData } from "solid-start";
@@ -8,15 +7,13 @@ import {
   redirect,
 } from "solid-start/server";
 import { LoadingSwitch } from "~/components/LoadingSwitch/LoadingSwitch";
+import { insertInvoice, invoiceSchema, type Invoice } from "~/db/invoices";
 import { InvoiceForm } from "~/modules/InvoiceForm/InvoiceForm";
 import { InvoiceTopbar } from "~/modules/InvoiceTopbar/InvoiceTopbar";
 import { getUser } from "~/server/auth";
-import {
-  FindInvoiceKey,
-  findInvoice,
-  handleInsertInvoiceAction,
-} from "~/server/invoices";
+import { FindInvoiceKey, findInvoice } from "~/server/invoices";
 import { ResourceResult } from "~/server/types";
+import { zodFormParse } from "~/server/utils";
 import { paths } from "~/utils/paths";
 
 export const routeData = ({ params }: RouteDataArgs) => {
@@ -37,8 +34,11 @@ const CopyInvoicePage: Component = () => {
   const [copy, submit] = createServerAction$(
     async (form: FormData, { request }) => {
       const user = await getUser(request);
-      const invoice = await handleInsertInvoiceAction(form, user.id);
-      return redirect(paths.invoice(invoice.id));
+
+      const parsed = await zodFormParse({ form, schema: invoiceSchema });
+      const invoice = await insertInvoice({ ...parsed, user_id: user.id });
+
+      return redirect(paths.invoice(invoice.insertId));
     }
   );
 

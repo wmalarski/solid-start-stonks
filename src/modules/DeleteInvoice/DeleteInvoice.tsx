@@ -1,10 +1,11 @@
-import type { Invoice } from "@prisma/client";
 import { useI18n } from "@solid-primitives/i18n";
 import clsx from "clsx";
 import { Component } from "solid-js";
 import { createServerAction$, redirect } from "solid-start/server";
+import { z } from "zod";
+import { deleteInvoice, type Invoice } from "~/db/invoices";
 import { getUser } from "~/server/auth";
-import { handleDeleteInvoiceAction } from "~/server/invoices";
+import { zodFormParse } from "~/server/utils";
 import { paths } from "~/utils/paths";
 
 type Props = {
@@ -17,7 +18,11 @@ export const DeleteInvoice: Component<Props> = (props) => {
   const [remove, submit] = createServerAction$(
     async (form: FormData, { request }) => {
       const user = await getUser(request);
-      await handleDeleteInvoiceAction(form, user.id);
+
+      const schema = z.object({ id: z.string() });
+      const data = await zodFormParse({ form, schema });
+      await deleteInvoice({ id: data.id, userId: user.id });
+
       return redirect(paths.invoices());
     }
   );
