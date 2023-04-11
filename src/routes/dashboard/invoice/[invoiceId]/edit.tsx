@@ -1,28 +1,20 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { Component } from "solid-js";
 import { Navigate, RouteDataArgs, useRouteData } from "solid-start";
-import {
-  createServerAction$,
-  createServerData$,
-  redirect,
-} from "solid-start/server";
+import { createServerAction$, redirect } from "solid-start/server";
 import { z } from "zod";
 import { LoadingSwitch } from "~/components/LoadingSwitch/LoadingSwitch";
-import { invoiceSchema, selectInvoiceById, updateInvoice } from "~/db/invoices";
+import { invoiceSchema, updateInvoice } from "~/db/invoices";
 import { InvoiceForm } from "~/modules/InvoiceForm/InvoiceForm";
 import { InvoiceTopbar } from "~/modules/InvoiceTopbar/InvoiceTopbar";
 import { getUser } from "~/server/auth";
-import { selectInvoiceKey } from "~/server/invoices";
+import { createInvoiceServerData, selectInvoiceKey } from "~/server/invoices";
 import { zodFormParse } from "~/server/utils";
 import { paths } from "~/utils/paths";
 
 export const routeData = ({ params }: RouteDataArgs) => {
-  return createServerData$(
-    async ([, { id }], { request }) => {
-      const user = await getUser(request);
-      return selectInvoiceById({ id, userId: user.id });
-    },
-    { key: () => selectInvoiceKey({ id: params.invoiceId }) }
+  return createInvoiceServerData(() =>
+    selectInvoiceKey({ id: params.invoiceId })
   );
 };
 

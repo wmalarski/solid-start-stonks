@@ -1,6 +1,6 @@
 import { createServerData$ } from "solid-start/server";
 import {
-  Invoice,
+  countInvoicesByUserId,
   selectInvoiceById,
   selectInvoicesByUserId,
 } from "~/db/invoices";
@@ -20,37 +20,36 @@ export const createInvoiceServerData = (
   return createServerData$(
     async ([, { id }], { request }) => {
       const user = await getUser(request);
+
       return selectInvoiceById({ id, userId: user.id });
     },
     { key }
   );
 };
 
-export type FindInvoicesArgs = {
+type SelectInvoicesKeyArgs = {
   offset: number;
   limit: number;
-  userId: string;
 };
 
-export const findInvoicesKey = (args: FindInvoicesArgs) => {
-  return ["findInvoices", args] as const;
+export const selectInvoicesKey = (args: SelectInvoicesKeyArgs) => {
+  return ["selectInvoices", args] as const;
 };
 
-export type FindInvoicesResult = {
-  invoices: Invoice[];
-  size: number;
-};
+export const createInvoicesServerData = (
+  key: () => ReturnType<typeof selectInvoicesKey>
+) => {
+  return createServerData$(
+    async ([, { limit, offset }], { request }) => {
+      const user = await getUser(request);
 
-export const findInvoices = async ([, { offset, limit, userId }]: ReturnType<
-  typeof findInvoicesKey
->) => {
-  const { collection, total } = await selectInvoicesByUserId({
-    limit,
-    offset,
-    userId,
-  });
-  return {
-    data: { collection, total },
-    kind: "success",
-  };
+      const [collection, total] = await Promise.all([
+        selectInvoicesByUserId({ limit, offset, userId: user.id }),
+        countInvoicesByUserId({ userId: user.id }),
+      ]);
+
+      return { collection, total };
+    },
+    { key }
+  );
 };

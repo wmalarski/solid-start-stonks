@@ -2,34 +2,22 @@ import { useI18n } from "@solid-primitives/i18n";
 import { useNavigate } from "@solidjs/router";
 import { Component } from "solid-js";
 import { Navigate, RouteDataArgs, useRouteData } from "solid-start";
-import { createServerData$ } from "solid-start/server";
 import { LoadingSwitch } from "~/components/LoadingSwitch/LoadingSwitch";
 import { Pagination } from "~/components/Pagination/Pagination";
 import { Invoices } from "~/modules/Invoices/Invoices";
 import { InvoicesTopbar } from "~/modules/InvoicesTopbar/InvoicesTopbar";
-import { getUser } from "~/server/auth";
-import {
-  findInvoices,
-  FindInvoicesKey,
-  FindInvoicesResult,
-} from "~/server/invoices";
-import type { ResourceResult } from "~/server/types";
+import { createInvoicesServerData, selectInvoicesKey } from "~/server/invoices";
 import { paths } from "~/utils/paths";
 
 const limit = 10;
 
 export const routeData = (args: RouteDataArgs) => {
   const page = () => +args.location.query.page || 0;
-  const invoices = createServerData$<
-    ResourceResult<FindInvoicesResult>,
-    FindInvoicesKey
-  >(
-    async (source, { request }) => {
-      const user = await getUser(request);
-      return findInvoices(source, user.id);
-    },
-    { key: () => ["findInvoices", { limit, skip: page() * limit }] }
+
+  const invoices = createInvoicesServerData(() =>
+    selectInvoicesKey({ limit, offset: page() * limit })
   );
+
   return { invoices, page };
 };
 
