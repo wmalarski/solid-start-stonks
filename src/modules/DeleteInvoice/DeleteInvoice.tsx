@@ -1,12 +1,8 @@
 import { useI18n } from "@solid-primitives/i18n";
 import clsx from "clsx";
 import { Component } from "solid-js";
-import { createServerAction$, redirect } from "solid-start/server";
-import { z } from "zod";
-import { deleteInvoice, type Invoice } from "~/db/invoices";
-import { getUser } from "~/server/auth";
-import { zodFormParse } from "~/server/utils";
-import { paths } from "~/utils/paths";
+import { type Invoice } from "~/db/invoices";
+import { createDeleteInvoiceServerAction } from "~/server/invoices";
 
 type Props = {
   invoice: Invoice;
@@ -15,17 +11,7 @@ type Props = {
 export const DeleteInvoice: Component<Props> = (props) => {
   const [t] = useI18n();
 
-  const [remove, submit] = createServerAction$(
-    async (form: FormData, { request }) => {
-      const user = await getUser(request);
-
-      const schema = z.object({ id: z.string() });
-      const data = await zodFormParse({ form, schema });
-      await deleteInvoice({ id: data.id, userId: user.id });
-
-      return redirect(paths.invoices());
-    }
-  );
+  const [remove, submit] = createDeleteInvoiceServerAction();
 
   return (
     <submit.Form>

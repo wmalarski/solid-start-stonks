@@ -1,7 +1,6 @@
 import { createId } from "@paralleldrive/cuid2";
 import { InferModel, sql } from "drizzle-orm";
 import { and, eq } from "drizzle-orm/expressions";
-import { z } from "zod";
 import { db } from "./db";
 import { invoices } from "./schema";
 
@@ -90,26 +89,3 @@ export const deleteInvoice = (args: DeleteInvoiceArgs) => {
     .where(and(eq(invoices.id, args.id), eq(invoices.user_id, args.userId)))
     .execute();
 };
-
-export const invoiceSchema = z.object({
-  buyer_address_1: z.string(),
-  buyer_address_2: z.string(),
-  buyer_name: z.string(),
-  buyer_nip: z.string(),
-  city: z.string(),
-  date: z.date(),
-  invoice_title: z.string(),
-  notes: z.string(),
-  payment_account: z.string(),
-  payment_bank: z.string(),
-  payment_method: z.union([z.literal("cash"), z.literal("transfer")]),
-  seller_address1: z.string(),
-  seller_address2: z.string(),
-  seller_name: z.string(),
-  seller_nip: z.string(),
-  service_count: z.coerce.number().min(0),
-  service_payed: z.coerce.number().min(0),
-  service_price: z.coerce.number().min(0),
-  service_title: z.string(),
-  service_unit: z.string(),
-});

@@ -1,15 +1,14 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { Component, ErrorBoundary, Show, Suspense } from "solid-js";
 import { Navigate, RouteDataArgs, useRouteData } from "solid-start";
-import { createServerAction$, redirect } from "solid-start/server";
-import { z } from "zod";
 import { LoadingSpinner } from "~/components/LoadingSpinner/LoadingSpinner";
-import { invoiceSchema, updateInvoice } from "~/db/invoices";
 import { InvoiceForm } from "~/modules/InvoiceForm/InvoiceForm";
 import { InvoiceTopbar } from "~/modules/InvoiceTopbar/InvoiceTopbar";
-import { getUser } from "~/server/auth";
-import { createInvoiceServerData, selectInvoiceKey } from "~/server/invoices";
-import { zodFormParse } from "~/server/utils";
+import {
+  createInvoiceServerData,
+  createUpdateInvoiceServerAction,
+  selectInvoiceKey,
+} from "~/server/invoices";
 import { paths } from "~/utils/paths";
 
 export const routeData = ({ params }: RouteDataArgs) => {
@@ -23,21 +22,7 @@ const EditInvoicePage: Component = () => {
 
   const data = useRouteData<typeof routeData>();
 
-  const [edit, submit] = createServerAction$(async (form: FormData, event) => {
-    const user = await getUser(event.request);
-
-    const idSchema = z.object({ id: z.string() });
-    const schema = z.intersection(invoiceSchema.partial(), idSchema);
-
-    const parsed = await zodFormParse({ form, schema });
-    const invoice = await updateInvoice({
-      change: parsed,
-      id: parsed.id,
-      userId: user.id,
-    });
-
-    return redirect(invoice ? paths.invoice(parsed.id) : paths.notFound);
-  });
+  const [edit, submit] = createUpdateInvoiceServerAction();
 
   return (
     <ErrorBoundary fallback={<Navigate href={paths.notFound} />}>
