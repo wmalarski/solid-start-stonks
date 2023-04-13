@@ -10,8 +10,9 @@
     "code-check": "yarn lint --max-warnings=0 && yarn tsc",
     "=== HOOKS ===": "",
     "db:push": "pnpm drizzle-kit push:mysql",
-    "db:up": "drizzle-kit up:pg",
-    "db:drop": "drizzle-kit drop:pg",
+    "db:generate": "drizzle-kit generate:mysql",
+    "db:up": "drizzle-kit up:mysql",
+    "db:drop": "drizzle-kit drop:mysql",
     "db:migrate": "npx tsx scripts/migrate.ts"
   },
   "type": "module",

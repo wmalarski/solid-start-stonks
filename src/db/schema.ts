@@ -111,9 +111,9 @@ export const invoices = mysqlTable(
     service_title: text("service_title").notNull(),
     service_unit: text("service_unit").notNull(),
     updated_at: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
-    user_id: varchar("user_id", { length: 191 }).notNull(),
+    userId: varchar("userId", { length: 191 }).notNull(),
   },
   (invoice) => ({
-    userIdIndex: uniqueIndex("invoices__user_id__idx").on(invoice.user_id),
+    userIdIndex: uniqueIndex("invoices__user_id__idx").on(invoice.userId),
   })
 );

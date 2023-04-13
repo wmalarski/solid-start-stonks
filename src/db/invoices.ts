@@ -15,7 +15,7 @@ export const selectInvoiceById = async (args: SelectInvoiceByIdArgs) => {
   const collection = await db
     .select()
     .from(invoices)
-    .where(and(eq(invoices.id, args.id), eq(invoices.user_id, args.userId)))
+    .where(and(eq(invoices.id, args.id), eq(invoices.userId, args.userId)))
     .limit(1);
 
   return collection.at(0);
@@ -31,7 +31,7 @@ export const selectInvoicesByUserId = (args: SelectInvoicesByUserIdArgs) => {
   return db
     .select()
     .from(invoices)
-    .where(eq(invoices.user_id, args.userId))
+    .where(eq(invoices.userId, args.userId))
     .offset(args.offset)
     .limit(args.limit);
 };
@@ -44,10 +44,10 @@ export const countInvoicesByUserId = async (
   args: CountInvoicesByUserIdArgs
 ) => {
   const counts = await db
-    .select({ count: sql<number>`count(${invoices.user_id})` })
+    .select({ count: sql<number>`count(${invoices.userId})` })
     .from(invoices)
-    .where(eq(invoices.user_id, args.userId))
-    .groupBy(invoices.user_id);
+    .where(eq(invoices.userId, args.userId))
+    .groupBy(invoices.userId);
 
   return counts.at(0)?.count || 0;
 };
@@ -74,7 +74,7 @@ export const updateInvoice = (args: UpdateInvoiceArgs) => {
   return db
     .update(invoices)
     .set(args.change)
-    .where(and(eq(invoices.id, args.id), eq(invoices.user_id, args.userId)))
+    .where(and(eq(invoices.id, args.id), eq(invoices.userId, args.userId)))
     .execute();
 };
 
@@ -86,6 +86,6 @@ export type DeleteInvoiceArgs = {
 export const deleteInvoice = (args: DeleteInvoiceArgs) => {
   return db
     .delete(invoices)
-    .where(and(eq(invoices.id, args.id), eq(invoices.user_id, args.userId)))
+    .where(and(eq(invoices.id, args.id), eq(invoices.userId, args.userId)))
     .execute();
 };
