@@ -3,6 +3,7 @@ import { Component } from "solid-js";
 import { InvoiceForm } from "~/modules/InvoiceForm/InvoiceForm";
 import { InvoicesTopbar } from "~/modules/InvoicesTopbar/InvoicesTopbar";
 import { createInsertInvoiceServerAction } from "~/server/invoices";
+import { getServerError } from "~/utils/errors";
 
 const AddInvoicePage: Component = () => {
   const [t] = useI18n();
@@ -15,7 +16,7 @@ const AddInvoicePage: Component = () => {
       <h1 class="px-8 text-3xl font-semibold">{t("addInvoice.header")}</h1>
       <div class="p-8 pt-0">
         <InvoiceForm
-          error={add.error as string}
+          error={getServerError(add.error)}
           Form={submit.Form}
           isLoading={add.pending}
         />

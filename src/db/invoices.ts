@@ -67,7 +67,7 @@ export const insertInvoice = (args: InsertInvoiceArgs) => {
 export type UpdateInvoiceArgs = {
   id: string;
   userId: string;
-  change: Omit<Partial<Invoice>, "id" | "user_id">;
+  change: Omit<Partial<Invoice>, "id" | "userId">;
 };
 
 export const updateInvoice = (args: UpdateInvoiceArgs) => {

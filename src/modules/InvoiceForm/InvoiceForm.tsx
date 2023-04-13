@@ -5,10 +5,12 @@ import {
   Component,
   createEffect,
   createSignal,
+  JSX,
   ParentComponent,
   Show,
 } from "solid-js";
 import { FormProps } from "solid-start";
+import type { ZodIssue } from "zod";
 import { DatePicker } from "~/components/DatePicker/DatePicker";
 import { Invoice } from "~/db/invoices";
 
@@ -37,11 +39,59 @@ const formDefault: InvoiceFormData = {
   service_title: "",
   service_unit: "",
   updated_at: new Date(),
-  user_id: "",
+  userId: "",
+};
+
+type FormItemContainerProps = {
+  children: JSX.Element;
+  error?: ZodIssue;
+  id: string;
+  label: string;
+};
+
+const FormItemContainer: Component<FormItemContainerProps> = (props) => {
+  return (
+    <>
+      <label for={props.id} class="label label-text font-semibold">
+        {props.label}
+      </label>
+      <div class="flex w-full flex-col gap-2">
+        {props.children}
+        <Show when={props.error}>
+          {(error) => <div class="text-sm text-red-400">{error().message}</div>}
+        </Show>
+      </div>
+    </>
+  );
+};
+
+type FormInputItemProps = JSX.InputHTMLAttributes<HTMLInputElement> & {
+  error?: ZodIssue;
+  id: string;
+  isLoading: boolean;
+  label: string;
+};
+
+const FormInputItem: Component<FormInputItemProps> = (props) => {
+  return (
+    <FormItemContainer label={props.label} id={props.id} error={props.error}>
+      <input
+        class="input input-bordered input-sm grow"
+        disabled={props.isLoading}
+        id={props.id}
+        min={props.min}
+        name={props.name}
+        placeholder={props.label}
+        step={props.step}
+        type={props.type}
+        value={props.value}
+      />
+    </FormItemContainer>
+  );
 };
 
 type Props = {
-  error: string;
+  error?: Record<string, ZodIssue>;
   Form: ParentComponent<FormProps>;
   id?: string;
   initial?: InvoiceFormData;
@@ -75,283 +125,196 @@ export const InvoiceForm: Component<Props> = (props) => {
         />
         <input
           id="paymentMethod"
-          name="paymentMethod"
+          name="payment_method"
           type="hidden"
           value={initial().payment_method}
         />
         <input
           id="servicePayed"
-          name="servicePayed"
+          name="service_payed"
           type="hidden"
           value={initial().service_payed}
         />
         <h3 class="col-span-2 text-xl">{t("invoiceForm.general")}</h3>
-        <label for="city" class="label label-text font-semibold">
-          {t("invoiceForm.city")}
-        </label>
-        <div class="flex w-full gap-2">
-          <input
-            class="input input-bordered input-sm grow"
-            disabled={props.isLoading}
-            id="city"
-            name="city"
-            placeholder={t("invoiceForm.city")}
-            type="text"
-            value={initial().city}
-          />
-        </div>
-        <label for="date" class="label label-text font-semibold">
-          {t("invoiceForm.date")}
-        </label>
-        <div class="flex w-full flex-col gap-2">
+        <FormInputItem
+          isLoading={props.isLoading}
+          id="city"
+          name="city"
+          label={t("invoiceForm.city")}
+          type="text"
+          value={initial().city}
+          error={props.error?.city}
+        />
+        <FormItemContainer
+          id="date"
+          label={t("invoiceForm.date")}
+          error={props.error?.date}
+        >
           <DatePicker
             disabled={props.isLoading}
             id="date"
             value={date()}
             onChange={(change) => setDate(change)}
           />
-        </div>
-        <label for="invoiceTitle" class="label label-text font-semibold">
-          {t("invoiceForm.invoiceTitle")}
-        </label>
-        <div class="flex w-full gap-2">
-          <input
-            class="input input-bordered input-sm grow"
-            disabled={props.isLoading}
-            id="invoiceTitle"
-            name="invoiceTitle"
-            placeholder={t("invoiceForm.invoiceTitle")}
-            type="text"
-            value={initial().invoice_title}
-          />
-        </div>
+        </FormItemContainer>
+        <FormInputItem
+          isLoading={props.isLoading}
+          id="invoiceTitle"
+          name="invoice_title"
+          label={t("invoiceForm.invoiceTitle")}
+          type="text"
+          value={initial().invoice_title}
+          error={props.error?.invoice_title}
+        />
         <div class="divider col-span-2 m-0" />
         <h3 class="col-span-2 text-xl">{t("invoiceForm.seller")}</h3>
-        <label for="sellerAddress1" class="label label-text font-semibold">
-          {t("invoiceForm.sellerAddress1")}
-        </label>
-        <div class="flex w-full gap-2">
-          <input
-            class="input input-bordered input-sm grow"
-            disabled={props.isLoading}
-            id="sellerAddress1"
-            name="sellerAddress1"
-            placeholder={t("invoiceForm.sellerAddress1")}
-            type="text"
-            value={initial().seller_address1}
-          />
-        </div>
-        <label for="sellerAddress2" class="label label-text font-semibold">
-          {t("invoiceForm.sellerAddress2")}
-        </label>
-        <div class="flex w-full gap-2">
-          <input
-            class="input input-bordered input-sm grow"
-            disabled={props.isLoading}
-            id="sellerAddress2"
-            name="sellerAddress2"
-            placeholder={t("invoiceForm.sellerAddress2")}
-            type="text"
-            value={initial().seller_address2}
-          />
-        </div>
-        <label for="sellerName" class="label label-text font-semibold">
-          {t("invoiceForm.sellerName")}
-        </label>
-        <div class="flex w-full gap-2">
-          <input
-            class="input input-bordered input-sm grow"
-            disabled={props.isLoading}
-            id="sellerName"
-            name="sellerName"
-            placeholder={t("invoiceForm.sellerName")}
-            type="text"
-            value={initial().seller_name}
-          />
-        </div>
-        <label for="sellerNip" class="label label-text font-semibold">
-          {t("invoiceForm.sellerNip")}
-        </label>
-        <div class="flex w-full gap-2">
-          <input
-            class="input input-bordered input-sm grow"
-            disabled={props.isLoading}
-            id="sellerNip"
-            name="sellerNip"
-            placeholder={t("invoiceForm.sellerNip")}
-            type="text"
-            value={initial().seller_nip}
-          />
-        </div>
+        <FormInputItem
+          isLoading={props.isLoading}
+          id="sellerAddress1"
+          name="seller_address1"
+          label={t("invoiceForm.sellerAddress1")}
+          type="text"
+          value={initial().seller_address1}
+          error={props.error?.seller_address1}
+        />
+        <FormInputItem
+          isLoading={props.isLoading}
+          id="sellerAddress2"
+          name="seller_address2"
+          label={t("invoiceForm.sellerAddress2")}
+          type="text"
+          value={initial().seller_address2}
+          error={props.error?.seller_address2}
+        />
+        <FormInputItem
+          isLoading={props.isLoading}
+          id="sellerName"
+          name="seller_name"
+          label={t("invoiceForm.sellerName")}
+          type="text"
+          value={initial().seller_name}
+          error={props.error?.seller_name}
+        />
+        <FormInputItem
+          isLoading={props.isLoading}
+          id="sellerNip"
+          name="seller_nip"
+          label={t("invoiceForm.sellerNip")}
+          type="text"
+          value={initial().seller_nip}
+          error={props.error?.seller_nip}
+        />
         <div class="divider col-span-2 m-0" />
         <h3 class="col-span-2 text-xl">{t("invoiceForm.buyer")}</h3>
-        <label for="buyerAddress1" class="label label-text font-semibold">
-          {t("invoiceForm.buyerAddress1")}
-        </label>
-        <div class="flex w-full gap-2">
-          <input
-            class="input input-bordered input-sm grow"
-            disabled={props.isLoading}
-            id="buyerAddress1"
-            name="buyerAddress1"
-            placeholder={t("invoiceForm.buyerAddress1")}
-            type="text"
-            value={initial().buyer_address_1}
-          />
-        </div>
-        <label for="buyerAddress2" class="label label-text font-semibold">
-          {t("invoiceForm.buyerAddress2")}
-        </label>
-        <div class="flex w-full gap-2">
-          <input
-            class="input input-bordered input-sm grow"
-            disabled={props.isLoading}
-            id="buyerAddress2"
-            name="buyerAddress2"
-            placeholder={t("invoiceForm.buyerAddress2")}
-            type="text"
-            value={initial().buyer_address_2}
-          />
-        </div>
-        <label for="buyerName" class="label label-text font-semibold">
-          {t("invoiceForm.buyerName")}
-        </label>
-        <div class="flex w-full gap-2">
-          <input
-            class="input input-bordered input-sm grow"
-            disabled={props.isLoading}
-            id="buyerName"
-            name="buyerName"
-            placeholder={t("invoiceForm.buyerName")}
-            type="text"
-            value={initial().buyer_name}
-          />
-        </div>
-        <label for="buyerNip" class="label label-text font-semibold">
-          {t("invoiceForm.buyerNip")}
-        </label>
-        <div class="flex w-full gap-2">
-          <input
-            class="input input-bordered input-sm grow"
-            disabled={props.isLoading}
-            id="buyerNip"
-            name="buyerNip"
-            placeholder={t("invoiceForm.buyerNip")}
-            type="text"
-            value={initial().buyer_nip}
-          />
-        </div>
+        <FormInputItem
+          isLoading={props.isLoading}
+          id="buyerAddress1"
+          name="buyer_address_1"
+          label={t("invoiceForm.buyerAddress1")}
+          type="text"
+          value={initial().buyer_address_1}
+          error={props.error?.buyer_address_1}
+        />
+        <FormInputItem
+          isLoading={props.isLoading}
+          id="buyerAddress2"
+          name="buyer_address_2"
+          label={t("invoiceForm.buyerAddress2")}
+          type="text"
+          value={initial().buyer_address_2}
+          error={props.error?.buyer_address_2}
+        />
+        <FormInputItem
+          isLoading={props.isLoading}
+          id="buyerName"
+          name="buyer_name"
+          label={t("invoiceForm.buyerName")}
+          type="text"
+          value={initial().buyer_name}
+          error={props.error?.buyer_name}
+        />
+        <FormInputItem
+          isLoading={props.isLoading}
+          id="buyerNip"
+          name="buyer_nip"
+          label={t("invoiceForm.buyerNip")}
+          type="text"
+          value={initial().buyer_nip}
+          error={props.error?.buyer_nip}
+        />
         <div class="divider col-span-2 m-0" />
         <h3 class="col-span-2 text-xl">{t("invoiceForm.payment")}</h3>
-        <label for="paymentAccount" class="label label-text font-semibold">
-          {t("invoiceForm.paymentAccount")}
-        </label>
-        <div class="flex w-full gap-2">
-          <input
-            class="input input-bordered input-sm grow"
-            disabled={props.isLoading}
-            id="paymentAccount"
-            name="paymentAccount"
-            placeholder={t("invoiceForm.paymentAccount")}
-            type="text"
-            value={initial().payment_account}
-          />
-        </div>
-        <label for="paymentBank" class="label label-text font-semibold">
-          {t("invoiceForm.paymentBank")}
-        </label>
-        <div class="flex w-full gap-2">
-          <input
-            class="input input-bordered input-sm grow"
-            disabled={props.isLoading}
-            id="paymentBank"
-            name="paymentBank"
-            placeholder={t("invoiceForm.paymentBank")}
-            type="text"
-            value={initial().payment_bank}
-          />
-        </div>
+        <FormInputItem
+          isLoading={props.isLoading}
+          id="paymentAccount"
+          name="payment_account"
+          label={t("invoiceForm.paymentAccount")}
+          type="text"
+          value={initial().payment_account}
+          error={props.error?.payment_account}
+        />
+        <FormInputItem
+          isLoading={props.isLoading}
+          id="paymentBank"
+          name="payment_bank"
+          label={t("invoiceForm.paymentBank")}
+          type="text"
+          value={initial().payment_bank}
+          error={props.error?.payment_bank}
+        />
         <div class="divider col-span-2 m-0" />
         <h3 class="col-span-2 text-xl">{t("invoiceForm.service")}</h3>
-        <label for="serviceCount" class="label label-text font-semibold">
-          {t("invoiceForm.serviceCount")}
-        </label>
-        <div class="flex w-full gap-2">
-          <input
-            class="input input-bordered input-sm grow"
-            disabled={props.isLoading}
-            id="serviceCount"
-            name="serviceCount"
-            placeholder={t("invoiceForm.serviceCount")}
-            type="number"
-            min={0}
-            step={1}
-            value={initial().service_count}
-          />
-        </div>
-        <label for="servicePrice" class="label label-text font-semibold">
-          {t("invoiceForm.servicePrice")}
-        </label>
-        <div class="flex w-full gap-2">
-          <input
-            class="input input-bordered input-sm grow"
-            disabled={props.isLoading}
-            id="servicePrice"
-            name="servicePrice"
-            placeholder={t("invoiceForm.servicePrice")}
-            type="number"
-            min={0}
-            step={1}
-            value={initial().service_price}
-          />
-        </div>
-        <label for="serviceTitle" class="label label-text font-semibold">
-          {t("invoiceForm.serviceTitle")}
-        </label>
-        <div class="flex w-full gap-2">
-          <input
-            class="input input-bordered input-sm grow"
-            disabled={props.isLoading}
-            id="serviceTitle"
-            name="serviceTitle"
-            placeholder={t("invoiceForm.serviceTitle")}
-            type="text"
-            value={initial().service_title}
-          />
-        </div>
-        <label for="serviceUnit" class="label label-text font-semibold">
-          {t("invoiceForm.serviceUnit")}
-        </label>
-        <div class="flex w-full gap-2">
-          <input
-            class="input input-bordered input-sm grow"
-            disabled={props.isLoading}
-            id="serviceUnit"
-            name="serviceUnit"
-            placeholder={t("invoiceForm.serviceUnit")}
-            type="text"
-            value={initial().service_unit}
-          />
-        </div>
+        <FormInputItem
+          isLoading={props.isLoading}
+          id="serviceCount"
+          name="service_count"
+          label={t("invoiceForm.serviceCount")}
+          type="number"
+          min={0}
+          step={1}
+          value={initial().service_count}
+          error={props.error?.service_count}
+        />
+        <FormInputItem
+          isLoading={props.isLoading}
+          id="servicePrice"
+          name="service_price"
+          label={t("invoiceForm.servicePrice")}
+          type="number"
+          min={0}
+          step={1}
+          value={initial().service_price}
+          error={props.error?.service_price}
+        />
+        <FormInputItem
+          isLoading={props.isLoading}
+          id="serviceTitle"
+          name="service_title"
+          label={t("invoiceForm.serviceTitle")}
+          type="text"
+          value={initial().service_title}
+          error={props.error?.service_title}
+        />
+        <FormInputItem
+          isLoading={props.isLoading}
+          id="serviceUnit"
+          name="service_unit"
+          label={t("invoiceForm.serviceUnit")}
+          type="text"
+          value={initial().service_unit}
+          error={props.error?.service_unit}
+        />
         <div class="divider col-span-2 m-0" />
         <h3 class="col-span-2 text-xl">{t("invoiceForm.notes")}</h3>
-        <label for="notes" class="label label-text font-semibold">
-          {t("invoiceForm.notes")}
-        </label>
-        <div class="flex w-full gap-2">
-          <input
-            class="input input-bordered input-sm grow"
-            disabled={props.isLoading}
-            id="notes"
-            name="notes"
-            placeholder={t("invoiceForm.notes")}
-            type="text"
-            value={initial().notes}
-          />
-        </div>
-        <Show when={props.error} keyed>
-          {(error) => <div class="text-sm text-red-400">{error}</div>}
-        </Show>
+        <FormInputItem
+          isLoading={props.isLoading}
+          id="notes"
+          name="notes"
+          label={t("invoiceForm.notes")}
+          type="text"
+          value={initial().notes}
+          error={props.error?.notes}
+        />
         <div class="col-span-2 flex w-full justify-end gap-2">
           <button
             disabled={props.isLoading}

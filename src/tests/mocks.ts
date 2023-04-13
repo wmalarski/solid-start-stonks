@@ -29,7 +29,7 @@ export const mockInvoice = (update: Partial<Invoice> = {}): Invoice => {
     service_title: "string",
     service_unit: "string",
     updated_at: new Date(),
-    user_id: "",
+    userId: "",
     ...update,
   };
 };

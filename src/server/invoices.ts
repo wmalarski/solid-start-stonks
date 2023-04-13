@@ -110,7 +110,7 @@ export const createInsertInvoiceServerAction = () => {
     const user = await getUser(event.request);
 
     const parsed = await zodFormParse({ form, schema: invoiceSchema });
-    const invoice = await insertInvoice({ ...parsed, user_id: user.id });
+    const invoice = await insertInvoice({ ...parsed, userId: user.id });
 
     return redirect(paths.invoice(invoice.insertId));
   });
