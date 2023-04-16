@@ -10,6 +10,7 @@ specifiers:
   '@solid-primitives/i18n': ^1.2.4
   '@solidjs/meta': ^0.28.4
   '@solidjs/router': ^0.8.2
+  '@tanstack/solid-query': ^5.0.0-alpha.18
   '@types/node': ^18.15.11
   '@typescript-eslint/eslint-plugin': ^5.58.0
   '@typescript-eslint/parser': ^5.58.0
@@ -55,6 +56,7 @@ dependencies:
   '@solid-primitives/i18n': 1.2.4_solid-js@1.7.3
   '@solidjs/meta': 0.28.4_solid-js@1.7.3
   '@solidjs/router': 0.8.2_solid-js@1.7.3
+  '@tanstack/solid-query': 5.0.0-alpha.18_solid-js@1.7.3
   class-variance-authority: 0.5.2_typescript@5.0.4
   daisyui: 2.51.5_j7yt3jd32cwenjqavrrga47yr4
   drizzle-orm: 0.23.13_x5zvu6yhqtclhr76ddvo6x3wgi
@@ -1848,6 +1850,19 @@ packages:
     resolution: {integrity: sha512-4C7nX/dvpzB7za4Ql9K81xK3HPxCpHMgwTZVyf+9JQ6VUbn9jjZVN7/Nkdz/Ugzs2CSjqnL/UPXroiVBVHUWUw==}
     dependencies:
       tslib: 2.5.0
+    dev: false
+
+  /@tanstack/query-core/5.0.0-alpha.18:
+    resolution: {integrity: sha512-9ChvuSjt2N4c0nwCOWjUF9MDd4lSFV96A71Vf6/gRqfa/Mwzxbsnoq1tfkRDC1JZgrIE5WWz5GTvCorhkQVUKQ==}
+    dev: false
+
+  /@tanstack/solid-query/5.0.0-alpha.18_solid-js@1.7.3:
+    resolution: {integrity: sha512-Ia6uRfEwvo6upgKSjsitXH/IJCeK+JkZWm+EVWR71mN9WjowlOLFbvWLwTxFePIXyaJXT2lFHjQKV2hGNXEOMQ==}
+    peerDependencies:
+      solid-js: ^1.6.13
+    dependencies:
+      '@tanstack/query-core': 5.0.0-alpha.18
+      solid-js: 1.7.3
     dev: false
 
   /@types/babel__core/7.20.0:

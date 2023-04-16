@@ -10,6 +10,7 @@
     "solidjs",
     "SUPABASE",
     "tailwindcss",
+    "tanstack",
     "Topbar",
     "trpc",
     "undici"
