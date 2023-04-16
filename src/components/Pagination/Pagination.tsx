@@ -8,12 +8,20 @@ type Props = {
 };
 
 export const Pagination: Component<Props> = (props) => {
+  const onPreviousClick = () => {
+    props.onChange(props.current - 1);
+  };
+
+  const onNextClick = () => {
+    props.onChange(props.current + 1);
+  };
+
   return (
     <div class="btn-group">
       <button
         class={clsx("btn", { "btn-disabled": props.current < 1 })}
         disabled={props.current < 1}
-        onClick={() => props.onChange(props.current - 1)}
+        onClick={onPreviousClick}
       >
         «
       </button>
@@ -21,7 +29,7 @@ export const Pagination: Component<Props> = (props) => {
       <button
         class={clsx("btn", { "btn-disabled": props.current + 1 >= props.max })}
         disabled={props.current + 1 >= props.max}
-        onClick={() => props.onChange(props.current + 1)}
+        onClick={onNextClick}
       >
         »
       </button>

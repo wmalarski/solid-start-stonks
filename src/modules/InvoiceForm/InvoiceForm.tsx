@@ -1,14 +1,6 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import { useI18n } from "@solid-primitives/i18n";
 import clsx from "clsx";
-import {
-  Component,
-  createEffect,
-  createSignal,
-  JSX,
-  ParentComponent,
-  Show,
-} from "solid-js";
+import { Component, createSignal, JSX, ParentComponent, Show } from "solid-js";
 import { FormProps } from "solid-start";
 import type { ZodIssue } from "zod";
 import { DatePicker } from "~/components/DatePicker/DatePicker";
@@ -90,6 +82,18 @@ const FormInputItem: Component<FormInputItemProps> = (props) => {
   );
 };
 
+const Divider: Component = () => {
+  return <div class="divider col-span-2 m-0" />;
+};
+
+type SubHeadingProps = {
+  children: JSX.Element;
+};
+
+const SubHeading: Component<SubHeadingProps> = (props) => {
+  return <h3 class="col-span-2 text-xl">{props.children}</h3>;
+};
+
 type Props = {
   error?: Record<string, ZodIssue>;
   Form: ParentComponent<FormProps>;
@@ -106,10 +110,6 @@ export const InvoiceForm: Component<Props> = (props) => {
   const initial = () => {
     return { ...formDefault, ...props.initial };
   };
-
-  createEffect(() => {
-    setDate(new Date(initial().date));
-  });
 
   return (
     <div class="card shadow-xl">
@@ -135,7 +135,7 @@ export const InvoiceForm: Component<Props> = (props) => {
           type="hidden"
           value={initial().service_payed}
         />
-        <h3 class="col-span-2 text-xl">{t("invoiceForm.general")}</h3>
+        <SubHeading>{t("invoiceForm.general")}</SubHeading>
         <FormInputItem
           isLoading={props.isLoading}
           id="city"
@@ -166,8 +166,8 @@ export const InvoiceForm: Component<Props> = (props) => {
           value={initial().invoice_title}
           error={props.error?.invoice_title}
         />
-        <div class="divider col-span-2 m-0" />
-        <h3 class="col-span-2 text-xl">{t("invoiceForm.seller")}</h3>
+        <Divider />
+        <SubHeading>{t("invoiceForm.seller")}</SubHeading>
         <FormInputItem
           isLoading={props.isLoading}
           id="sellerAddress1"
@@ -204,8 +204,8 @@ export const InvoiceForm: Component<Props> = (props) => {
           value={initial().seller_nip}
           error={props.error?.seller_nip}
         />
-        <div class="divider col-span-2 m-0" />
-        <h3 class="col-span-2 text-xl">{t("invoiceForm.buyer")}</h3>
+        <Divider />
+        <SubHeading>{t("invoiceForm.buyer")}</SubHeading>
         <FormInputItem
           isLoading={props.isLoading}
           id="buyerAddress1"
@@ -242,8 +242,8 @@ export const InvoiceForm: Component<Props> = (props) => {
           value={initial().buyer_nip}
           error={props.error?.buyer_nip}
         />
-        <div class="divider col-span-2 m-0" />
-        <h3 class="col-span-2 text-xl">{t("invoiceForm.payment")}</h3>
+        <Divider />
+        <SubHeading>{t("invoiceForm.payment")}</SubHeading>
         <FormInputItem
           isLoading={props.isLoading}
           id="paymentAccount"
@@ -262,8 +262,8 @@ export const InvoiceForm: Component<Props> = (props) => {
           value={initial().payment_bank}
           error={props.error?.payment_bank}
         />
-        <div class="divider col-span-2 m-0" />
-        <h3 class="col-span-2 text-xl">{t("invoiceForm.service")}</h3>
+        <Divider />
+        <SubHeading>{t("invoiceForm.service")}</SubHeading>
         <FormInputItem
           isLoading={props.isLoading}
           id="serviceCount"
@@ -304,8 +304,8 @@ export const InvoiceForm: Component<Props> = (props) => {
           value={initial().service_unit}
           error={props.error?.service_unit}
         />
-        <div class="divider col-span-2 m-0" />
-        <h3 class="col-span-2 text-xl">{t("invoiceForm.notes")}</h3>
+        <Divider />
+        <SubHeading>{t("invoiceForm.notes")}</SubHeading>
         <FormInputItem
           isLoading={props.isLoading}
           id="notes"

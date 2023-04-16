@@ -1,13 +1,38 @@
 import { useI18n } from "@solid-primitives/i18n";
+import clsx from "clsx";
 import { Component } from "solid-js";
 import { Invoice } from "~/db/invoices";
 import { pricePLN } from "~/utils/pricePLN";
 
-type Props = {
+type InvoiceCompanyProps = {
+  address1: string;
+  address2: string;
+  name: string;
+  nip: string;
+  title: string;
+};
+
+export const InvoiceCompany: Component<InvoiceCompanyProps> = (props) => {
+  const [t] = useI18n();
+
+  return (
+    <div>
+      <p class="text-xl font-extrabold">{props.title}</p>
+      <div class="divider m-0" />
+      <p class="font-bold">{props.name}</p>
+      <p class="text-sm">{props.address1}</p>
+      <p class="text-sm">{props.address2}</p>
+      <p class="mt-2 text-sm">{t("invoice.nip", { nip: props.nip })}</p>
+    </div>
+  );
+};
+
+type InvoiceSummaryProps = {
+  class?: string;
   invoice: Invoice;
 };
 
-export const InvoiceDetails: Component<Props> = (props) => {
+export const InvoiceSummary: Component<InvoiceSummaryProps> = (props) => {
   const [t, { locale }] = useI18n();
 
   const currencyFormatter = (value: number) => {
@@ -16,6 +41,44 @@ export const InvoiceDetails: Component<Props> = (props) => {
       style: "currency",
     }).format(value);
   };
+
+  const sum = () => {
+    return props.invoice.service_count * props.invoice.service_price;
+  };
+
+  return (
+    <table class={clsx("text-xs", props.class)}>
+      <tbody>
+        <tr>
+          <td>{t("invoice.toPay")}</td>
+          <td class="text-right">{currencyFormatter(sum())}</td>
+          <td class="w-6/12 pl-4">
+            {t("invoice.longToPay", { sum: pricePLN(sum()) })}
+          </td>
+        </tr>
+        <tr>
+          <td>{t("invoice.payed")}</td>
+          <td class="text-right">
+            {currencyFormatter(props.invoice.service_payed)}
+          </td>
+        </tr>
+        <tr>
+          <td>{t("invoice.leftToPay")}</td>
+          <td class="text-right">
+            {currencyFormatter(sum() - props.invoice.service_payed)}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  );
+};
+
+type Props = {
+  invoice: Invoice;
+};
+
+export const InvoiceDetails: Component<Props> = (props) => {
+  const [t, { locale }] = useI18n();
 
   const numberFormatter = (value: number) => {
     return new Intl.NumberFormat(locale(), {
@@ -45,26 +108,20 @@ export const InvoiceDetails: Component<Props> = (props) => {
           date: dateFormatter(props.invoice.date),
         })}
       </span>
-      <div>
-        <p class="text-xl font-extrabold">{t("invoice.seller")}</p>
-        <div class="divider m-0" />
-        <p class="font-bold">{props.invoice.seller_name}</p>
-        <p class="text-sm">{props.invoice.seller_address1}</p>
-        <p class="text-sm">{props.invoice.seller_address2}</p>
-        <p class="mt-2 text-sm">
-          {t("invoice.nip", { nip: props.invoice.seller_nip })}
-        </p>
-      </div>
-      <div>
-        <p class="text-xl font-extrabold">{t("invoice.buyer")}</p>
-        <div class="divider m-0" />
-        <p class="font-bold">{props.invoice.buyer_name}</p>
-        <p class="text-sm">{props.invoice.buyer_address_1}</p>
-        <p class="text-sm">{props.invoice.buyer_address_2}</p>
-        <p class="mt-2 text-sm">
-          {t("invoice.nip", { nip: props.invoice.buyer_nip })}
-        </p>
-      </div>
+      <InvoiceCompany
+        title={t("invoice.seller")}
+        address1={props.invoice.seller_address1}
+        address2={props.invoice.seller_address2}
+        name={props.invoice.seller_name}
+        nip={props.invoice.seller_nip}
+      />
+      <InvoiceCompany
+        title={t("invoice.buyer")}
+        address1={props.invoice.buyer_address_1}
+        address2={props.invoice.buyer_address_2}
+        name={props.invoice.buyer_name}
+        nip={props.invoice.buyer_nip}
+      />
       <div class="col-span-2">
         <p class="m-1 text-center text-2xl font-extrabold">
           {t("invoice.title", { title: props.invoice.invoice_title })}
@@ -132,29 +189,7 @@ export const InvoiceDetails: Component<Props> = (props) => {
           </tr>
         </tbody>
       </table>
-      <table class="col-span-2 text-xs">
-        <tbody>
-          <tr>
-            <td>{t("invoice.toPay")}</td>
-            <td class="text-right">{currencyFormatter(sum())}</td>
-            <td class="w-6/12 pl-4">
-              {t("invoice.longToPay", { sum: pricePLN(sum()) })}
-            </td>
-          </tr>
-          <tr>
-            <td>{t("invoice.payed")}</td>
-            <td class="text-right">
-              {currencyFormatter(props.invoice.service_payed)}
-            </td>
-          </tr>
-          <tr>
-            <td>{t("invoice.leftToPay")}</td>
-            <td class="text-right">
-              {currencyFormatter(sum() - props.invoice.service_payed)}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <InvoiceSummary invoice={props.invoice} />
       <div class="col-span-2">
         <p class="text-xs font-bold">{t("invoice.notes")}</p>
         <p class="w-full max-w-full text-sm">{props.invoice.notes}</p>
