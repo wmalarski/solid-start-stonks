@@ -1,6 +1,11 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { Component, For } from "solid-js";
+import { Component, For, createMemo } from "solid-js";
 import { A } from "solid-start";
+import {
+  BreadcrumbsItem,
+  BreadcrumbsList,
+  BreadcrumbsRoot,
+} from "~/components/Breadcrumbs";
 import { buttonClass } from "~/components/Button";
 import { Invoice } from "~/db/invoices";
 import { paths } from "~/utils/paths";
@@ -14,7 +19,7 @@ type Props = {
 export const InvoiceTopbar: Component<Props> = (props) => {
   const [t] = useI18n();
 
-  const breadcrumbs = () => {
+  const breadcrumbs = createMemo(() => {
     return [
       { path: paths.invoices(), text: t("topbar.home") },
       {
@@ -23,21 +28,24 @@ export const InvoiceTopbar: Component<Props> = (props) => {
       },
       ...(props.breadcrumbs || []),
     ];
-  };
+  });
 
   return (
     <div class="navbar flex w-full justify-between px-8 print:invisible print:hidden">
-      <div class="breadcrumbs text-sm">
-        <ul>
+      <BreadcrumbsRoot>
+        <BreadcrumbsList>
           <For each={breadcrumbs()}>
-            {({ path, text }) => (
-              <li>
+            {({ path, text }, index) => (
+              <BreadcrumbsItem
+                asChild
+                hasSeparator={index() !== breadcrumbs().length}
+              >
                 <A href={path}>{text}</A>
-              </li>
+              </BreadcrumbsItem>
             )}
           </For>
-        </ul>
-      </div>
+        </BreadcrumbsList>
+      </BreadcrumbsRoot>
       <div>
         <A
           href={paths.editInvoice(props.invoice.id)}
