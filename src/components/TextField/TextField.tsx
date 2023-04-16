@@ -69,7 +69,7 @@ export const textFieldInputClass = twCva(["input"], {
       xs: ["input-xs"],
     },
     variant: {
-      bordered: ["input-bordered"],
+      bordered: "input-bordered",
       ghost: ["input-ghost"],
       none: [],
     },

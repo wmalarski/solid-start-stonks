@@ -1,0 +1,1 @@
+DROP INDEX `invoices__user_id__idx` ON `invoices`;

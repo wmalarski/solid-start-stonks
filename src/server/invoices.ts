@@ -70,7 +70,7 @@ const invoiceSchema = z.object({
   buyer_name: z.string(),
   buyer_nip: z.string(),
   city: z.string(),
-  date: z.date(),
+  date: z.coerce.date(),
   invoice_title: z.string(),
   notes: z.string(),
   payment_account: z.string(),
@@ -110,6 +110,7 @@ export const createInsertInvoiceServerAction = () => {
     const user = await getUser(event.request);
 
     const parsed = await zodFormParse({ form, schema: invoiceSchema });
+
     const invoice = await insertInvoice({ ...parsed, userId: user.id });
 
     return redirect(paths.invoice(invoice.insertId));

@@ -14,6 +14,7 @@ import {
   TextFieldErrorMessage,
   TextFieldInput,
   TextFieldLabel,
+  TextFieldRoot,
   type TextFieldInputProps,
 } from "~/components/TextField";
 import type { Invoice } from "~/db/invoices";
@@ -55,7 +56,7 @@ type FormItemContainerProps = {
 
 const FormItemContainer: Component<FormItemContainerProps> = (props) => {
   return (
-    <>
+    <TextFieldRoot>
       <TextFieldLabel for={props.id} class="font-semibold">
         {props.label}
       </TextFieldLabel>
@@ -67,7 +68,7 @@ const FormItemContainer: Component<FormItemContainerProps> = (props) => {
           )}
         </Show>
       </div>
-    </>
+    </TextFieldRoot>
   );
 };
 
@@ -129,7 +130,7 @@ export const InvoiceForm: Component<Props> = (props) => {
 
   return (
     <div class="card shadow-xl">
-      <props.Form class="card-body grid w-full grid-cols-[auto_1fr] gap-2">
+      <props.Form class="card-body grid w-full gap-2">
         <Show when={props.id}>
           {(id) => <input id="id" name="id" type="hidden" value={id()} />}
         </Show>

@@ -1,3 +1,4 @@
+import { As } from "@kobalte/core";
 import { useI18n } from "@solid-primitives/i18n";
 import { For, createMemo, type Component } from "solid-js";
 import { A } from "solid-start";
@@ -40,7 +41,9 @@ export const InvoiceTopbar: Component<Props> = (props) => {
                 asChild
                 hasSeparator={index() !== breadcrumbs().length}
               >
-                <A href={path}>{text}</A>
+                <As component={A} href={path}>
+                  {text}
+                </As>
               </BreadcrumbsItem>
             )}
           </For>
