@@ -164,7 +164,7 @@ export const InvoiceForm: Component<Props> = (props) => {
             disabled={props.isLoading}
             id="date"
             value={date()}
-            onChange={(change) => setDate(change)}
+            onChange={setDate}
           />
         </FormItemContainer>
         <FormInputItem

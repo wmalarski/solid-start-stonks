@@ -9,9 +9,14 @@ import {
   RadioGroupLabel,
   RadioGroupRoot,
 } from "~/components/RadioGroup";
-import { Invoice } from "~/db/invoices";
-import { pricePLN } from "~/utils/pricePLN";
-import { twCx } from "~/utils/twCva";
+import {
+  useCurrencyFormatter,
+  useDateFormatter,
+  useNumberFormatter,
+} from "~/components/utils/format";
+import { pricePLN } from "~/components/utils/pricePLN";
+import { twCx } from "~/components/utils/twCva";
+import type { Invoice } from "~/db/invoices";
 
 type InvoiceCompanyProps = {
   address1: string;
@@ -42,14 +47,9 @@ type InvoiceSummaryProps = {
 };
 
 export const InvoiceSummary: Component<InvoiceSummaryProps> = (props) => {
-  const [t, { locale }] = useI18n();
+  const [t] = useI18n();
 
-  const currencyFormatter = (value: number) => {
-    return new Intl.NumberFormat(locale(), {
-      currency: "PLN",
-      style: "currency",
-    }).format(value);
-  };
+  const currencyFormatter = useCurrencyFormatter();
 
   const sum = () => {
     return props.invoice.service_count * props.invoice.service_price;
@@ -121,13 +121,9 @@ type InvoiceTableProps = {
 };
 
 export const InvoiceTable: Component<InvoiceTableProps> = (props) => {
-  const [t, { locale }] = useI18n();
+  const [t] = useI18n();
 
-  const numberFormatter = (value: number) => {
-    return new Intl.NumberFormat(locale(), {
-      minimumFractionDigits: 2,
-    }).format(value);
-  };
+  const numberFormatter = useNumberFormatter();
 
   const sum = () => {
     return props.invoice.service_count * props.invoice.service_price;
@@ -166,11 +162,9 @@ type InvoicePaymentSummaryProps = {
 export const InvoicePaymentSummary: Component<InvoicePaymentSummaryProps> = (
   props
 ) => {
-  const [t, { locale }] = useI18n();
+  const [t] = useI18n();
 
-  const dateFormatter = (value: string | Date) => {
-    return new Intl.DateTimeFormat(locale()).format(new Date(value));
-  };
+  const dateFormatter = useDateFormatter();
 
   const dueDate = () => {
     const date = new Date(props.invoice.date);
@@ -203,11 +197,9 @@ type Props = {
 };
 
 export const InvoiceDetails: Component<Props> = (props) => {
-  const [t, { locale }] = useI18n();
+  const [t] = useI18n();
 
-  const dateFormatter = (value: string | Date) => {
-    return new Intl.DateTimeFormat(locale()).format(new Date(value));
-  };
+  const dateFormatter = useDateFormatter();
 
   return (
     <div class="m-12 grid grid-cols-2 gap-x-16 gap-y-8">

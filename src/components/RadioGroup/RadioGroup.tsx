@@ -1,6 +1,6 @@
 import { RadioGroup as KobalteRadioGroup } from "@kobalte/core";
 import type { Component } from "solid-js";
-import { twCx } from "../../utils/twCva";
+import { twCx } from "../utils/twCva";
 
 export type RadioGroupRootProps = KobalteRadioGroup.RadioGroupRootProps;
 

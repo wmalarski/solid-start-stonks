@@ -1,7 +1,7 @@
 import { TextField } from "@kobalte/core";
 import type { VariantProps } from "class-variance-authority";
 import type { Component } from "solid-js";
-import { twCva, twCx } from "../../utils/twCva";
+import { twCva, twCx } from "../utils/twCva";
 
 export type TextFieldRootProps = TextField.TextFieldRootProps;
 

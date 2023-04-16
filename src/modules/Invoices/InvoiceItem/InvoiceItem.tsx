@@ -1,6 +1,7 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { Link } from "@solidjs/router";
 import { Component } from "solid-js";
+import { useDateFormatter } from "~/components/utils/format";
 import { Invoice } from "~/db/invoices";
 import { DeleteInvoice } from "~/modules/DeleteInvoice/DeleteInvoice";
 import {
@@ -14,11 +15,9 @@ type Props = {
 };
 
 export const InvoiceItem: Component<Props> = (props) => {
-  const [t, { locale }] = useI18n();
+  const [t] = useI18n();
 
-  const dateFormatter = (value: Date | string) => {
-    return new Intl.DateTimeFormat(locale()).format(new Date(value));
-  };
+  const dateFormatter = useDateFormatter();
 
   return (
     <div class="card w-full shadow-xl">

@@ -1,7 +1,7 @@
 import { Button as KobalteButton } from "@kobalte/core";
 import { type VariantProps } from "class-variance-authority";
 import type { Component, JSX } from "solid-js";
-import { twCva } from "../../utils/twCva";
+import { twCva } from "../utils/twCva";
 
 export const buttonClass = twCva(["btn"], {
   defaultVariants: {

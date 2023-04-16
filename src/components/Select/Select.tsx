@@ -1,6 +1,6 @@
 import { type VariantProps } from "class-variance-authority";
 import type { Component, JSX } from "solid-js";
-import { twCva } from "../../utils/twCva";
+import { twCva } from "../utils/twCva";
 
 export const selectClass = twCva(["select"], {
   defaultVariants: {
