@@ -1,6 +1,6 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { Component, For, Match, Switch } from "solid-js";
-import { Option, Select, SelectProps } from "../Select";
+import { For, Match, Switch, type Component } from "solid-js";
+import { Option, Select, type SelectProps } from "../Select";
 
 type DateSelectOption = {
   value: number;

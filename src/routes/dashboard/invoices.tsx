@@ -1,10 +1,10 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { Component, ErrorBoundary, Show, Suspense } from "solid-js";
+import { ErrorBoundary, Show, Suspense, type Component } from "solid-js";
 import {
   Navigate,
-  RouteDataArgs,
   useNavigate,
   useRouteData,
+  type RouteDataArgs,
 } from "solid-start";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { Pagination } from "~/components/Pagination";

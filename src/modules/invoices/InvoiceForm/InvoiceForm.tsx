@@ -1,16 +1,22 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { Component, createSignal, JSX, ParentComponent, Show } from "solid-js";
-import { FormProps } from "solid-start";
+import {
+  Show,
+  createSignal,
+  type Component,
+  type JSX,
+  type ParentComponent,
+} from "solid-js";
+import type { FormProps } from "solid-start";
 import type { ZodIssue } from "zod";
 import { Button } from "~/components/Button";
 import { DatePicker } from "~/components/DatePicker";
 import {
   TextFieldErrorMessage,
   TextFieldInput,
-  TextFieldInputProps,
   TextFieldLabel,
+  type TextFieldInputProps,
 } from "~/components/TextField";
-import { Invoice } from "~/db/invoices";
+import type { Invoice } from "~/db/invoices";
 
 export type InvoiceFormData = Omit<Invoice, "id">;
 

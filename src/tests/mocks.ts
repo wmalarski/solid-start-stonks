@@ -1,4 +1,4 @@
-import { Invoice } from "~/db/invoices";
+import type { Invoice } from "~/db/invoices";
 
 export const mockId = (): string => {
   return `${Math.floor(Math.random() * 1e16)}`;

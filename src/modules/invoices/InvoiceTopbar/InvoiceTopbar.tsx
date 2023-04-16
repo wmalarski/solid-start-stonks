@@ -1,5 +1,5 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { Component, For, createMemo } from "solid-js";
+import { For, createMemo, type Component } from "solid-js";
 import { A } from "solid-start";
 import {
   BreadcrumbsItem,
@@ -7,7 +7,7 @@ import {
   BreadcrumbsRoot,
 } from "~/components/Breadcrumbs";
 import { buttonClass } from "~/components/Button";
-import { Invoice } from "~/db/invoices";
+import type { Invoice } from "~/db/invoices";
 import { paths } from "~/utils/paths";
 import { DeleteInvoice } from "../DeleteInvoice";
 

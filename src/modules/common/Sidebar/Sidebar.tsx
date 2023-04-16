@@ -1,6 +1,6 @@
 import { signOut } from "@auth/solid-start/client";
 import { useI18n } from "@solid-primitives/i18n";
-import { Component } from "solid-js";
+import type { Component } from "solid-js";
 import { A } from "solid-start";
 import { Button } from "~/components/Button";
 import { paths } from "~/utils/paths";

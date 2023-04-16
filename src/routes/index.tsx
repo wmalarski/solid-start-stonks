@@ -1,4 +1,4 @@
-import { Component, Show, Suspense } from "solid-js";
+import { Show, Suspense, type Component } from "solid-js";
 import { redirect, useRouteData } from "solid-start";
 import { createServerData$ } from "solid-start/server";
 import { LoadingSpinner } from "~/components/LoadingSpinner";

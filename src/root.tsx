@@ -1,6 +1,6 @@
 // @refresh reload
 import { I18nContext } from "@solid-primitives/i18n";
-import { JSX, Suspense } from "solid-js";
+import { Suspense, type JSX } from "solid-js";
 import {
   Body,
   ErrorBoundary,

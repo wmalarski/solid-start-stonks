@@ -1,4 +1,4 @@
-import { Component } from "solid-js";
+import type { Component } from "solid-js";
 import { Outlet } from "solid-start";
 import { createServerData$, redirect } from "solid-start/server";
 import { Sidebar } from "~/modules/common/Sidebar/Sidebar";

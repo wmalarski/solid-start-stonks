@@ -1,5 +1,5 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { Component } from "solid-js";
+import type { Component } from "solid-js";
 import { InvoiceForm } from "~/modules/invoices/InvoiceForm";
 import { InvoicesTopbar } from "~/modules/invoices/InvoicesTopbar";
 import { createInsertInvoiceServerAction } from "~/server/invoices";

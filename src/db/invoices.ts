@@ -1,5 +1,5 @@
 import { createId } from "@paralleldrive/cuid2";
-import { InferModel, sql } from "drizzle-orm";
+import { sql, type InferModel } from "drizzle-orm";
 import { and, eq } from "drizzle-orm/expressions";
 import { db } from "./db";
 import { invoices } from "./schema";

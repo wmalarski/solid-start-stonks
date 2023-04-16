@@ -1,6 +1,6 @@
 import { signIn } from "@auth/solid-start/client";
 import { useI18n } from "@solid-primitives/i18n";
-import { Component } from "solid-js";
+import type { Component } from "solid-js";
 import { redirect } from "solid-start";
 import { createServerData$ } from "solid-start/server";
 import { Button } from "~/components/Button";

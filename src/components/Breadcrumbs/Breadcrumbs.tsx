@@ -1,5 +1,5 @@
 import { Breadcrumbs as KobalteBreadcrumbs } from "@kobalte/core";
-import { Component, JSX, Show } from "solid-js";
+import { Show, type Component, type JSX } from "solid-js";
 import { twCx } from "../utils/twCva";
 
 export type BreadcrumbsRootProps = KobalteBreadcrumbs.BreadcrumbsRootProps;

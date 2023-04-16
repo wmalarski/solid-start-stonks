@@ -1,5 +1,5 @@
 import { ServerError } from "solid-start/server";
-import { z } from "zod";
+import type { z } from "zod";
 
 type ZodFormParse<T extends z.ZodTypeAny> = {
   form: FormData;

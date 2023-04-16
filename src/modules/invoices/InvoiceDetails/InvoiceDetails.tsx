@@ -1,5 +1,5 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { Component } from "solid-js";
+import type { Component } from "solid-js";
 import { useDateFormatter } from "~/components/utils/format";
 import type { Invoice } from "~/db/invoices";
 import {

@@ -1,9 +1,9 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { Component, For } from "solid-js";
+import { For, type Component } from "solid-js";
 import { A } from "solid-start";
 import { buttonClass } from "~/components/Button";
 import { useDateFormatter } from "~/components/utils/format";
-import { Invoice } from "~/db/invoices";
+import type { Invoice } from "~/db/invoices";
 import { DeleteInvoice } from "~/modules/invoices/DeleteInvoice";
 import {
   InvoiceCompany,

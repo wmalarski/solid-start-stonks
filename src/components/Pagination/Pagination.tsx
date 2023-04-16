@@ -1,4 +1,4 @@
-import { Component } from "solid-js";
+import type { Component } from "solid-js";
 import { Button, ButtonGroup } from "../Button";
 
 type Props = {
