@@ -28,10 +28,16 @@ export const createInvoiceServerData = (
   key: () => ReturnType<typeof selectInvoiceKey>
 ) => {
   return createServerData$(
-    async ([, { id }], { request }) => {
-      const user = await getUser(request);
+    async ([, { id }], event) => {
+      const user = await getUser(event.request);
 
-      return selectInvoiceById({ id, userId: user.id });
+      const invoice = await selectInvoiceById({ id, userId: user.id });
+
+      if (!invoice) {
+        throw redirect(paths.notFound);
+      }
+
+      return invoice;
     },
     { key }
   );
@@ -110,10 +116,9 @@ export const createInsertInvoiceServerAction = () => {
     const user = await getUser(event.request);
 
     const parsed = await zodFormParse({ form, schema: invoiceSchema });
-
     const invoice = await insertInvoice({ ...parsed, userId: user.id });
 
-    return redirect(paths.invoice(invoice.insertId));
+    return redirect(paths.invoice(invoice.id));
   });
 };
 

@@ -10,5 +10,5 @@ export const paths = {
       page: `${page}`,
     })}`,
   login: "/auth/login",
-  notFound: "/notFound",
+  notFound: "/404",
 };

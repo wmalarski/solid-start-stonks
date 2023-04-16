@@ -57,11 +57,15 @@ export type InsertInvoiceArgs = Omit<
   "id"
 >;
 
-export const insertInvoice = (args: InsertInvoiceArgs) => {
-  return db
+export const insertInvoice = async (args: InsertInvoiceArgs) => {
+  const id = createId();
+
+  const result = await db
     .insert(invoices)
-    .values({ ...args, id: createId() })
+    .values({ ...args, id })
     .execute();
+
+  return { id, result };
 };
 
 export type UpdateInvoiceArgs = {
