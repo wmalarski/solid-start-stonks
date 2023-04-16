@@ -9,7 +9,7 @@ import {
   TextFieldInput,
   TextFieldInputProps,
   TextFieldLabel,
-} from "~/components/Input";
+} from "~/components/TextField";
 import { Invoice } from "~/db/invoices";
 
 export type InvoiceFormData = Omit<Invoice, "id">;
