@@ -41,17 +41,16 @@ export const buttonClass = twCva(["btn"], {
       ghost: ["btn-ghost"],
       glass: ["glass"],
       link: ["btn-link"],
-      none: [""],
+      none: [],
       outline: ["btn-outline"],
     },
   },
 });
 
-type ButtonProps = VariantProps<typeof buttonClass>;
+export type ButtonProps = KobalteButton.ButtonRootProps &
+  VariantProps<typeof buttonClass>;
 
-export const Button: Component<KobalteButton.ButtonRootProps & ButtonProps> = (
-  props
-) => {
+export const Button: Component<ButtonProps> = (props) => {
   return (
     <KobalteButton.Root
       {...props}
@@ -73,10 +72,9 @@ export const buttonGroupClass = twCva(["btn-group"], {
   },
 });
 
-type ButtonGroupProps = VariantProps<typeof buttonGroupClass>;
+export type ButtonGroupProps = JSX.HTMLAttributes<HTMLDivElement> &
+  VariantProps<typeof buttonGroupClass>;
 
-export const ButtonGroup: Component<
-  JSX.HTMLAttributes<HTMLDivElement> & ButtonGroupProps
-> = (props) => {
+export const ButtonGroup: Component<ButtonGroupProps> = (props) => {
   return <div {...props} class={buttonGroupClass({ class: props.class })} />;
 };

@@ -1,6 +1,6 @@
 import { useI18n } from "@solid-primitives/i18n";
-import clsx from "clsx";
 import { Component, For, Match, Switch } from "solid-js";
+import { Option, Select, SelectProps } from "../Select";
 
 type DateSelectOption = {
   value: number;
@@ -15,21 +15,22 @@ type DateSelectProps = {
 };
 
 const DateSelect: Component<DateSelectProps> = (props) => {
+  const onChange: SelectProps["onChange"] = (event) => {
+    props.onChange(Number(event.target.value));
+  };
+
   return (
-    <select
-      class={clsx("select select-bordered select-sm", {
-        "select-disabled": props.disabled,
-      })}
+    <Select
+      variant="bordered"
+      size="sm"
       disabled={props.disabled}
       value={props.value}
-      onChange={(event) => {
-        props.onChange(Number(event.target.value));
-      }}
+      onChange={onChange}
     >
       <For each={props.options}>
-        {(option) => <option value={option.value}>{option.text}</option>}
+        {(option) => <Option value={option.value}>{option.text}</Option>}
       </For>
-    </select>
+    </Select>
   );
 };
 

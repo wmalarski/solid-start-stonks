@@ -3,7 +3,7 @@ import { Component, createSignal, JSX, ParentComponent, Show } from "solid-js";
 import { FormProps } from "solid-start";
 import type { ZodIssue } from "zod";
 import { Button } from "~/components/Button";
-import { DatePicker } from "~/components/DatePicker/DatePicker";
+import { DatePicker } from "~/components/DatePicker";
 import { Invoice } from "~/db/invoices";
 
 export type InvoiceFormData = Omit<Invoice, "id">;

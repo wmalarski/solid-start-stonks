@@ -33,10 +33,9 @@ export const inputClass = twCva(["input"], {
   },
 });
 
-type InputProps = VariantProps<typeof inputClass>;
+export type InputProps = JSX.InputHTMLAttributes<HTMLInputElement> &
+  VariantProps<typeof inputClass>;
 
-export const Input: Component<
-  JSX.InputHTMLAttributes<HTMLInputElement> & InputProps
-> = (props) => {
+export const Input: Component<InputProps> = (props) => {
   return <input {...props} class={inputClass({ class: props.class })} />;
 };
