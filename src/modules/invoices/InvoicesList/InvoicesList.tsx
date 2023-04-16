@@ -8,7 +8,7 @@ import { DeleteInvoice } from "~/modules/invoices/DeleteInvoice";
 import {
   InvoiceCompany,
   InvoiceSummary,
-} from "~/modules/invoices/InvoiceDetails";
+} from "~/modules/invoices/InvoicePrimitives";
 import { paths } from "~/utils/paths";
 
 type InvoiceItemProps = {
