@@ -1,7 +1,7 @@
 import { Component, Show, Suspense } from "solid-js";
 import { redirect, useRouteData } from "solid-start";
 import { createServerData$ } from "solid-start/server";
-import { LoadingSpinner } from "~/components/LoadingSpinner/LoadingSpinner";
+import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { Sidebar } from "~/modules/Sidebar/Sidebar";
 import { getSession } from "~/server/auth";
 import { paths } from "~/utils/paths";

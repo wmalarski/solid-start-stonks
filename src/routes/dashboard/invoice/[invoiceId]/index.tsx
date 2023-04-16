@@ -1,7 +1,7 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { Component, ErrorBoundary, Show, Suspense } from "solid-js";
 import { Navigate, RouteDataArgs, useRouteData } from "solid-start";
-import { LoadingSpinner } from "~/components/LoadingSpinner/LoadingSpinner";
+import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { InvoiceDetails } from "~/modules/InvoiceDetails/InvoiceDetails";
 import { InvoiceTopbar } from "~/modules/InvoiceTopbar/InvoiceTopbar";
 import { createInvoiceServerData, selectInvoiceKey } from "~/server/invoices";

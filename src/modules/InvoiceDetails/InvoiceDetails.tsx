@@ -1,8 +1,17 @@
 import { useI18n } from "@solid-primitives/i18n";
-import clsx from "clsx";
 import { Component } from "solid-js";
+import {
+  RadioGroupItem,
+  RadioGroupItemControl,
+  RadioGroupItemIndicator,
+  RadioGroupItemInput,
+  RadioGroupItemLabel,
+  RadioGroupLabel,
+  RadioGroupRoot,
+} from "~/components/RadioGroup";
 import { Invoice } from "~/db/invoices";
 import { pricePLN } from "~/utils/pricePLN";
+import { twCx } from "~/utils/twCva";
 
 type InvoiceCompanyProps = {
   address1: string;
@@ -47,7 +56,7 @@ export const InvoiceSummary: Component<InvoiceSummaryProps> = (props) => {
   };
 
   return (
-    <table class={clsx("text-xs", props.class)}>
+    <table class={twCx("text-xs", props.class)}>
       <tbody>
         <tr>
           <td>{t("invoice.toPay")}</td>
@@ -73,11 +82,45 @@ export const InvoiceSummary: Component<InvoiceSummaryProps> = (props) => {
   );
 };
 
-type Props = {
+type InvoicePaymentProps = {
   invoice: Invoice;
 };
 
-export const InvoiceDetails: Component<Props> = (props) => {
+export const InvoicePaymentMethod: Component<InvoicePaymentProps> = (props) => {
+  const [t] = useI18n();
+
+  return (
+    <RadioGroupRoot
+      class="flex flex-row items-start gap-4"
+      value={props.invoice.payment_method}
+    >
+      <RadioGroupLabel>{t("invoice.paymentMethod")}</RadioGroupLabel>
+      <div class="grid grid-cols-[auto_1fr] gap-1 text-sm">
+        <RadioGroupItem value="cash">
+          <RadioGroupItemInput />
+          <RadioGroupItemControl>
+            <RadioGroupItemIndicator />
+          </RadioGroupItemControl>
+          <RadioGroupItemLabel>{t("invoice.cash")}</RadioGroupItemLabel>
+        </RadioGroupItem>
+        <RadioGroupItem value="transfer">
+          <RadioGroupItemInput />
+          <RadioGroupItemControl>
+            <RadioGroupItemIndicator />
+          </RadioGroupItemControl>
+          <RadioGroupItemLabel>{t("invoice.transfer")}</RadioGroupItemLabel>
+        </RadioGroupItem>
+      </div>
+    </RadioGroupRoot>
+  );
+};
+
+type InvoiceTableProps = {
+  class: string;
+  invoice: Invoice;
+};
+
+export const InvoiceTable: Component<InvoiceTableProps> = (props) => {
   const [t, { locale }] = useI18n();
 
   const numberFormatter = (value: number) => {
@@ -86,18 +129,84 @@ export const InvoiceDetails: Component<Props> = (props) => {
     }).format(value);
   };
 
-  const dateFormatter = (value: string | Date) => {
-    return new Intl.DateTimeFormat(locale()).format(new Date(value));
-  };
-
   const sum = () => {
     return props.invoice.service_count * props.invoice.service_price;
+  };
+
+  return (
+    <table class={twCx("table w-full text-sm", props.class)}>
+      <thead>
+        <tr>
+          <th class="w-3 whitespace-normal">{t("invoice.index")}</th>
+          <th class="whitespace-normal">{t("invoice.serviceName")}</th>
+          <th class="w-3 whitespace-normal">{t("invoice.unit")}</th>
+          <th class="w-3 whitespace-normal">{t("invoice.count")}</th>
+          <th class="w-4 whitespace-normal">{t("invoice.price")}</th>
+          <th class="w-6 whitespace-normal">{t("invoice.sum")}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border text-xs">
+          <td>1</td>
+          <td class="whitespace-break-spaces">{props.invoice.service_title}</td>
+          <td>{props.invoice.service_unit}</td>
+          <td>{props.invoice.service_count}</td>
+          <td>{props.invoice.service_price}</td>
+          <td>{numberFormatter(sum())}</td>
+        </tr>
+      </tbody>
+    </table>
+  );
+};
+
+type InvoicePaymentSummaryProps = {
+  invoice: Invoice;
+};
+
+export const InvoicePaymentSummary: Component<InvoicePaymentSummaryProps> = (
+  props
+) => {
+  const [t, { locale }] = useI18n();
+
+  const dateFormatter = (value: string | Date) => {
+    return new Intl.DateTimeFormat(locale()).format(new Date(value));
   };
 
   const dueDate = () => {
     const date = new Date(props.invoice.date);
     date.setDate(date.getDate() + 15);
     return date;
+  };
+
+  return (
+    <table>
+      <tbody>
+        <tr>
+          <td class="text-right">{t("invoice.dueDate")}</td>
+          <td>{dateFormatter(dueDate())}</td>
+        </tr>
+        <tr>
+          <td class="text-right">{t("invoice.bankName")}</td>
+          <td>{props.invoice.payment_bank}</td>
+        </tr>
+        <tr>
+          <td class="text-right">{t("invoice.account")}</td>
+          <td>{props.invoice.payment_account}</td>
+        </tr>
+      </tbody>
+    </table>
+  );
+};
+
+type Props = {
+  invoice: Invoice;
+};
+
+export const InvoiceDetails: Component<Props> = (props) => {
+  const [t, { locale }] = useI18n();
+
+  const dateFormatter = (value: string | Date) => {
+    return new Intl.DateTimeFormat(locale()).format(new Date(value));
   };
 
   return (
@@ -129,66 +238,10 @@ export const InvoiceDetails: Component<Props> = (props) => {
         <div class="divider m-0" />
       </div>
       <div class="col-span-2 flex flex-row justify-center gap-x-20 text-sm">
-        <div class="flex flex-row items-start gap-4">
-          <p>{t("invoice.paymentMethod")}</p>
-          <div class="grid grid-cols-[auto_1fr] gap-1 text-sm">
-            <input
-              type="radio"
-              class="radio radio-xs"
-              checked={props.invoice.payment_method === "cash"}
-              onChange={() => void 0}
-            />
-            <span>{t("invoice.cash")}</span>
-            <input
-              type="radio"
-              class="radio radio-xs"
-              checked={props.invoice.payment_method === "transfer"}
-              onChange={() => void 0}
-            />
-            <span>{t("invoice.transfer")}</span>
-          </div>
-        </div>
-        <table>
-          <tbody>
-            <tr>
-              <td class="text-right">{t("invoice.dueDate")}</td>
-              <td>{dateFormatter(dueDate())}</td>
-            </tr>
-            <tr>
-              <td class="text-right">{t("invoice.bankName")}</td>
-              <td>{props.invoice.payment_bank}</td>
-            </tr>
-            <tr>
-              <td class="text-right">{t("invoice.account")}</td>
-              <td>{props.invoice.payment_account}</td>
-            </tr>
-          </tbody>
-        </table>
+        <InvoicePaymentMethod invoice={props.invoice} />
+        <InvoicePaymentSummary invoice={props.invoice} />
       </div>
-      <table class="col-span-2 table w-full text-sm">
-        <thead>
-          <tr>
-            <th class="w-3 whitespace-normal">{t("invoice.index")}</th>
-            <th class="whitespace-normal">{t("invoice.serviceName")}</th>
-            <th class="w-3 whitespace-normal">{t("invoice.unit")}</th>
-            <th class="w-3 whitespace-normal">{t("invoice.count")}</th>
-            <th class="w-4 whitespace-normal">{t("invoice.price")}</th>
-            <th class="w-6 whitespace-normal">{t("invoice.sum")}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="border text-xs">
-            <td>1</td>
-            <td class="whitespace-break-spaces">
-              {props.invoice.service_title}
-            </td>
-            <td>{props.invoice.service_unit}</td>
-            <td>{props.invoice.service_count}</td>
-            <td>{props.invoice.service_price}</td>
-            <td>{numberFormatter(sum())}</td>
-          </tr>
-        </tbody>
-      </table>
+      <InvoiceTable class="col-span-2" invoice={props.invoice} />
       <InvoiceSummary invoice={props.invoice} />
       <div class="col-span-2">
         <p class="text-xs font-bold">{t("invoice.notes")}</p>
