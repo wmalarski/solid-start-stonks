@@ -1,8 +1,8 @@
 import { useI18n } from "@solid-primitives/i18n";
-import clsx from "clsx";
 import { Component, createSignal, JSX, ParentComponent, Show } from "solid-js";
 import { FormProps } from "solid-start";
 import type { ZodIssue } from "zod";
+import { Button } from "~/components/Button";
 import { DatePicker } from "~/components/DatePicker/DatePicker";
 import { Invoice } from "~/db/invoices";
 
@@ -316,13 +316,14 @@ export const InvoiceForm: Component<Props> = (props) => {
           error={props.error?.notes}
         />
         <div class="col-span-2 flex w-full justify-end gap-2">
-          <button
+          <Button
+            color="primary"
             disabled={props.isLoading}
-            class={clsx("btn btn-primary", { loading: props.isLoading })}
+            isLoading={props.isLoading}
             type="submit"
           >
             {t("invoiceForm.save")}
-          </button>
+          </Button>
         </div>
       </props.Form>
     </div>

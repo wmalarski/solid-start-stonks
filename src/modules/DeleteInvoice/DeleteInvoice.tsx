@@ -1,6 +1,6 @@
 import { useI18n } from "@solid-primitives/i18n";
-import clsx from "clsx";
 import { Component } from "solid-js";
+import { Button } from "~/components/Button";
 import { type Invoice } from "~/db/invoices";
 import { createDeleteInvoiceServerAction } from "~/server/invoices";
 
@@ -16,14 +16,16 @@ export const DeleteInvoice: Component<Props> = (props) => {
   return (
     <submit.Form>
       <input type="hidden" name="id" id="id" value={props.invoice.id} />
-      <button
+      <Button
+        color="warning"
+        disabled={remove.pending}
+        isLoading={remove.pending}
+        size="sm"
         type="submit"
-        class={clsx("btn btn-warning btn-ghost btn-sm", {
-          loading: remove.pending,
-        })}
+        variant="ghost"
       >
         {t("topbar.removeInvoice")}
-      </button>
+      </Button>
     </submit.Form>
   );
 };

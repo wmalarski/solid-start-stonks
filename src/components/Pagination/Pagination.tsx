@@ -1,5 +1,5 @@
-import clsx from "clsx";
 import { Component } from "solid-js";
+import { Button, ButtonGroup } from "../Button";
 
 type Props = {
   current: number;
@@ -17,22 +17,22 @@ export const Pagination: Component<Props> = (props) => {
   };
 
   return (
-    <div class="btn-group">
-      <button
-        class={clsx("btn", { "btn-disabled": props.current < 1 })}
+    <ButtonGroup>
+      <Button
         disabled={props.current < 1}
         onClick={onPreviousClick}
+        variant={props.current < 1 ? "disabled" : "none"}
       >
         «
-      </button>
-      <button class="btn">{props.current + 1}</button>
-      <button
-        class={clsx("btn", { "btn-disabled": props.current + 1 >= props.max })}
+      </Button>
+      <span>{props.current + 1}</span>
+      <Button
         disabled={props.current + 1 >= props.max}
         onClick={onNextClick}
+        variant={props.current + 1 >= props.max ? "disabled" : "none"}
       >
         »
-      </button>
-    </div>
+      </Button>
+    </ButtonGroup>
   );
 };

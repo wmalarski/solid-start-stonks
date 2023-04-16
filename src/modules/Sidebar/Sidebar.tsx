@@ -2,6 +2,7 @@ import { signOut } from "@auth/solid-start/client";
 import { useI18n } from "@solid-primitives/i18n";
 import { Component } from "solid-js";
 import { A } from "solid-start";
+import { Button } from "~/components/Button";
 import { paths } from "~/utils/paths";
 
 export const Sidebar: Component = () => {
@@ -25,9 +26,9 @@ export const Sidebar: Component = () => {
       </ul>
       <ul class="menu w-56 p-2 ">
         <li>
-          <button onClick={handleClick} class="text-sm">
+          <Button onClick={handleClick} size="sm">
             {t("sidebar.logout")}
-          </button>
+          </Button>
         </li>
       </ul>
     </div>
