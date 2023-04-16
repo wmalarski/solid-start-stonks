@@ -1,6 +1,7 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { Link } from "@solidjs/router";
 import { Component, For } from "solid-js";
+import { A } from "solid-start";
+import { buttonClass } from "~/components/Button";
 import { Invoice } from "~/db/invoices";
 import { paths } from "~/utils/paths";
 import { DeleteInvoice } from "../DeleteInvoice/DeleteInvoice";
@@ -31,25 +32,25 @@ export const InvoiceTopbar: Component<Props> = (props) => {
           <For each={breadcrumbs()}>
             {({ path, text }) => (
               <li>
-                <Link href={path}>{text}</Link>
+                <A href={path}>{text}</A>
               </li>
             )}
           </For>
         </ul>
       </div>
       <div>
-        <Link
+        <A
           href={paths.editInvoice(props.invoice.id)}
-          class="btn btn-link btn-sm"
+          class={buttonClass({ size: "sm", variant: "link" })}
         >
           {t("topbar.editInvoice")}
-        </Link>
-        <Link
+        </A>
+        <A
           href={paths.copyInvoice(props.invoice.id)}
-          class="btn btn-link btn-sm"
+          class={buttonClass({ size: "sm", variant: "link" })}
         >
           {t("topbar.copyInvoice")}
-        </Link>
+        </A>
         <DeleteInvoice invoice={props.invoice} />
       </div>
     </div>

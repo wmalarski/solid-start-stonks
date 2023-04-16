@@ -1,7 +1,11 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { useNavigate } from "@solidjs/router";
 import { Component, ErrorBoundary, Show, Suspense } from "solid-js";
-import { Navigate, RouteDataArgs, useRouteData } from "solid-start";
+import {
+  Navigate,
+  RouteDataArgs,
+  useNavigate,
+  useRouteData,
+} from "solid-start";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { Pagination } from "~/components/Pagination";
 import { Invoices } from "~/modules/Invoices/Invoices";

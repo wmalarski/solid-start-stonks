@@ -1,6 +1,7 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { Link } from "@solidjs/router";
 import { Component } from "solid-js";
+import { A } from "solid-start";
+import { buttonClass } from "~/components/Button";
 import { paths } from "~/utils/paths";
 
 export const InvoicesTopbar: Component = () => {
@@ -11,14 +12,17 @@ export const InvoicesTopbar: Component = () => {
       <div class="breadcrumbs text-sm">
         <ul>
           <li>
-            <Link href={paths.invoices()}>{t("topbar.home")}</Link>
+            <A href={paths.invoices()}>{t("topbar.home")}</A>
           </li>
         </ul>
       </div>
       <div>
-        <Link href={paths.addInvoice} class="btn btn-link btn-sm">
+        <A
+          href={paths.addInvoice}
+          class={buttonClass({ size: "sm", variant: "link" })}
+        >
           {t("topbar.addInvoice")}
-        </Link>
+        </A>
       </div>
     </div>
   );
