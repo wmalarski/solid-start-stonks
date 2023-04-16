@@ -2,13 +2,14 @@ import { useI18n } from "@solid-primitives/i18n";
 import { Component, ErrorBoundary, Show, Suspense } from "solid-js";
 import { Navigate, RouteDataArgs, useRouteData } from "solid-start";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
-import { InvoiceForm } from "~/modules/InvoiceForm/InvoiceForm";
-import { InvoiceTopbar } from "~/modules/InvoiceTopbar/InvoiceTopbar";
+import { InvoiceForm } from "~/modules/invoices/InvoiceForm";
+import { InvoiceTopbar } from "~/modules/invoices/InvoiceTopbar";
 import {
   createInsertInvoiceServerAction,
   createInvoiceServerData,
   selectInvoiceKey,
 } from "~/server/invoices";
+import { getServerError } from "~/utils/errors";
 import { paths } from "~/utils/paths";
 
 export const routeData = ({ params }: RouteDataArgs) => {
@@ -44,7 +45,7 @@ const CopyInvoicePage: Component = () => {
               </h1>
               <div class="p-8 pt-0">
                 <InvoiceForm
-                  error={copy.error as string}
+                  error={getServerError(copy.error)}
                   Form={submit.Form}
                   initial={invoice()}
                   isLoading={copy.pending}

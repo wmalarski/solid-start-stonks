@@ -4,11 +4,11 @@ import { A } from "solid-start";
 import { buttonClass } from "~/components/Button";
 import { useDateFormatter } from "~/components/utils/format";
 import { Invoice } from "~/db/invoices";
-import { DeleteInvoice } from "~/modules/DeleteInvoice/DeleteInvoice";
+import { DeleteInvoice } from "~/modules/invoices/DeleteInvoice";
 import {
   InvoiceCompany,
   InvoiceSummary,
-} from "~/modules/InvoiceDetails/InvoiceDetails";
+} from "~/modules/invoices/InvoiceDetails";
 import { paths } from "~/utils/paths";
 
 type InvoiceItemProps = {
@@ -82,7 +82,7 @@ type Props = {
   invoices: Invoice[];
 };
 
-export const Invoices: Component<Props> = (props) => {
+export const InvoicesList: Component<Props> = (props) => {
   return (
     <div class="flex w-full flex-col gap-4 px-8">
       <For each={props.invoices}>

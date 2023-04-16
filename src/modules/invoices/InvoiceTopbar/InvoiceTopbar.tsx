@@ -9,7 +9,7 @@ import {
 import { buttonClass } from "~/components/Button";
 import { Invoice } from "~/db/invoices";
 import { paths } from "~/utils/paths";
-import { DeleteInvoice } from "../DeleteInvoice/DeleteInvoice";
+import { DeleteInvoice } from "../DeleteInvoice";
 
 type Props = {
   invoice: Invoice;

@@ -8,8 +8,8 @@ import {
 } from "solid-start";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { Pagination } from "~/components/Pagination";
-import { Invoices } from "~/modules/Invoices/Invoices";
-import { InvoicesTopbar } from "~/modules/InvoicesTopbar/InvoicesTopbar";
+import { InvoicesList } from "~/modules/invoices/InvoicesList";
+import { InvoicesTopbar } from "~/modules/invoices/InvoicesTopbar";
 import { createInvoicesServerData, selectInvoicesKey } from "~/server/invoices";
 import { paths } from "~/utils/paths";
 
@@ -46,7 +46,7 @@ const InvoicesPage: Component = () => {
                   onChange={(page) => navigate(paths.invoices(page))}
                 />
               </div>
-              <Invoices invoices={invoices().collection} />;
+              <InvoicesList invoices={invoices().collection} />;
             </div>
           )}
         </Show>
