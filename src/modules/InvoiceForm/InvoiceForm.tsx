@@ -4,6 +4,12 @@ import { FormProps } from "solid-start";
 import type { ZodIssue } from "zod";
 import { Button } from "~/components/Button";
 import { DatePicker } from "~/components/DatePicker";
+import {
+  TextFieldErrorMessage,
+  TextFieldInput,
+  TextFieldInputProps,
+  TextFieldLabel,
+} from "~/components/Input";
 import { Invoice } from "~/db/invoices";
 
 export type InvoiceFormData = Omit<Invoice, "id">;
@@ -44,20 +50,22 @@ type FormItemContainerProps = {
 const FormItemContainer: Component<FormItemContainerProps> = (props) => {
   return (
     <>
-      <label for={props.id} class="label label-text font-semibold">
+      <TextFieldLabel for={props.id} class="font-semibold">
         {props.label}
-      </label>
+      </TextFieldLabel>
       <div class="flex w-full flex-col gap-2">
         {props.children}
         <Show when={props.error}>
-          {(error) => <div class="text-sm text-red-400">{error().message}</div>}
+          {(error) => (
+            <TextFieldErrorMessage>{error().message}</TextFieldErrorMessage>
+          )}
         </Show>
       </div>
     </>
   );
 };
 
-type FormInputItemProps = JSX.InputHTMLAttributes<HTMLInputElement> & {
+type FormInputItemProps = TextFieldInputProps & {
   error?: ZodIssue;
   id: string;
   isLoading: boolean;
@@ -67,8 +75,10 @@ type FormInputItemProps = JSX.InputHTMLAttributes<HTMLInputElement> & {
 const FormInputItem: Component<FormInputItemProps> = (props) => {
   return (
     <FormItemContainer label={props.label} id={props.id} error={props.error}>
-      <input
-        class="input input-bordered input-sm grow"
+      <TextFieldInput
+        class="grow"
+        variant="bordered"
+        size="sm"
         disabled={props.isLoading}
         id={props.id}
         min={props.min}
@@ -114,8 +124,8 @@ export const InvoiceForm: Component<Props> = (props) => {
   return (
     <div class="card shadow-xl">
       <props.Form class="card-body grid w-full grid-cols-[auto_1fr] gap-2">
-        <Show when={props.id} keyed>
-          {(id) => <input id="id" name="id" type="hidden" value={id} />}
+        <Show when={props.id}>
+          {(id) => <input id="id" name="id" type="hidden" value={id()} />}
         </Show>
         <input
           id="date"
