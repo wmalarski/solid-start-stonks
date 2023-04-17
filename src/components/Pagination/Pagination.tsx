@@ -1,13 +1,13 @@
 import type { Component } from "solid-js";
 import { Button, ButtonGroup } from "../Button";
 
-type Props = {
+export type PaginationProps = {
   current: number;
   max: number;
   onChange: (value: number) => void;
 };
 
-export const Pagination: Component<Props> = (props) => {
+export const Pagination: Component<PaginationProps> = (props) => {
   const onPreviousClick = () => {
     props.onChange(props.current - 1);
   };

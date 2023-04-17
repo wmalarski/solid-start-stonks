@@ -168,7 +168,7 @@ export const InvoiceForm: Component<Props> = (props) => {
           error={props.error?.date}
         >
           <DatePicker
-            disabled={props.isLoading}
+            isDisabled={props.isLoading}
             id="date"
             value={date()}
             onChange={setDate}

@@ -1,5 +1,4 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { createQuery } from "@tanstack/solid-query";
 import { ErrorBoundary, Show, Suspense, type Component } from "solid-js";
 import {
   Navigate,
@@ -7,7 +6,6 @@ import {
   useRouteData,
   type RouteDataArgs,
 } from "solid-start";
-import server$ from "solid-start/server";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { Pagination } from "~/components/Pagination";
 import { InvoicesList } from "~/modules/invoices/InvoicesList";
@@ -30,13 +28,13 @@ export const routeData = (args: RouteDataArgs) => {
 const InvoicesPage: Component = () => {
   const [t] = useI18n();
 
-  const query = createQuery({
-    queryFn: () =>
-      server$(() => {
-        //
-      })(),
-    queryKey: () => ["invoices", { limit, page: 0 }],
-  });
+  // const query = createQuery({
+  //   queryFn: () =>
+  //     server$(() => {
+  //       //
+  //     })(),
+  //   queryKey: () => ["invoices", { limit, page: 0 }],
+  // });
 
   const data = useRouteData<typeof routeData>();
   const navigate = useNavigate();

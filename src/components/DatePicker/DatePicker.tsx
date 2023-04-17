@@ -8,10 +8,10 @@ type DateSelectOption = {
 };
 
 type DateSelectProps = {
-  disabled: boolean;
-  value: number;
+  isDisabled: boolean;
   onChange: (value: number) => void;
   options: DateSelectOption[];
+  value: number;
 };
 
 const DateSelect: Component<DateSelectProps> = (props) => {
@@ -21,11 +21,11 @@ const DateSelect: Component<DateSelectProps> = (props) => {
 
   return (
     <Select
-      variant="bordered"
-      size="sm"
-      disabled={props.disabled}
-      value={props.value}
+      disabled={props.isDisabled}
       onChange={onChange}
+      size="sm"
+      value={props.value}
+      variant="bordered"
     >
       <For each={props.options}>
         {(option) => <Option value={option.value}>{option.text}</Option>}
@@ -34,14 +34,14 @@ const DateSelect: Component<DateSelectProps> = (props) => {
   );
 };
 
-type Props = {
-  disabled: boolean;
+export type DatePickerProps = {
+  isDisabled: boolean;
   id: string;
   value: Date;
   onChange: (value: Date) => void;
 };
 
-export const DatePicker: Component<Props> = (props) => {
+export const DatePicker: Component<DatePickerProps> = (props) => {
   const [, { locale }] = useI18n();
 
   const months = () => {
@@ -98,7 +98,7 @@ export const DatePicker: Component<Props> = (props) => {
           <Switch>
             <Match when={part.type === "day"}>
               <DateSelect
-                disabled={props.disabled}
+                isDisabled={props.isDisabled}
                 onChange={onDayChange}
                 options={days()}
                 value={props.value.getDate()}
@@ -109,7 +109,7 @@ export const DatePicker: Component<Props> = (props) => {
             </Match>
             <Match when={part.type === "month"}>
               <DateSelect
-                disabled={props.disabled}
+                isDisabled={props.isDisabled}
                 onChange={onMonthChange}
                 options={months()}
                 value={props.value.getMonth()}
@@ -117,7 +117,7 @@ export const DatePicker: Component<Props> = (props) => {
             </Match>
             <Match when={part.type === "year"}>
               <DateSelect
-                disabled={props.disabled}
+                isDisabled={props.isDisabled}
                 onChange={onYearChange}
                 options={years()}
                 value={Number(part.value)}
