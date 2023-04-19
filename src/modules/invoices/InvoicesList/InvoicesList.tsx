@@ -2,6 +2,7 @@ import { useI18n } from "@solid-primitives/i18n";
 import { For, type Component } from "solid-js";
 import { A } from "solid-start";
 import { buttonClass } from "~/components/Button";
+import { Card, CardActions, CardBody, CardTitle } from "~/components/Card";
 import { useDateFormatter } from "~/components/utils/format";
 import type { Invoice } from "~/db/invoices";
 import { DeleteInvoice } from "~/modules/invoices/DeleteInvoice";
@@ -21,12 +22,12 @@ const InvoiceItem: Component<InvoiceItemProps> = (props) => {
   const dateFormatter = useDateFormatter();
 
   return (
-    <div class="card w-full shadow-xl">
-      <div class="card-body bg-base-100">
+    <Card class="w-full shadow-xl">
+      <CardBody component="div" class="bg-base-100">
         <div class="flex justify-between">
-          <h2 class="card-title text-2xl font-extrabold">
+          <CardTitle component="h2" class="title text-2xl font-extrabold">
             {t("invoice.title", { title: props.invoice.invoice_title })}
-          </h2>
+          </CardTitle>
           <span class="col-span-2 text-right text-sm">
             {t("invoice.header", {
               city: props.invoice.city,
@@ -52,7 +53,7 @@ const InvoiceItem: Component<InvoiceItemProps> = (props) => {
           <div class="divider col-span-2 m-0" />
           <InvoiceSummary class="col-span-2" invoice={props.invoice} />
         </div>
-        <div class="card-actions">
+        <CardActions>
           <A
             class={buttonClass({ size: "sm", variant: "link" })}
             href={paths.invoice(props.invoice.id)}
@@ -72,9 +73,9 @@ const InvoiceItem: Component<InvoiceItemProps> = (props) => {
             {t("topbar.copyInvoice")}
           </A>
           <DeleteInvoice invoice={props.invoice} />
-        </div>
-      </div>
-    </div>
+        </CardActions>
+      </CardBody>
+    </Card>
   );
 };
 

@@ -9,6 +9,7 @@ import {
 import type { FormProps } from "solid-start";
 import type { ZodIssue } from "zod";
 import { Button } from "~/components/Button";
+import { Card, CardBody } from "~/components/Card";
 import { DatePicker } from "~/components/DatePicker";
 import {
   TextFieldErrorMessage,
@@ -129,8 +130,8 @@ export const InvoiceForm: Component<Props> = (props) => {
   };
 
   return (
-    <div class="card shadow-xl">
-      <props.Form class="card-body grid w-full gap-2">
+    <Card class="shadow-xl">
+      <CardBody component={props.Form} class="grid w-full gap-2">
         <Show when={props.id}>
           {(id) => <input id="id" name="id" type="hidden" value={id()} />}
         </Show>
@@ -342,7 +343,7 @@ export const InvoiceForm: Component<Props> = (props) => {
             {t("invoiceForm.save")}
           </Button>
         </div>
-      </props.Form>
-    </div>
+      </CardBody>
+    </Card>
   );
 };

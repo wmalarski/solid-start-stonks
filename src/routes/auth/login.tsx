@@ -4,6 +4,7 @@ import type { Component } from "solid-js";
 import { redirect } from "solid-start";
 import { createServerData$ } from "solid-start/server";
 import { Button } from "~/components/Button";
+import { Card, CardActions, CardBody, CardTitle } from "~/components/Card";
 import { getSession } from "~/server/auth";
 import { paths } from "~/utils/paths";
 
@@ -25,17 +26,17 @@ const Login: Component = () => {
   };
 
   return (
-    <div class="card bg-base-300">
-      <div class="card-body">
-        <h3 class="card-title">{t("login.header")}</h3>
+    <Card class="bg-base-300">
+      <CardBody component="div">
+        <CardTitle component="h3">{t("login.header")}</CardTitle>
         <div class="pb-2">{t("login.subheader")}</div>
-        <div class="card-actions relative pt-3">
+        <CardActions class="relative pt-3">
           <Button color="primary" class="w-full" onClick={onClick}>
             {t("login.button")}
           </Button>
-        </div>
-      </div>
-    </div>
+        </CardActions>
+      </CardBody>
+    </Card>
   );
 };
 
