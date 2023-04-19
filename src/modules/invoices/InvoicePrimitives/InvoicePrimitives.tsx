@@ -1,5 +1,6 @@
 import { useI18n } from "@solid-primitives/i18n";
 import type { Component } from "solid-js";
+import { Divider } from "~/components/Divider";
 import {
   RadioGroupItem,
   RadioGroupItemControl,
@@ -32,7 +33,7 @@ export const InvoiceCompany: Component<InvoiceCompanyProps> = (props) => {
   return (
     <div>
       <p class="text-xl font-extrabold">{props.title}</p>
-      <div class="divider m-0" />
+      <Divider class="m-0" />
       <p class="font-bold">{props.name}</p>
       <p class="text-sm">{props.address1}</p>
       <p class="text-sm">{props.address2}</p>

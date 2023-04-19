@@ -1,5 +1,6 @@
 import { useI18n } from "@solid-primitives/i18n";
 import type { Component } from "solid-js";
+import { Divider } from "~/components/Divider";
 import { useDateFormatter } from "~/components/utils/format";
 import type { Invoice } from "~/db/invoices";
 import {
@@ -45,7 +46,7 @@ export const InvoiceDetails: Component<Props> = (props) => {
         <p class="m-1 text-center text-2xl font-extrabold">
           {t("invoice.title", { title: props.invoice.invoice_title })}
         </p>
-        <div class="divider m-0" />
+        <Divider class="m-0" />
       </div>
       <div class="col-span-2 flex flex-row justify-center gap-x-20 text-sm">
         <InvoicePaymentMethod invoice={props.invoice} />

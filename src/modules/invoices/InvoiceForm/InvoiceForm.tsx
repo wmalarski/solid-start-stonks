@@ -11,6 +11,7 @@ import type { ZodIssue } from "zod";
 import { Button } from "~/components/Button";
 import { Card, CardBody } from "~/components/Card";
 import { DatePicker } from "~/components/DatePicker";
+import { Divider } from "~/components/Divider";
 import {
   TextFieldErrorMessage,
   TextFieldInput,
@@ -100,8 +101,8 @@ const FormInputItem: Component<FormInputItemProps> = (props) => {
   );
 };
 
-const Divider: Component = () => {
-  return <div class="divider col-span-2 m-0" />;
+const FormDivider: Component = () => {
+  return <Divider class="col-span-2 m-0" />;
 };
 
 type SubHeadingProps = {
@@ -184,7 +185,7 @@ export const InvoiceForm: Component<Props> = (props) => {
           value={initial().invoice_title}
           error={props.error?.invoice_title}
         />
-        <Divider />
+        <FormDivider />
         <SubHeading>{t("invoiceForm.seller")}</SubHeading>
         <FormInputItem
           isLoading={props.isLoading}
@@ -222,7 +223,7 @@ export const InvoiceForm: Component<Props> = (props) => {
           value={initial().seller_nip}
           error={props.error?.seller_nip}
         />
-        <Divider />
+        <FormDivider />
         <SubHeading>{t("invoiceForm.buyer")}</SubHeading>
         <FormInputItem
           isLoading={props.isLoading}
@@ -260,7 +261,7 @@ export const InvoiceForm: Component<Props> = (props) => {
           value={initial().buyer_nip}
           error={props.error?.buyer_nip}
         />
-        <Divider />
+        <FormDivider />
         <SubHeading>{t("invoiceForm.payment")}</SubHeading>
         <FormInputItem
           isLoading={props.isLoading}
@@ -280,7 +281,7 @@ export const InvoiceForm: Component<Props> = (props) => {
           value={initial().payment_bank}
           error={props.error?.payment_bank}
         />
-        <Divider />
+        <FormDivider />
         <SubHeading>{t("invoiceForm.service")}</SubHeading>
         <FormInputItem
           isLoading={props.isLoading}
@@ -322,7 +323,7 @@ export const InvoiceForm: Component<Props> = (props) => {
           value={initial().service_unit}
           error={props.error?.service_unit}
         />
-        <Divider />
+        <FormDivider />
         <SubHeading>{t("invoiceForm.notes")}</SubHeading>
         <FormInputItem
           isLoading={props.isLoading}

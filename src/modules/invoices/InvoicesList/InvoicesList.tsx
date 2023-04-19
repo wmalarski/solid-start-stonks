@@ -3,6 +3,7 @@ import { For, type Component } from "solid-js";
 import { A } from "solid-start";
 import { buttonClass } from "~/components/Button";
 import { Card, CardActions, CardBody, CardTitle } from "~/components/Card";
+import { Divider } from "~/components/Divider";
 import { useDateFormatter } from "~/components/utils/format";
 import type { Invoice } from "~/db/invoices";
 import { DeleteInvoice } from "~/modules/invoices/DeleteInvoice";
@@ -50,7 +51,7 @@ const InvoiceItem: Component<InvoiceItemProps> = (props) => {
             nip={props.invoice.buyer_nip}
             title={t("invoice.buyer")}
           />
-          <div class="divider col-span-2 m-0" />
+          <Divider class="col-span-2 m-0" />
           <InvoiceSummary class="col-span-2" invoice={props.invoice} />
         </div>
         <CardActions>
