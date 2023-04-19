@@ -25,7 +25,7 @@ export const Pagination: Component<PaginationProps> = (props) => {
       >
         «
       </Button>
-      <span>{props.current + 1}</span>
+      <Button variant="active">{props.current + 1}</Button>
       <Button
         disabled={props.current + 1 >= props.max}
         onClick={onNextClick}

@@ -8,6 +8,7 @@ import {
   BreadcrumbsRoot,
 } from "~/components/Breadcrumbs";
 import { buttonClass } from "~/components/Button";
+import { Navbar } from "~/components/Navbar";
 import type { Invoice } from "~/db/invoices";
 import { paths } from "~/utils/paths";
 import { DeleteInvoice } from "../DeleteInvoice";
@@ -32,7 +33,7 @@ export const InvoiceTopbar: Component<Props> = (props) => {
   });
 
   return (
-    <div class="navbar flex w-full justify-between px-8 print:invisible print:hidden">
+    <Navbar class="flex w-full justify-between px-8 print:invisible print:hidden">
       <BreadcrumbsRoot>
         <BreadcrumbsList>
           <For each={breadcrumbs()}>
@@ -64,6 +65,6 @@ export const InvoiceTopbar: Component<Props> = (props) => {
         </A>
         <DeleteInvoice invoice={props.invoice} />
       </div>
-    </div>
+    </Navbar>
   );
 };

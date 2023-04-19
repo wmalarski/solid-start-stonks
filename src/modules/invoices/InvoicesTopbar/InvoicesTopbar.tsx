@@ -8,14 +8,15 @@ import {
   BreadcrumbsRoot,
 } from "~/components/Breadcrumbs";
 import { buttonClass } from "~/components/Button";
+import { Navbar } from "~/components/Navbar";
 import { paths } from "~/utils/paths";
 
 export const InvoicesTopbar: Component = () => {
   const [t] = useI18n();
 
   return (
-    <div class="navbar flex w-full justify-between px-8 print:invisible print:hidden">
-      <BreadcrumbsRoot class="breadcrumbs text-sm">
+    <Navbar class="flex w-full justify-between px-8 print:invisible print:hidden">
+      <BreadcrumbsRoot class="text-sm">
         <BreadcrumbsList>
           <BreadcrumbsItem asChild>
             <As component={A} href={paths.invoices()}>
@@ -32,6 +33,6 @@ export const InvoicesTopbar: Component = () => {
           {t("topbar.addInvoice")}
         </A>
       </div>
-    </div>
+    </Navbar>
   );
 };
