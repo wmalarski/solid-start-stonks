@@ -26,7 +26,7 @@ const InvoiceItem: Component<InvoiceItemProps> = (props) => {
     <Card class="w-full shadow-xl">
       <CardBody component="div" class="bg-base-100">
         <div class="flex justify-between">
-          <CardTitle component="h2" class="title text-2xl font-extrabold">
+          <CardTitle component="h2" class="text-2xl font-extrabold">
             {t("invoice.title", { title: props.invoice.invoice_title })}
           </CardTitle>
           <span class="col-span-2 text-right text-sm">

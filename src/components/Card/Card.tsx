@@ -1,4 +1,5 @@
 import { As } from "@kobalte/core";
+import type { VariantProps } from "class-variance-authority";
 import type { Component, JSX, ValidComponent } from "solid-js";
 import type { DynamicProps } from "solid-js/web";
 import { twCva, twCx } from "../utils/twCva";
@@ -22,7 +23,8 @@ export const cardClass = twCva(["card"], {
   },
 });
 
-export type CardProps = JSX.HTMLAttributes<HTMLDivElement>;
+export type CardProps = JSX.HTMLAttributes<HTMLDivElement> &
+  VariantProps<typeof cardClass>;
 
 export const Card: Component<CardProps> = (props) => {
   return <div {...props} class={cardClass({ class: props.class })} />;

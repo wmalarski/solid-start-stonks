@@ -1,3 +1,4 @@
+import type { VariantProps } from "class-variance-authority";
 import type { Component, JSX } from "solid-js";
 import { twCva, twCx } from "../utils/twCva";
 
@@ -18,7 +19,8 @@ export const menuClass = twCva(["menu"], {
   },
 });
 
-export type MenuProps = JSX.HTMLAttributes<HTMLUListElement>;
+export type MenuProps = JSX.HTMLAttributes<HTMLUListElement> &
+  VariantProps<typeof menuClass>;
 
 export const Menu: Component<MenuProps> = (props) => {
   return <ul {...props} class={menuClass({ class: props.class })} />;
@@ -51,7 +53,8 @@ export const menuItemClass = twCva([], {
   },
 });
 
-export type MenuTitleProps = JSX.LiHTMLAttributes<HTMLLIElement>;
+export type MenuTitleProps = JSX.LiHTMLAttributes<HTMLLIElement> &
+  VariantProps<typeof menuItemClass>;
 
 export const MenuTitle: Component<MenuTitleProps> = (props) => {
   return (

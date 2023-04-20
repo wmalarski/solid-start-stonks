@@ -1,3 +1,4 @@
+import type { VariantProps } from "class-variance-authority";
 import type { Component, JSX } from "solid-js";
 import { twCva } from "../utils/twCva";
 
@@ -13,7 +14,8 @@ export const dividerClass = twCva(["divider"], {
   },
 });
 
-export type DividerProps = JSX.HTMLAttributes<HTMLDivElement>;
+export type DividerProps = JSX.HTMLAttributes<HTMLDivElement> &
+  VariantProps<typeof dividerClass>;
 
 export const Divider: Component<DividerProps> = (props) => {
   return <div {...props} class={dividerClass({ class: props.class })} />;

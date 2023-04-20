@@ -11,6 +11,14 @@ import {
   RadioGroupRoot,
 } from "~/components/RadioGroup";
 import {
+  Table,
+  TableBody,
+  TableDataCell,
+  TableHead,
+  TableHeaderCell,
+  TableRow,
+} from "~/components/Table";
+import {
   useCurrencyFormatter,
   useDateFormatter,
   useNumberFormatter,
@@ -131,28 +139,42 @@ export const InvoiceTable: Component<InvoiceTableProps> = (props) => {
   };
 
   return (
-    <table class={twCx("table w-full text-sm", props.class)}>
-      <thead>
-        <tr>
-          <th class="w-3 whitespace-normal">{t("invoice.index")}</th>
-          <th class="whitespace-normal">{t("invoice.serviceName")}</th>
-          <th class="w-3 whitespace-normal">{t("invoice.unit")}</th>
-          <th class="w-3 whitespace-normal">{t("invoice.count")}</th>
-          <th class="w-4 whitespace-normal">{t("invoice.price")}</th>
-          <th class="w-6 whitespace-normal">{t("invoice.sum")}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="border text-xs">
-          <td>1</td>
-          <td class="whitespace-break-spaces">{props.invoice.service_title}</td>
-          <td>{props.invoice.service_unit}</td>
-          <td>{props.invoice.service_count}</td>
-          <td>{props.invoice.service_price}</td>
-          <td>{numberFormatter(sum())}</td>
-        </tr>
-      </tbody>
-    </table>
+    <Table class={twCx("w-full text-sm", props.class)}>
+      <TableHead>
+        <TableRow>
+          <TableHeaderCell class="w-3 whitespace-normal">
+            {t("invoice.index")}
+          </TableHeaderCell>
+          <TableHeaderCell class="whitespace-normal">
+            {t("invoice.serviceName")}
+          </TableHeaderCell>
+          <TableHeaderCell class="w-3 whitespace-normal">
+            {t("invoice.unit")}
+          </TableHeaderCell>
+          <TableHeaderCell class="w-3 whitespace-normal">
+            {t("invoice.count")}
+          </TableHeaderCell>
+          <TableHeaderCell class="w-4 whitespace-normal">
+            {t("invoice.price")}
+          </TableHeaderCell>
+          <TableHeaderCell class="w-6 whitespace-normal">
+            {t("invoice.sum")}
+          </TableHeaderCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        <TableRow class="border text-xs">
+          <TableDataCell>1</TableDataCell>
+          <TableDataCell class="whitespace-break-spaces">
+            {props.invoice.service_title}
+          </TableDataCell>
+          <TableDataCell>{props.invoice.service_unit}</TableDataCell>
+          <TableDataCell>{props.invoice.service_count}</TableDataCell>
+          <TableDataCell>{props.invoice.service_price}</TableDataCell>
+          <TableDataCell>{numberFormatter(sum())}</TableDataCell>
+        </TableRow>
+      </TableBody>
+    </Table>
   );
 };
 
