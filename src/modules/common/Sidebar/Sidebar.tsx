@@ -3,6 +3,7 @@ import { useI18n } from "@solid-primitives/i18n";
 import type { Component } from "solid-js";
 import { A } from "solid-start";
 import { Button } from "~/components/Button";
+import { Menu, MenuItem } from "~/components/Menu";
 import { paths } from "~/utils/paths";
 
 export const Sidebar: Component = () => {
@@ -17,20 +18,20 @@ export const Sidebar: Component = () => {
       data-theme="black"
       class="flex min-h-screen flex-col justify-between py-4 print:invisible print:hidden"
     >
-      <ul class="menu w-56 p-2 ">
-        <li>
+      <Menu class="w-56 p-2 ">
+        <MenuItem>
           <A class="text-sm" activeClass="active" href={paths.index}>
             {t("sidebar.home")}
           </A>
-        </li>
-      </ul>
-      <ul class="menu w-56 p-2 ">
-        <li>
+        </MenuItem>
+      </Menu>
+      <Menu class="w-56 p-2 ">
+        <MenuItem>
           <Button onClick={handleClick} size="sm">
             {t("sidebar.logout")}
           </Button>
-        </li>
-      </ul>
+        </MenuItem>
+      </Menu>
     </div>
   );
 };
