@@ -1,60 +1,62 @@
 import { useI18n } from "@solid-primitives/i18n";
+import { createQuery } from "@tanstack/solid-query";
 import { ErrorBoundary, Show, Suspense, type Component } from "solid-js";
-import {
-  Navigate,
-  useNavigate,
-  useRouteData,
-  type RouteDataArgs,
-} from "solid-start";
+import { Navigate, useNavigate, useSearchParams } from "solid-start";
+import server$ from "solid-start/server";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { Pagination } from "~/components/Pagination";
-import { InvoicesList } from "~/modules/invoices/InvoicesList";
+import { countInvoicesByUserId, selectInvoicesByUserId } from "~/db/invoices";
 import { InvoicesTopbar } from "~/modules/invoices/InvoicesTopbar";
-import { createInvoicesServerData, selectInvoicesKey } from "~/server/invoices";
+import { getUser } from "~/server/auth";
+import { selectInvoicesKey } from "~/server/invoices";
 import { paths } from "~/utils/paths";
 
 const limit = 10;
 
-export const routeData = (args: RouteDataArgs) => {
-  const page = () => +args.location.query.page || 0;
+const fetchInvoices = server$(
+  async ([, args]: ReturnType<typeof selectInvoicesKey>) => {
+    const user = await getUser(server$.request);
 
-  const invoices = createInvoicesServerData(() =>
-    selectInvoicesKey({ limit, offset: page() * limit })
-  );
+    const [collection, total] = await Promise.all([
+      selectInvoicesByUserId({ limit, offset: args.offset, userId: user.id }),
+      countInvoicesByUserId({ userId: user.id }),
+    ]);
 
-  return { invoices, page };
-};
+    return { collection, total };
+  }
+);
 
 const InvoicesPage: Component = () => {
   const [t] = useI18n();
 
-  // const query = createQuery({
-  //   queryFn: () =>
-  //     server$(() => {
-  //       //
-  //     })(),
-  //   queryKey: () => ["invoices", { limit, page: 0 }],
-  // });
+  const [searchParams] = useSearchParams();
 
-  const data = useRouteData<typeof routeData>();
+  const page = () => +searchParams.page || 0;
+
+  const invoicesQuery = createQuery(() => ({
+    queryFn: (context) => fetchInvoices(context.queryKey),
+    queryKey: selectInvoicesKey({ limit, offset: page() * limit }),
+  }));
+
   const navigate = useNavigate();
 
   return (
     <ErrorBoundary fallback={<Navigate href={paths.notFound} />}>
       <Suspense fallback={<LoadingSpinner />}>
-        <Show when={data.invoices()}>
+        <Show when={invoicesQuery.data}>
           {(invoices) => (
             <div class="grid w-full grid-cols-1 grid-rows-[auto_1fr] items-start">
               <InvoicesTopbar />
               <div class="flex justify-between px-8">
                 <h1 class="text-3xl font-semibold">{t("invoices.header")}</h1>
                 <Pagination
-                  current={data.page()}
+                  current={page()}
                   max={Math.ceil(invoices().total / limit)}
                   onChange={(page) => navigate(paths.invoices(page))}
                 />
               </div>
-              <InvoicesList invoices={invoices().collection} />;
+              <pre>{JSON.stringify(invoices(), null, 2)}</pre>
+              {/* <InvoicesList invoices={invoices().collection} />; */}
             </div>
           )}
         </Show>

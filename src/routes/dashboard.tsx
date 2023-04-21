@@ -9,8 +9,6 @@ export const routeData = () => {
   return createServerData$(async (_source, { request }) => {
     const session = await getSession(request);
 
-    console.log("dashboard", { session });
-
     if (!session) {
       return redirect(paths.login);
     }
