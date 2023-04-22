@@ -6,7 +6,10 @@ import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { Pagination } from "~/components/Pagination";
 import { InvoicesList } from "~/modules/invoices/InvoicesList";
 import { InvoicesTopbar } from "~/modules/invoices/InvoicesTopbar";
-import { queryInvoices, selectInvoicesKey } from "~/server/invoices";
+import {
+  selectInvoicesKey,
+  selectInvoicesServerQuery,
+} from "~/server/invoices";
 import { paths } from "~/utils/paths";
 
 const limit = 10;
@@ -19,7 +22,7 @@ const InvoicesPage: Component = () => {
   const page = () => +searchParams.page || 0;
 
   const invoicesQuery = createQuery(() => ({
-    queryFn: (context) => queryInvoices(context.queryKey),
+    queryFn: (context) => selectInvoicesServerQuery(context.queryKey),
     queryKey: selectInvoicesKey({ limit, offset: page() * limit }),
   }));
 

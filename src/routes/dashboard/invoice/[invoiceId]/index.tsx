@@ -5,7 +5,7 @@ import { Navigate, useParams } from "solid-start";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { InvoiceDetails } from "~/modules/invoices/InvoiceDetails";
 import { InvoiceTopbar } from "~/modules/invoices/InvoiceTopbar";
-import { queryInvoice, selectInvoiceKey } from "~/server/invoices";
+import { selectInvoiceKey, selectInvoiceServerQuery } from "~/server/invoices";
 import { paths } from "~/utils/paths";
 
 const InvoicePage: Component = () => {
@@ -14,7 +14,7 @@ const InvoicePage: Component = () => {
   const params = useParams();
 
   const invoiceQuery = createQuery(() => ({
-    queryFn: (context) => queryInvoice(context.queryKey),
+    queryFn: (context) => selectInvoiceServerQuery(context.queryKey),
     queryKey: selectInvoiceKey({ id: params.invoiceId }),
   }));
 

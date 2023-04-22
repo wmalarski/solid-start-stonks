@@ -7,8 +7,8 @@ import { InvoiceForm } from "~/modules/invoices/InvoiceForm";
 import { InvoiceTopbar } from "~/modules/invoices/InvoiceTopbar";
 import {
   createInsertInvoiceServerAction,
-  queryInvoice,
   selectInvoiceKey,
+  selectInvoiceServerQuery,
 } from "~/server/invoices";
 import { getServerError } from "~/utils/errors";
 import { paths } from "~/utils/paths";
@@ -19,7 +19,7 @@ const CopyInvoicePage: Component = () => {
   const params = useParams();
 
   const invoiceQuery = createQuery(() => ({
-    queryFn: (context) => queryInvoice(context.queryKey),
+    queryFn: (context) => selectInvoiceServerQuery(context.queryKey),
     queryKey: selectInvoiceKey({ id: params.invoiceId }),
   }));
 
