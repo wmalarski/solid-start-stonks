@@ -6,12 +6,9 @@ import { Card, CardActions, CardBody, CardTitle } from "~/components/Card";
 import { Divider } from "~/components/Divider";
 import { useDateFormatter } from "~/components/utils/format";
 import type { Invoice } from "~/db/invoices";
-import { DeleteInvoice } from "~/modules/invoices/DeleteInvoice";
-import {
-  InvoiceCompany,
-  InvoiceSummary,
-} from "~/modules/invoices/InvoicePrimitives";
 import { paths } from "~/utils/paths";
+import { DeleteInvoice } from "../DeleteInvoice";
+import { InvoiceCompany, InvoiceSummary } from "../InvoicePrimitives";
 
 type InvoiceItemProps = {
   invoice: Invoice;

@@ -1,6 +1,7 @@
 // @refresh reload
 import { I18nContext } from "@solid-primitives/i18n";
-import { Suspense, type JSX } from "solid-js";
+import { QueryClient, QueryClientProvider } from "@tanstack/solid-query";
+import { Suspense, createSignal, type JSX } from "solid-js";
 import {
   Body,
   ErrorBoundary,
@@ -16,6 +17,8 @@ import "./root.css";
 import { i18n } from "./utils/i18n";
 
 const Root = (): JSX.Element => {
+  const [queryClient] = createSignal(new QueryClient());
+
   return (
     <Html lang="en" data-theme="corporate">
       <Head>
@@ -27,9 +30,11 @@ const Root = (): JSX.Element => {
         <Suspense>
           <ErrorBoundary>
             <I18nContext.Provider value={i18n}>
-              <Routes>
-                <FileRoutes />
-              </Routes>
+              <QueryClientProvider client={queryClient()}>
+                <Routes>
+                  <FileRoutes />
+                </Routes>
+              </QueryClientProvider>
             </I18nContext.Provider>
           </ErrorBoundary>
         </Suspense>

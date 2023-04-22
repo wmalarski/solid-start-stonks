@@ -1,7 +1,6 @@
-import { As } from "@kobalte/core";
 import type { VariantProps } from "class-variance-authority";
 import type { Component, JSX, ValidComponent } from "solid-js";
-import type { DynamicProps } from "solid-js/web";
+import { Dynamic, type DynamicProps } from "solid-js/web";
 import { twCva, twCx } from "../utils/twCva";
 
 export const cardClass = twCva(["card"], {
@@ -34,7 +33,7 @@ export type CardTitleProps<T extends ValidComponent> = DynamicProps<T>;
 
 export function CardTitle<T extends ValidComponent>(props: CardTitleProps<T>) {
   return (
-    <As
+    <Dynamic
       {...props}
       component={props.component}
       class={twCx("card-title", props.class)}
@@ -46,7 +45,7 @@ export type CardBodyProps<T extends ValidComponent> = DynamicProps<T>;
 
 export function CardBody<T extends ValidComponent>(props: CardBodyProps<T>) {
   return (
-    <As
+    <Dynamic
       {...props}
       component={props.component}
       class={twCx("card-body", props.class)}
