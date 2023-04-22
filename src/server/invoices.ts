@@ -1,8 +1,4 @@
-import {
-  createServerAction$,
-  createServerData$,
-  redirect,
-} from "solid-start/server";
+import server$, { createServerAction$, redirect } from "solid-start/server";
 import { z } from "zod";
 import {
   countInvoicesByUserId,
@@ -16,59 +12,57 @@ import { zodFormParse } from "~/server/utils";
 import { paths } from "~/utils/paths";
 import { getUser } from "./auth";
 
-type SelectInvoiceKeyArgs = {
-  id: string;
-};
+const selectInvoiceKeyArgsSchema = z.object({
+  id: z.string(),
+});
 
-export const selectInvoiceKey = (args: SelectInvoiceKeyArgs) => {
+export const selectInvoiceKey = (
+  args: z.infer<typeof selectInvoiceKeyArgsSchema>
+) => {
   return ["selectInvoice", args] as const;
 };
 
-export const createInvoiceServerData = (
-  key: () => ReturnType<typeof selectInvoiceKey>
+export const queryInvoice = server$(
+  async ([, args]: ReturnType<typeof selectInvoiceKey>) => {
+    const { id } = selectInvoiceKeyArgsSchema.parse(args);
+
+    const user = await getUser(server$.request);
+
+    const invoice = await selectInvoiceById({ id, userId: user.id });
+
+    if (!invoice) {
+      throw redirect(paths.notFound);
+    }
+
+    return invoice;
+  }
+);
+
+const selectInvoicesKeyArgsSchema = z.object({
+  limit: z.number(),
+  offset: z.number(),
+});
+
+export const selectInvoicesKey = (
+  args: z.infer<typeof selectInvoicesKeyArgsSchema>
 ) => {
-  return createServerData$(
-    async ([, { id }], event) => {
-      const user = await getUser(event.request);
-
-      const invoice = await selectInvoiceById({ id, userId: user.id });
-
-      if (!invoice) {
-        throw redirect(paths.notFound);
-      }
-
-      return invoice;
-    },
-    { key }
-  );
-};
-
-type SelectInvoicesKeyArgs = {
-  offset: number;
-  limit: number;
-};
-
-export const selectInvoicesKey = (args: SelectInvoicesKeyArgs) => {
   return ["selectInvoices", args] as const;
 };
 
-export const createInvoicesServerData = (
-  key: () => ReturnType<typeof selectInvoicesKey>
-) => {
-  return createServerData$(
-    async ([, { limit, offset }], { request }) => {
-      const user = await getUser(request);
+export const queryInvoices = server$(
+  async ([, args]: ReturnType<typeof selectInvoicesKey>) => {
+    const { limit, offset } = selectInvoicesKeyArgsSchema.parse(args);
 
-      const [collection, total] = await Promise.all([
-        selectInvoicesByUserId({ limit, offset, userId: user.id }),
-        countInvoicesByUserId({ userId: user.id }),
-      ]);
+    const user = await getUser(server$.request);
 
-      return { collection, total };
-    },
-    { key }
-  );
-};
+    const [collection, total] = await Promise.all([
+      selectInvoicesByUserId({ limit, offset, userId: user.id }),
+      countInvoicesByUserId({ userId: user.id }),
+    ]);
+
+    return { collection, total };
+  }
+);
 
 const invoiceSchema = z.object({
   buyer_address_1: z.string(),

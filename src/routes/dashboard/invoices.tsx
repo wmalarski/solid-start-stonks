@@ -2,29 +2,13 @@ import { useI18n } from "@solid-primitives/i18n";
 import { createQuery } from "@tanstack/solid-query";
 import { ErrorBoundary, Show, Suspense, type Component } from "solid-js";
 import { Navigate, useNavigate, useSearchParams } from "solid-start";
-import server$ from "solid-start/server";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { Pagination } from "~/components/Pagination";
-import { countInvoicesByUserId, selectInvoicesByUserId } from "~/db/invoices";
 import { InvoicesTopbar } from "~/modules/invoices/InvoicesTopbar";
-import { getUser } from "~/server/auth";
-import { selectInvoicesKey } from "~/server/invoices";
+import { queryInvoices, selectInvoicesKey } from "~/server/invoices";
 import { paths } from "~/utils/paths";
 
 const limit = 10;
-
-const fetchInvoices = server$(
-  async ([, args]: ReturnType<typeof selectInvoicesKey>) => {
-    const user = await getUser(server$.request);
-
-    const [collection, total] = await Promise.all([
-      selectInvoicesByUserId({ limit, offset: args.offset, userId: user.id }),
-      countInvoicesByUserId({ userId: user.id }),
-    ]);
-
-    return { collection, total };
-  }
-);
 
 const InvoicesPage: Component = () => {
   const [t] = useI18n();
@@ -34,7 +18,7 @@ const InvoicesPage: Component = () => {
   const page = () => +searchParams.page || 0;
 
   const invoicesQuery = createQuery(() => ({
-    queryFn: (context) => fetchInvoices(context.queryKey),
+    queryFn: (context) => queryInvoices(context.queryKey),
     queryKey: selectInvoicesKey({ limit, offset: page() * limit }),
   }));
 

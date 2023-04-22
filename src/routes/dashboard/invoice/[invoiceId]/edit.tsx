@@ -1,34 +1,34 @@
 import { useI18n } from "@solid-primitives/i18n";
+import { createQuery } from "@tanstack/solid-query";
 import { ErrorBoundary, Show, Suspense, type Component } from "solid-js";
-import { Navigate, useRouteData, type RouteDataArgs } from "solid-start";
+import { Navigate, useParams } from "solid-start";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { InvoiceForm } from "~/modules/invoices/InvoiceForm";
 import { InvoiceTopbar } from "~/modules/invoices/InvoiceTopbar";
 import {
-  createInvoiceServerData,
   createUpdateInvoiceServerAction,
+  queryInvoice,
   selectInvoiceKey,
 } from "~/server/invoices";
 import { getServerError } from "~/utils/errors";
 import { paths } from "~/utils/paths";
 
-export const routeData = ({ params }: RouteDataArgs) => {
-  return createInvoiceServerData(() =>
-    selectInvoiceKey({ id: params.invoiceId })
-  );
-};
-
 const EditInvoicePage: Component = () => {
   const [t] = useI18n();
 
-  const data = useRouteData<typeof routeData>();
+  const params = useParams();
+
+  const invoiceQuery = createQuery(() => ({
+    queryFn: (context) => queryInvoice(context.queryKey),
+    queryKey: selectInvoiceKey({ id: params.id }),
+  }));
 
   const [edit, submit] = createUpdateInvoiceServerAction();
 
   return (
     <ErrorBoundary fallback={<Navigate href={paths.notFound} />}>
       <Suspense fallback={<LoadingSpinner />}>
-        <Show when={data()}>
+        <Show when={invoiceQuery.data}>
           {(invoice) => (
             <div class="grid w-full grid-cols-1 grid-rows-[auto_1fr] items-start">
               <InvoiceTopbar
