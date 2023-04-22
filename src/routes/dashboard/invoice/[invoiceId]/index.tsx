@@ -15,7 +15,7 @@ const InvoicePage: Component = () => {
 
   const invoiceQuery = createQuery(() => ({
     queryFn: (context) => queryInvoice(context.queryKey),
-    queryKey: selectInvoiceKey({ id: params.id }),
+    queryKey: selectInvoiceKey({ id: params.invoiceId }),
   }));
 
   return (

@@ -20,7 +20,7 @@ const CopyInvoicePage: Component = () => {
 
   const invoiceQuery = createQuery(() => ({
     queryFn: (context) => queryInvoice(context.queryKey),
-    queryKey: selectInvoiceKey({ id: params.id }),
+    queryKey: selectInvoiceKey({ id: params.invoiceId }),
   }));
 
   const [copy, submit] = createInsertInvoiceServerAction();

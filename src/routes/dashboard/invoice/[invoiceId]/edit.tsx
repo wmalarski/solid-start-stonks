@@ -20,7 +20,7 @@ const EditInvoicePage: Component = () => {
 
   const invoiceQuery = createQuery(() => ({
     queryFn: (context) => queryInvoice(context.queryKey),
-    queryKey: selectInvoiceKey({ id: params.id }),
+    queryKey: selectInvoiceKey({ id: params.invoiceId }),
   }));
 
   const [edit, submit] = createUpdateInvoiceServerAction();
