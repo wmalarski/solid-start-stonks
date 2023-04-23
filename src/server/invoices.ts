@@ -45,6 +45,10 @@ export const selectInvoicesKey = (args: z.infer<typeof selectInvoicesArgs>) => {
   return ["selectInvoices", args] as const;
 };
 
+export const selectAllInvoicesKey = () => {
+  return ["selectInvoices"] as const;
+};
+
 export const selectInvoicesServerQuery = server$(
   async ([, args]: ReturnType<typeof selectInvoicesKey>) => {
     const { limit, offset } = selectInvoicesArgs.parse(args);
@@ -71,7 +75,7 @@ const invoiceSchema = z.object({
   notes: z.string(),
   payment_account: z.string(),
   payment_bank: z.string(),
-  payment_method: z.union([z.literal("cash"), z.literal("transfer")]),
+  payment_method: z.string(),
   seller_address1: z.string(),
   seller_address2: z.string(),
   seller_name: z.string(),

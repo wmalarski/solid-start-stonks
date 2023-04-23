@@ -1,12 +1,5 @@
 import { useI18n } from "@solid-primitives/i18n";
-import {
-  Show,
-  createSignal,
-  type Component,
-  type JSX,
-  type ParentComponent,
-} from "solid-js";
-import type { FormProps } from "solid-start";
+import { Show, createSignal, type Component, type JSX } from "solid-js";
 import type { ZodIssue } from "zod";
 import { Button } from "~/components/Button";
 import { Card, CardBody } from "~/components/Card";
@@ -115,10 +108,10 @@ const SubHeading: Component<SubHeadingProps> = (props) => {
 
 type Props = {
   error?: Record<string, ZodIssue>;
-  Form: ParentComponent<FormProps>;
   id?: string;
   initial?: InvoiceFormData;
   isLoading: boolean;
+  onSubmit: (data: InvoiceFormData) => void;
 };
 
 export const InvoiceForm: Component<Props> = (props) => {
@@ -130,9 +123,19 @@ export const InvoiceForm: Component<Props> = (props) => {
     return { ...formDefault, ...props.initial };
   };
 
+  const onSubmit: JSX.FormHTMLAttributes<HTMLFormElement>["onSubmit"] = (
+    event
+  ) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    // TODO use form library
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    props.onSubmit(Object.fromEntries(form.entries()) as any);
+  };
+
   return (
     <Card class="shadow-xl">
-      <CardBody component={props.Form} class="grid w-full gap-2">
+      <CardBody component="form" onSubmit={onSubmit} class="grid w-full gap-2">
         <Show when={props.id}>
           {(id) => <input id="id" name="id" type="hidden" value={id()} />}
         </Show>

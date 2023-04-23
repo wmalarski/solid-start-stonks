@@ -1,14 +1,22 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { createQuery } from "@tanstack/solid-query";
+import {
+  createMutation,
+  createQuery,
+  useQueryClient,
+} from "@tanstack/solid-query";
 import { ErrorBoundary, Show, Suspense, type Component } from "solid-js";
-import { Navigate, useParams } from "solid-start";
+import { Navigate, useNavigate, useParams } from "solid-start";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
-import { InvoiceForm } from "~/modules/invoices/InvoiceForm";
+import {
+  InvoiceForm,
+  type InvoiceFormData,
+} from "~/modules/invoices/InvoiceForm";
 import { InvoiceTopbar } from "~/modules/invoices/InvoiceTopbar";
 import {
-  createUpdateInvoiceServerAction,
+  selectAllInvoicesKey,
   selectInvoiceKey,
   selectInvoiceServerQuery,
+  updateInvoiceServerMutation,
 } from "~/server/invoices";
 import { getServerError } from "~/utils/errors";
 import { paths } from "~/utils/paths";
@@ -17,13 +25,32 @@ const EditInvoicePage: Component = () => {
   const [t] = useI18n();
 
   const params = useParams();
+  const navigate = useNavigate();
+
+  const queryClient = useQueryClient();
 
   const invoiceQuery = createQuery(() => ({
     queryFn: (context) => selectInvoiceServerQuery(context.queryKey),
     queryKey: selectInvoiceKey({ id: params.invoiceId }),
   }));
 
-  const [edit, submit] = createUpdateInvoiceServerAction();
+  const editMutation = createMutation(() => ({
+    mutationFn: updateInvoiceServerMutation,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: selectInvoiceKey({ id: params.invoiceId }),
+      });
+      queryClient.invalidateQueries({
+        queryKey: selectAllInvoicesKey(),
+      });
+
+      navigate(paths.invoice(params.invoiceId));
+    },
+  }));
+
+  const onSubmit = (data: InvoiceFormData) => {
+    editMutation.mutate({ ...data, id: params.invoiceId });
+  };
 
   return (
     <ErrorBoundary fallback={<Navigate href={paths.notFound} />}>
@@ -45,11 +72,11 @@ const EditInvoicePage: Component = () => {
               </h1>
               <div class="p-8 pt-0">
                 <InvoiceForm
-                  error={getServerError(edit.error)}
+                  error={getServerError(editMutation.error)}
                   id={invoice().id}
-                  isLoading={edit.pending}
-                  Form={submit.Form}
                   initial={invoice()}
+                  isLoading={editMutation.isPending}
+                  onSubmit={onSubmit}
                 />
               </div>
             </div>

@@ -1,12 +1,20 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { createQuery } from "@tanstack/solid-query";
+import {
+  createMutation,
+  createQuery,
+  useQueryClient,
+} from "@tanstack/solid-query";
 import { ErrorBoundary, Show, Suspense, type Component } from "solid-js";
-import { Navigate, useParams } from "solid-start";
+import { Navigate, useNavigate, useParams } from "solid-start";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
-import { InvoiceForm } from "~/modules/invoices/InvoiceForm";
+import {
+  InvoiceForm,
+  type InvoiceFormData,
+} from "~/modules/invoices/InvoiceForm";
 import { InvoiceTopbar } from "~/modules/invoices/InvoiceTopbar";
 import {
-  createInsertInvoiceServerAction,
+  insertInvoiceServerMutation,
+  selectAllInvoicesKey,
   selectInvoiceKey,
   selectInvoiceServerQuery,
 } from "~/server/invoices";
@@ -17,13 +25,29 @@ const CopyInvoicePage: Component = () => {
   const [t] = useI18n();
 
   const params = useParams();
+  const navigate = useNavigate();
+
+  const queryClient = useQueryClient();
 
   const invoiceQuery = createQuery(() => ({
     queryFn: (context) => selectInvoiceServerQuery(context.queryKey),
     queryKey: selectInvoiceKey({ id: params.invoiceId }),
   }));
 
-  const [copy, submit] = createInsertInvoiceServerAction();
+  const insertMutation = createMutation(() => ({
+    mutationFn: insertInvoiceServerMutation,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: selectAllInvoicesKey(),
+      });
+
+      navigate(paths.invoice(data.id));
+    },
+  }));
+
+  const onSubmit = (data: InvoiceFormData) => {
+    insertMutation.mutate(data);
+  };
 
   return (
     <ErrorBoundary fallback={<Navigate href={paths.notFound} />}>
@@ -45,10 +69,10 @@ const CopyInvoicePage: Component = () => {
               </h1>
               <div class="p-8 pt-0">
                 <InvoiceForm
-                  error={getServerError(copy.error)}
-                  Form={submit.Form}
+                  error={getServerError(insertMutation.error)}
                   initial={invoice()}
-                  isLoading={copy.pending}
+                  isLoading={insertMutation.isPending}
+                  onSubmit={onSubmit}
                 />
               </div>
             </div>
