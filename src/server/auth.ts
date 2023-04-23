@@ -43,8 +43,6 @@ export const getSession = (request: Request) => {
 };
 
 export const getUser = async (request: Request) => {
-  console.log("getUser", Boolean(request));
-
   const session = await getSession(request);
 
   if (!session?.user) {

@@ -1,8 +1,4 @@
-import server$, {
-  createServerData$,
-  redirect,
-  useRequest,
-} from "solid-start/server";
+import server$, { useRequest } from "solid-start/server";
 import { z } from "zod";
 import {
   countInvoicesByUserId,
@@ -12,7 +8,6 @@ import {
   selectInvoicesByUserId,
   updateInvoice,
 } from "~/db/invoices";
-import { paths } from "~/utils/paths";
 import { getUser } from "./auth";
 
 const selectInvoiceArgs = z.object({
@@ -30,44 +25,11 @@ export const selectInvoiceServerQuery = server$(
     const event = useRequest();
     const request = server$.request || event.request;
 
-    console.log(
-      "selectInvoiceServerQuery",
-      Boolean(event.request),
-      Boolean(server$.request),
-      Boolean(request)
-    );
-
     const user = await getUser(request);
 
     return selectInvoiceById({ id: parsed.id, userId: user.id });
   }
 );
-
-export const createInvoiceServerData = (
-  key: () => ReturnType<typeof selectInvoiceKey>
-) => {
-  return createServerData$(
-    async ([, args], event) => {
-      const parsed = selectInvoiceArgs.parse(args);
-
-      const user = await getUser(event.request);
-
-      console.log("createInvoiceServerData");
-
-      const invoice = await selectInvoiceById({
-        id: parsed.id,
-        userId: user.id,
-      });
-
-      if (!invoice) {
-        throw redirect(paths.notFound);
-      }
-
-      return invoice;
-    },
-    { key }
-  );
-};
 
 const selectInvoicesArgs = z.object({
   limit: z.number(),
@@ -89,13 +51,6 @@ export const selectInvoicesServerQuery = server$(
     const event = useRequest();
     const request = server$.request || event.request;
 
-    console.log(
-      "selectInvoicesServerQuery",
-      Boolean(event.request),
-      Boolean(server$.request),
-      Boolean(request)
-    );
-
     const user = await getUser(request);
 
     const [collection, total] = await Promise.all([
@@ -110,32 +65,6 @@ export const selectInvoicesServerQuery = server$(
     return { collection, total };
   }
 );
-
-export const createInvoicesServerData = (
-  key: () => ReturnType<typeof selectInvoicesKey>
-) => {
-  return createServerData$(
-    async ([, args], event) => {
-      const parsed = selectInvoicesArgs.parse(args);
-
-      const user = await getUser(event.request);
-
-      console.log("createInvoicesServerData");
-
-      const [collection, total] = await Promise.all([
-        selectInvoicesByUserId({
-          limit: parsed.limit,
-          offset: parsed.offset,
-          userId: user.id,
-        }),
-        countInvoicesByUserId({ userId: user.id }),
-      ]);
-
-      return { collection, total };
-    },
-    { key }
-  );
-};
 
 const invoiceSchema = z.object({
   buyer_address_1: z.string(),
@@ -169,12 +98,6 @@ export const updateInvoiceServerMutation = server$(
   async (data: z.infer<typeof updateInvoiceArgs>) => {
     const parsed = updateInvoiceArgs.parse(data);
 
-    console.log(
-      "updateInvoiceServerMutation",
-      server$,
-      Boolean(server$.request)
-    );
-
     const user = await getUser(server$.request);
 
     await updateInvoice({
@@ -191,12 +114,6 @@ export const insertInvoiceServerMutation = server$(
   async (data: z.infer<typeof invoiceSchema>) => {
     const parsed = invoiceSchema.parse(data);
 
-    console.log(
-      "insertInvoiceServerMutation",
-      server$,
-      Boolean(server$.request)
-    );
-
     const user = await getUser(server$.request);
 
     const invoice = await insertInvoice({ ...parsed, userId: user.id });
@@ -210,12 +127,6 @@ const deleteSchemaArgs = z.object({ id: z.string() });
 export const deleteInvoiceServerMutation = server$(
   async (data: z.infer<typeof deleteSchemaArgs>) => {
     const parsed = deleteSchemaArgs.parse(data);
-
-    console.log(
-      "deleteInvoiceServerMutation",
-      server$,
-      Boolean(server$.request)
-    );
 
     const user = await getUser(server$.request);
 

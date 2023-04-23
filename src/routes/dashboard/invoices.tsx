@@ -21,44 +21,8 @@ import { paths } from "~/utils/paths";
 
 const limit = 10;
 
-// export const routeData = () => {
-//   return createServerData$(async (_source, { request }) => {
-//     console.log("Index", Boolean(request));
-
-//     const session = await getSession(request);
-
-//     if (!session) {
-//       return redirect(paths.login);
-//     }
-//     return redirect(paths.invoices());
-//   });
-// };
-
-// export const createInvoiceServerData = (
-//   key: () => ReturnType<typeof selectInvoiceKey>
-// ) => {
-//   return createServerData$(
-//     async ([, { id }], event) => {
-//       const user = await getUser(event.request);
-
-//       const invoice = await selectInvoiceById({ id, userId: user.id });
-
-//       if (!invoice) {
-//         throw redirect(paths.notFound);
-//       }
-
-//       return invoice;
-//     },
-//     { key }
-//   );
-// };
-
 export const routeData = (args: RouteDataArgs) => {
   const page = () => +args.location.query.page || 0;
-
-  // const invoices = createInvoicesServerData(() =>
-  //   selectInvoicesKey({ limit, offset: page() * limit })
-  // );
 
   const queryClient = useQueryClient();
 
@@ -102,7 +66,6 @@ const InvoicesPage: Component = () => {
                   onChange={(page) => navigate(paths.invoices(page))}
                 />
               </div>
-              {/* <pre>{JSON.stringify(invoices().collection, null, 2)}</pre> */}
               <InvoicesList invoices={invoices().collection} />;
             </div>
           )}
