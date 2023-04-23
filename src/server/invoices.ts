@@ -1,4 +1,4 @@
-import server$, { createServerAction$, redirect } from "solid-start/server";
+import server$, { redirect } from "solid-start/server";
 import { z } from "zod";
 import {
   countInvoicesByUserId,
@@ -8,7 +8,6 @@ import {
   selectInvoicesByUserId,
   updateInvoice,
 } from "~/db/invoices";
-import { zodFormParse } from "~/server/utils";
 import { paths } from "~/utils/paths";
 import { getUser } from "./auth";
 
@@ -22,11 +21,11 @@ export const selectInvoiceKey = (args: z.infer<typeof selectInvoiceArgs>) => {
 
 export const selectInvoiceServerQuery = server$(
   async ([, args]: ReturnType<typeof selectInvoiceKey>) => {
-    const { id } = selectInvoiceArgs.parse(args);
+    const parsed = selectInvoiceArgs.parse(args);
 
     const user = await getUser(server$.request);
 
-    const invoice = await selectInvoiceById({ id, userId: user.id });
+    const invoice = await selectInvoiceById({ id: parsed.id, userId: user.id });
 
     if (!invoice) {
       throw redirect(paths.notFound);
@@ -51,12 +50,16 @@ export const selectAllInvoicesKey = () => {
 
 export const selectInvoicesServerQuery = server$(
   async ([, args]: ReturnType<typeof selectInvoicesKey>) => {
-    const { limit, offset } = selectInvoicesArgs.parse(args);
+    const parsed = selectInvoicesArgs.parse(args);
 
     const user = await getUser(server$.request);
 
     const [collection, total] = await Promise.all([
-      selectInvoicesByUserId({ limit, offset, userId: user.id }),
+      selectInvoicesByUserId({
+        limit: parsed.limit,
+        offset: parsed.offset,
+        userId: user.id,
+      }),
       countInvoicesByUserId({ userId: user.id }),
     ]);
 
@@ -108,24 +111,6 @@ export const updateInvoiceServerMutation = server$(
   }
 );
 
-export const createUpdateInvoiceServerAction = () => {
-  return createServerAction$(async (form: FormData, event) => {
-    const user = await getUser(event.request);
-
-    const idSchema = z.object({ id: z.string() });
-    const schema = z.intersection(invoiceSchema.partial(), idSchema);
-
-    const parsed = await zodFormParse({ form, schema });
-    const invoice = await updateInvoice({
-      change: parsed,
-      id: parsed.id,
-      userId: user.id,
-    });
-
-    return redirect(invoice ? paths.invoice(parsed.id) : paths.notFound);
-  });
-};
-
 export const insertInvoiceServerMutation = server$(
   async (data: z.infer<typeof invoiceSchema>) => {
     const parsed = invoiceSchema.parse(data);
@@ -137,17 +122,6 @@ export const insertInvoiceServerMutation = server$(
     return invoice;
   }
 );
-
-export const createInsertInvoiceServerAction = () => {
-  return createServerAction$(async (form: FormData, event) => {
-    const user = await getUser(event.request);
-
-    const parsed = await zodFormParse({ form, schema: invoiceSchema });
-    const invoice = await insertInvoice({ ...parsed, userId: user.id });
-
-    return redirect(paths.invoice(invoice.id));
-  });
-};
 
 const deleteSchemaArgs = z.object({ id: z.string() });
 
@@ -162,15 +136,3 @@ export const deleteInvoiceServerMutation = server$(
     return parsed.id;
   }
 );
-
-export const createDeleteInvoiceServerAction = () => {
-  return createServerAction$(async (form: FormData, event) => {
-    const user = await getUser(event.request);
-
-    const schema = z.object({ id: z.string() });
-    const data = await zodFormParse({ form, schema });
-    await deleteInvoice({ id: data.id, userId: user.id });
-
-    return redirect(paths.invoices());
-  });
-};
