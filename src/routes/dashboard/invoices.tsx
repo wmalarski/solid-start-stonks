@@ -1,5 +1,5 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { createQuery } from "@tanstack/solid-query";
+import { createQuery, useQueryClient } from "@tanstack/solid-query";
 import { ErrorBoundary, Show, Suspense, type Component } from "solid-js";
 import { Navigate, useNavigate, useSearchParams } from "solid-start";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
@@ -7,6 +7,7 @@ import { Pagination } from "~/components/Pagination";
 import { InvoicesList } from "~/modules/invoices/InvoicesList";
 import { InvoicesTopbar } from "~/modules/invoices/InvoicesTopbar";
 import {
+  selectInvoiceKey,
   selectInvoicesKey,
   selectInvoicesServerQuery,
 } from "~/server/invoices";
@@ -18,11 +19,20 @@ const InvoicesPage: Component = () => {
   const [t] = useI18n();
 
   const [searchParams] = useSearchParams();
-
   const page = () => +searchParams.page || 0;
 
+  const queryClient = useQueryClient();
+
   const invoicesQuery = createQuery(() => ({
-    queryFn: (context) => selectInvoicesServerQuery(context.queryKey),
+    queryFn: async (context) => {
+      const result = await selectInvoicesServerQuery(context.queryKey);
+
+      result.collection.forEach((invoice) => {
+        queryClient.setQueryData(selectInvoiceKey({ id: invoice.id }), invoice);
+      });
+
+      return result;
+    },
     queryKey: selectInvoicesKey({ limit, offset: page() * limit }),
   }));
 
