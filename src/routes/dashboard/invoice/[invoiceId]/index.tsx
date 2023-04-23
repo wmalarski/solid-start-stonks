@@ -1,25 +1,23 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { createQuery } from "@tanstack/solid-query";
 import { ErrorBoundary, Show, Suspense, type Component } from "solid-js";
-import { Navigate, useRouteData, type RouteDataArgs } from "solid-start";
+import { Navigate, useParams } from "solid-start";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { InvoiceDetails } from "~/modules/invoices/InvoiceDetails";
 import { InvoiceTopbar } from "~/modules/invoices/InvoiceTopbar";
 import { selectInvoiceKey, selectInvoiceServerQuery } from "~/server/invoices";
 import { paths } from "~/utils/paths";
 
-export const routeData = (args: RouteDataArgs) => {
-  return createQuery(() => ({
-    queryFn: (context) => selectInvoiceServerQuery(context.queryKey),
-    queryKey: selectInvoiceKey({ id: args.params.invoiceId }),
-    suspense: true,
-  }));
-};
-
 const InvoicePage: Component = () => {
   const [t] = useI18n();
 
-  const invoiceQuery = useRouteData<typeof routeData>();
+  const params = useParams();
+
+  const invoiceQuery = createQuery(() => ({
+    queryFn: (context) => selectInvoiceServerQuery(context.queryKey),
+    queryKey: selectInvoiceKey({ id: params.invoiceId }),
+    suspense: true,
+  }));
 
   return (
     <ErrorBoundary fallback={<Navigate href={paths.notFound} />}>

@@ -10,8 +10,6 @@ import { paths } from "~/utils/paths";
 
 export const routeData = () => {
   return createServerData$(async (_source, { request }) => {
-    console.log("Login", Boolean(request));
-
     const session = await getSession(request);
 
     if (session) {

@@ -1,13 +1,7 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { createQuery, useQueryClient } from "@tanstack/solid-query";
 import { ErrorBoundary, Show, Suspense, type Component } from "solid-js";
-import {
-  Navigate,
-  useNavigate,
-  useRouteData,
-  useSearchParams,
-  type RouteDataArgs,
-} from "solid-start";
+import { Navigate, useNavigate, useSearchParams } from "solid-start";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { Pagination } from "~/components/Pagination";
 import { InvoicesList } from "~/modules/invoices/InvoicesList";
@@ -21,12 +15,16 @@ import { paths } from "~/utils/paths";
 
 const limit = 10;
 
-export const routeData = (args: RouteDataArgs) => {
-  const page = () => +args.location.query.page || 0;
+const InvoicesPage: Component = () => {
+  const [t] = useI18n();
+
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const page = () => +searchParams.page || 0;
 
   const queryClient = useQueryClient();
 
-  return createQuery(() => ({
+  const invoicesQuery = createQuery(() => ({
     queryFn: async (context) => {
       const result = await selectInvoicesServerQuery(context.queryKey);
 
@@ -39,17 +37,6 @@ export const routeData = (args: RouteDataArgs) => {
     queryKey: selectInvoicesKey({ limit, offset: page() * limit }),
     suspense: true,
   }));
-};
-
-const InvoicesPage: Component = () => {
-  const [t] = useI18n();
-
-  const [searchParams] = useSearchParams();
-  const page = () => +searchParams.page || 0;
-
-  const invoicesQuery = useRouteData<typeof routeData>();
-
-  const navigate = useNavigate();
 
   return (
     <ErrorBoundary fallback={<Navigate href={paths.notFound} />}>

@@ -29,13 +29,10 @@ export const authOptions: SolidAuthConfig = {
 };
 
 export const getSession = (request: Request) => {
-  console.log("getSession", Boolean(request));
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const unsafeRequest = request as any;
 
   if (!unsafeRequest?.sessionPromise) {
-    console.log("=====getAuthSession====");
     unsafeRequest.sessionPromise = getAuthSession(request, authOptions);
   }
 

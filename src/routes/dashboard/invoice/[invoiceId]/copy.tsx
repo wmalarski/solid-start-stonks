@@ -5,12 +5,7 @@ import {
   useQueryClient,
 } from "@tanstack/solid-query";
 import { ErrorBoundary, Show, Suspense, type Component } from "solid-js";
-import {
-  Navigate,
-  useNavigate,
-  useRouteData,
-  type RouteDataArgs,
-} from "solid-start";
+import { Navigate, useNavigate, useParams } from "solid-start";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import {
   InvoiceForm,
@@ -26,22 +21,19 @@ import {
 import { getServerError } from "~/utils/errors";
 import { paths } from "~/utils/paths";
 
-export const routeData = (args: RouteDataArgs) => {
-  return createQuery(() => ({
-    queryFn: (context) => selectInvoiceServerQuery(context.queryKey),
-    queryKey: selectInvoiceKey({ id: args.params.invoiceId }),
-    suspense: true,
-  }));
-};
-
 const CopyInvoicePage: Component = () => {
   const [t] = useI18n();
 
+  const params = useParams();
   const navigate = useNavigate();
 
   const queryClient = useQueryClient();
 
-  const invoiceQuery = useRouteData<typeof routeData>();
+  const invoiceQuery = createQuery(() => ({
+    queryFn: (context) => selectInvoiceServerQuery(context.queryKey),
+    queryKey: selectInvoiceKey({ id: params.invoiceId }),
+    suspense: true,
+  }));
 
   const insertMutation = createMutation(() => ({
     mutationFn: insertInvoiceServerMutation,
