@@ -1,7 +1,8 @@
-import { Component, Show } from "solid-js";
+import { Show, Suspense, type Component } from "solid-js";
 import { redirect, useRouteData } from "solid-start";
 import { createServerData$ } from "solid-start/server";
-import { Sidebar } from "~/modules/Sidebar/Sidebar";
+import { LoadingSpinner } from "~/components/LoadingSpinner";
+import { Sidebar } from "~/modules/common/Sidebar/Sidebar";
 import { getSession } from "~/server/auth";
 import { paths } from "~/utils/paths";
 
@@ -20,12 +21,14 @@ const Index: Component = () => {
   const data = useRouteData<typeof routeData>();
 
   return (
-    <Show when={data()}>
-      <main class="flex min-h-screen w-full flex-row">
-        <Sidebar />
-        <div class="max-h-screen w-full overflow-scroll" />
-      </main>
-    </Show>
+    <Suspense fallback={<LoadingSpinner />}>
+      <Show when={data()}>
+        <main class="flex min-h-screen w-full flex-row">
+          <Sidebar />
+          <div class="max-h-screen w-full overflow-scroll" />
+        </main>
+      </Show>
+    </Suspense>
   );
 };
 

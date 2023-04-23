@@ -36,6 +36,7 @@
     "no-self-compare": "error",
     "no-use-before-define": "error",
     "curly": "error",
+    "sort-keys": "error",
     "eqeqeq": [
       "error",
       "smart"
@@ -52,6 +53,7 @@
     "require-await": "error",
     "sort-keys-fix/sort-keys-fix": "warn",
     "@typescript-eslint/array-type": "error",
+    "@typescript-eslint/consistent-type-imports": "error",
     "@typescript-eslint/consistent-type-definitions": [
       "error",
       "type"

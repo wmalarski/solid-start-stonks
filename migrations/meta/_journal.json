@@ -1,0 +1,18 @@
+{
+  "version": "5",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1681413655513,
+      "tag": "0000_brown_exodus"
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1681667590145,
+      "tag": "0001_unusual_norman_osborn"
+    }
+  ]
+}

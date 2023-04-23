@@ -1,72 +1,90 @@
-import type { Invoice } from "@prisma/client";
 import { useI18n } from "@solid-primitives/i18n";
-import { Component } from "solid-js";
-import { Navigate, RouteDataArgs, useRouteData } from "solid-start";
 import {
-  createServerAction$,
-  createServerData$,
-  redirect,
-} from "solid-start/server";
-import { LoadingSwitch } from "~/components/LoadingSwitch/LoadingSwitch";
-import { InvoiceForm } from "~/modules/InvoiceForm/InvoiceForm";
-import { InvoiceTopbar } from "~/modules/InvoiceTopbar/InvoiceTopbar";
-import { getUser } from "~/server/auth";
-import { findInvoice, FindInvoiceKey, updateInvoice } from "~/server/invoices";
-import type { ResourceResult } from "~/server/types";
+  createMutation,
+  createQuery,
+  useQueryClient,
+} from "@tanstack/solid-query";
+import { ErrorBoundary, Show, Suspense, type Component } from "solid-js";
+import { Navigate, useNavigate, useParams } from "solid-start";
+import { LoadingSpinner } from "~/components/LoadingSpinner";
+import {
+  InvoiceForm,
+  type InvoiceFormData,
+} from "~/modules/invoices/InvoiceForm";
+import { InvoiceTopbar } from "~/modules/invoices/InvoiceTopbar";
+import {
+  selectAllInvoicesKey,
+  selectInvoiceKey,
+  selectInvoiceServerQuery,
+  updateInvoiceServerMutation,
+} from "~/server/invoices";
+import { getServerError } from "~/utils/errors";
 import { paths } from "~/utils/paths";
-
-export const routeData = ({ params }: RouteDataArgs) => {
-  return createServerData$<ResourceResult<Invoice>, FindInvoiceKey>(
-    async (source, { request }) => {
-      const user = await getUser(request);
-      return findInvoice(source, user.id);
-    },
-    { key: () => ["findInvoice", params.invoiceId] }
-  );
-};
 
 const EditInvoicePage: Component = () => {
   const [t] = useI18n();
 
-  const data = useRouteData<typeof routeData>();
+  const params = useParams();
+  const navigate = useNavigate();
 
-  const [edit, submit] = createServerAction$(
-    async (form: FormData, { request }) => {
-      const user = await getUser(request);
-      const invoice = await updateInvoice(form, user.id);
-      return redirect(invoice ? paths.invoice(invoice.id) : paths.notFound);
-    }
-  );
+  const queryClient = useQueryClient();
+
+  const invoiceQuery = createQuery(() => ({
+    queryFn: (context) => selectInvoiceServerQuery(context.queryKey),
+    queryKey: selectInvoiceKey({ id: params.invoiceId }),
+    suspense: true,
+  }));
+
+  const editMutation = createMutation(() => ({
+    mutationFn: updateInvoiceServerMutation,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: selectInvoiceKey({ id: params.invoiceId }),
+      });
+      queryClient.invalidateQueries({
+        queryKey: selectAllInvoicesKey(),
+      });
+
+      navigate(paths.invoice(params.invoiceId));
+    },
+  }));
+
+  const onSubmit = (data: InvoiceFormData) => {
+    editMutation.mutate({ ...data, id: params.invoiceId });
+  };
 
   return (
-    <LoadingSwitch
-      resource={data}
-      fallback={<Navigate href={paths.notFound} />}
-    >
-      {(invoice) => (
-        <div class="grid w-full grid-cols-1 grid-rows-[auto_1fr] items-start">
-          <InvoiceTopbar
-            invoice={invoice}
-            breadcrumbs={[
-              {
-                path: paths.editInvoice(invoice.id),
-                text: t("topbar.editInvoice"),
-              },
-            ]}
-          />
-          <h1 class="px-8 text-3xl font-semibold">{t("editInvoice.header")}</h1>
-          <div class="p-8 pt-0">
-            <InvoiceForm
-              error={edit.error as string}
-              id={invoice.id}
-              isLoading={edit.pending}
-              Form={submit.Form}
-              initial={invoice}
-            />
-          </div>
-        </div>
-      )}
-    </LoadingSwitch>
+    <ErrorBoundary fallback={<Navigate href={paths.notFound} />}>
+      <Suspense fallback={<LoadingSpinner />}>
+        <Show when={invoiceQuery.data}>
+          {(invoice) => (
+            <div class="grid w-full grid-cols-1 grid-rows-[auto_1fr] items-start">
+              <InvoiceTopbar
+                invoice={invoice()}
+                breadcrumbs={[
+                  {
+                    path: paths.editInvoice(invoice().id),
+                    text: t("topbar.editInvoice"),
+                  },
+                ]}
+              />
+              <h1 class="px-8 text-3xl font-semibold">
+                {t("editInvoice.header")}
+              </h1>
+              <div class="p-8 pt-0">
+                <InvoiceForm
+                  error={getServerError(editMutation.error)}
+                  id={invoice().id}
+                  initial={invoice()}
+                  isLoading={editMutation.isPending}
+                  onSubmit={onSubmit}
+                />
+              </div>
+            </div>
+          )}
+        </Show>
+      </Suspense>
+    </ErrorBoundary>
   );
 };
 

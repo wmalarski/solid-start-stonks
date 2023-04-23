@@ -1,172 +1,137 @@
-import type { Invoice } from "@prisma/client";
-import { ServerError } from "solid-start/server";
+import server$, { useRequest } from "solid-start/server";
 import { z } from "zod";
-import { prisma } from "./prisma";
-import { ResourceResult } from "./types";
+import {
+  countInvoicesByUserId,
+  deleteInvoice,
+  insertInvoice,
+  selectInvoiceById,
+  selectInvoicesByUserId,
+  updateInvoice,
+} from "~/db/invoices";
+import { getUser } from "./auth";
 
-export type FindInvoiceKey = ["findInvoice", string];
-
-export const findInvoice = async (
-  [, id]: FindInvoiceKey,
-  userId: string
-): Promise<ResourceResult<Invoice>> => {
-  const invoice = await prisma.invoice.findFirst({
-    where: { id, userId },
-  });
-
-  if (!invoice) {
-    return { kind: "error", message: "Not found" };
-  }
-  return { data: invoice, kind: "success" };
-};
-
-export type FindInvoicesArgs = { skip: number; limit: number };
-
-export type FindInvoicesKey = ["findInvoices", FindInvoicesArgs];
-
-export type FindInvoicesResult = {
-  invoices: Invoice[];
-  size: number;
-};
-
-export const findInvoices = async (
-  [, { skip, limit }]: FindInvoicesKey,
-  userId: string
-): Promise<ResourceResult<FindInvoicesResult>> => {
-  const [invoices, size] = await Promise.all([
-    prisma.invoice.findMany({
-      skip,
-      take: limit,
-      where: { userId },
-    }),
-    prisma.invoice.count({
-      where: { userId },
-    }),
-  ]);
-  return {
-    data: { invoices, size },
-    kind: "success",
-  };
-};
-
-export const invoiceSchema = z.object({
-  buyerAddress1: z.string(),
-  buyerAddress2: z.string(),
-  buyerName: z.string(),
-  buyerNip: z.string(),
-  city: z.string(),
-  date: z.date(),
+const selectInvoiceArgs = z.object({
   id: z.string(),
-  invoiceTitle: z.string(),
-  notes: z.string(),
-  paymentAccount: z.string(),
-  paymentBank: z.string(),
-  paymentMethod: z.union([z.literal("cash"), z.literal("transfer")]),
-  sellerAddress1: z.string(),
-  sellerAddress2: z.string(),
-  sellerName: z.string(),
-  sellerNip: z.string(),
-  serviceCount: z.number().min(0),
-  servicePayed: z.number().min(0),
-  servicePrice: z.number().min(0),
-  serviceTitle: z.string(),
-  serviceUnit: z.string(),
 });
 
-const insertInvoiceSchema = invoiceSchema.omit({ id: undefined });
+export const selectInvoiceKey = (args: z.infer<typeof selectInvoiceArgs>) => {
+  return ["selectInvoice", args] as const;
+};
 
-const parseInsertInvoiceForm = async (form: FormData) => {
-  const entries = Object.fromEntries(form.entries());
-  const raw = {
-    ...entries,
-    date: entries.date ? new Date(entries.date as string) : undefined,
-    serviceCount: +entries.serviceCount,
-    servicePayed: +entries.servicePayed,
-    servicePrice: +entries.servicePrice,
-  };
+export const selectInvoiceServerQuery = server$(
+  async ([, args]: ReturnType<typeof selectInvoiceKey>) => {
+    const parsed = selectInvoiceArgs.parse(args);
 
-  const parsed = await insertInvoiceSchema.safeParseAsync(raw);
+    const event = useRequest();
+    const request = server$.request || event.request;
 
-  if (!parsed.success) {
-    throw new ServerError(JSON.stringify(parsed.error.issues));
+    const user = await getUser(request);
+
+    return selectInvoiceById({ id: parsed.id, userId: user.id });
   }
+);
 
-  return parsed.data;
+const selectInvoicesArgs = z.object({
+  limit: z.number(),
+  offset: z.number(),
+});
+
+export const selectInvoicesKey = (args: z.infer<typeof selectInvoicesArgs>) => {
+  return ["selectInvoices", args] as const;
 };
 
-export const insertInvoice = async (form: FormData, userId: string) => {
-  const parsed = await parseInsertInvoiceForm(form);
-
-  const invoice = await prisma.invoice.create({
-    data: { ...parsed, userId },
-  });
-
-  return invoice;
+export const selectAllInvoicesKey = () => {
+  return ["selectInvoices"] as const;
 };
 
-const updateInvoiceSchema = z.intersection(
+export const selectInvoicesServerQuery = server$(
+  async ([, args]: ReturnType<typeof selectInvoicesKey>) => {
+    const parsed = selectInvoicesArgs.parse(args);
+
+    const event = useRequest();
+    const request = server$.request || event.request;
+
+    const user = await getUser(request);
+
+    const [collection, total] = await Promise.all([
+      selectInvoicesByUserId({
+        limit: parsed.limit,
+        offset: parsed.offset,
+        userId: user.id,
+      }),
+      countInvoicesByUserId({ userId: user.id }),
+    ]);
+
+    return { collection, total };
+  }
+);
+
+const invoiceSchema = z.object({
+  buyer_address_1: z.string(),
+  buyer_address_2: z.string(),
+  buyer_name: z.string(),
+  buyer_nip: z.string(),
+  city: z.string(),
+  date: z.coerce.date(),
+  invoice_title: z.string(),
+  notes: z.string(),
+  payment_account: z.string(),
+  payment_bank: z.string(),
+  payment_method: z.string(),
+  seller_address1: z.string(),
+  seller_address2: z.string(),
+  seller_name: z.string(),
+  seller_nip: z.string(),
+  service_count: z.coerce.number().min(0),
+  service_payed: z.coerce.number().min(0),
+  service_price: z.coerce.number().min(0),
+  service_title: z.string(),
+  service_unit: z.string(),
+});
+
+const updateInvoiceArgs = z.intersection(
   invoiceSchema.partial(),
   z.object({ id: z.string() })
 );
 
-const parseUpdateInvoiceForm = async (form: FormData) => {
-  const entries = Object.fromEntries(form.entries());
-  const raw = {
-    ...entries,
-    date: entries.date ? new Date(entries.date as string) : undefined,
-    serviceCount: +entries.serviceCount,
-    servicePayed: +entries.servicePayed,
-    servicePrice: +entries.servicePrice,
-  };
+export const updateInvoiceServerMutation = server$(
+  async (data: z.infer<typeof updateInvoiceArgs>) => {
+    const parsed = updateInvoiceArgs.parse(data);
 
-  const parsed = await updateInvoiceSchema.safeParseAsync(raw);
+    const user = await getUser(server$.request);
 
-  if (!parsed.success) {
-    throw new ServerError(JSON.stringify(parsed.error.issues));
+    await updateInvoice({
+      change: parsed,
+      id: parsed.id,
+      userId: user.id,
+    });
+
+    return parsed;
   }
+);
 
-  return parsed.data;
-};
+export const insertInvoiceServerMutation = server$(
+  async (data: z.infer<typeof invoiceSchema>) => {
+    const parsed = invoiceSchema.parse(data);
 
-export const updateInvoice = async (form: FormData, userId: string) => {
-  const parsed = await parseUpdateInvoiceForm(form);
+    const user = await getUser(server$.request);
 
-  const invoice = await prisma.invoice.findFirstOrThrow({
-    where: { id: parsed.id },
-  });
+    const invoice = await insertInvoice({ ...parsed, userId: user.id });
 
-  if (invoice.userId !== userId) {
-    throw new ServerError("UNAUTHORIZED");
+    return invoice;
   }
+);
 
-  const updated = await prisma.invoice.update({
-    data: parsed,
-    where: { id: parsed.id },
-  });
+const deleteSchemaArgs = z.object({ id: z.string() });
 
-  return updated;
-};
+export const deleteInvoiceServerMutation = server$(
+  async (data: z.infer<typeof deleteSchemaArgs>) => {
+    const parsed = deleteSchemaArgs.parse(data);
 
-const deleteInvoiceSchema = z.object({ id: z.string() });
+    const user = await getUser(server$.request);
 
-const parseDeleteInvoiceForm = async (form: FormData) => {
-  const entries = Object.fromEntries(form.entries());
+    await deleteInvoice({ id: parsed.id, userId: user.id });
 
-  const parsed = await deleteInvoiceSchema.safeParseAsync(entries);
-
-  if (!parsed.success) {
-    throw new ServerError(JSON.stringify(parsed.error.issues));
+    return parsed.id;
   }
-
-  return parsed.data;
-};
-
-export const deleteInvoice = async (form: FormData, userId: string) => {
-  const parsed = await parseDeleteInvoiceForm(form);
-
-  const invoice = await prisma.invoice.deleteMany({
-    where: { id: parsed.id, userId },
-  });
-
-  return invoice;
-};
+);

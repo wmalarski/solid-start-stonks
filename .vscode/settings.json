@@ -1,12 +1,19 @@
 {
   "cSpell.words": [
+    "autodocs",
     "clsx",
     "daisyui",
+    "datetime",
+    "Kobalte",
+    "paralleldrive",
+    "planetscale",
     "solidauth",
     "solidjs",
     "SUPABASE",
     "tailwindcss",
+    "tanstack",
     "Topbar",
-    "trpc"
+    "trpc",
+    "undici"
   ]
 }

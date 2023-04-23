@@ -66,6 +66,7 @@ const dict = {
       header: "Faktury",
       more: "Więcej",
     },
+    loading: "Loading",
     login: {
       button: "Login with Google",
       header: "Login",

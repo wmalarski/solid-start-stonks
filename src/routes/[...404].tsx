@@ -1,6 +1,6 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { Link } from "@solidjs/router";
-import { Component } from "solid-js";
+import type { Component } from "solid-js";
+import { A } from "solid-start";
 import { paths } from "~/utils/paths";
 
 const NotFound: Component = () => {
@@ -12,9 +12,9 @@ const NotFound: Component = () => {
         {t("notFound.header")}
       </h1>
       <p class="my-4">
-        <Link href={paths.index} class="text-sky-600 hover:underline">
+        <A href={paths.index} class="text-sky-600 hover:underline">
           {t("notFound.home")}
-        </Link>
+        </A>
       </p>
     </main>
   );
