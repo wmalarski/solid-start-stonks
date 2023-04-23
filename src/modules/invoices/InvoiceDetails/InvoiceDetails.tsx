@@ -46,14 +46,14 @@ export const InvoiceDetails: Component<Props> = (props) => {
         <p class="m-1 text-center text-2xl font-extrabold">
           {t("invoice.title", { title: props.invoice.invoice_title })}
         </p>
-        <Divider class="m-0" />
+        <Divider />
       </div>
-      <div class="col-span-2 flex flex-row justify-center gap-x-20 text-sm">
+      <div class="col-span-2 flex flex-row justify-center gap-x-20">
         <InvoicePaymentMethod invoice={props.invoice} />
         <InvoicePaymentSummary invoice={props.invoice} />
       </div>
       <InvoiceTable class="col-span-2" invoice={props.invoice} />
-      <InvoiceSummary invoice={props.invoice} />
+      <InvoiceSummary class="col-span-2" invoice={props.invoice} />
       <div class="col-span-2">
         <p class="text-xs font-bold">{t("invoice.notes")}</p>
         <p class="w-full max-w-full text-sm">{props.invoice.notes}</p>

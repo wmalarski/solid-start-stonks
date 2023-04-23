@@ -47,9 +47,9 @@ export const RadioGroupItemControl: Component<RadioGroupItemControlProps> = (
     <KobalteRadioGroup.ItemControl
       {...props}
       class={twCx(
-        "flex items-center justify-center h-5 w-5 rounded-xl border-gray-100 bg-white",
+        "flex items-center justify-center h-5 w-5 rounded-xl border border-gray-500 bg-white",
         "peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-blue-700",
-        "data-[checked]:border-blue-700 data-[checked]:bg-blue-700",
+        // "data-[checked]:border-blue-700 data-[checked]:bg-blue-700",
         "data-[invalid]:border-red-500 data-[invalid]:bg-red-500",
         props.class
       )}

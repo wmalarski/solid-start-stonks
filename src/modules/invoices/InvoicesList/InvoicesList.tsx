@@ -48,7 +48,7 @@ const InvoiceItem: Component<InvoiceItemProps> = (props) => {
             nip={props.invoice.buyer_nip}
             title={t("invoice.buyer")}
           />
-          <Divider class="col-span-2 m-0" />
+          <Divider class="col-span-2" />
           <InvoiceSummary class="col-span-2" invoice={props.invoice} />
         </div>
         <CardActions>

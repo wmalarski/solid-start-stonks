@@ -41,7 +41,7 @@ export const InvoiceCompany: Component<InvoiceCompanyProps> = (props) => {
   return (
     <div>
       <p class="text-xl font-extrabold">{props.title}</p>
-      <Divider class="m-0" />
+      <Divider />
       <p class="font-bold">{props.name}</p>
       <p class="text-sm">{props.address1}</p>
       <p class="text-sm">{props.address2}</p>
@@ -104,7 +104,7 @@ export const InvoicePaymentMethod: Component<InvoicePaymentProps> = (props) => {
       value={props.invoice.payment_method}
     >
       <RadioGroupLabel>{t("invoice.paymentMethod")}</RadioGroupLabel>
-      <div class="grid grid-cols-[auto_1fr] gap-1 text-sm">
+      <div class="flex flex-col gap-1">
         <RadioGroupItem value="cash">
           <RadioGroupItemInput />
           <RadioGroupItemControl>
@@ -139,7 +139,7 @@ export const InvoiceTable: Component<InvoiceTableProps> = (props) => {
   };
 
   return (
-    <Table class={twCx("w-full text-sm", props.class)}>
+    <Table class={twCx("w-full", props.class)}>
       <TableHead>
         <TableRow>
           <TableHeaderCell class="w-3 whitespace-normal">
@@ -196,7 +196,7 @@ export const InvoicePaymentSummary: Component<InvoicePaymentSummaryProps> = (
   };
 
   return (
-    <table>
+    <table class="text-sm">
       <tbody>
         <tr>
           <td class="text-right">{t("invoice.dueDate")}</td>

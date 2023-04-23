@@ -1,6 +1,6 @@
 import type { VariantProps } from "class-variance-authority";
 import type { Component, JSX } from "solid-js";
-import { twCva } from "../utils/twCva";
+import { twCva, twCx } from "../utils/twCva";
 
 export const tableClass = twCva(["table"], {
   defaultVariants: {
@@ -65,11 +65,11 @@ export const TableBody: Component<TableBodyProps> = (props) => {
 export type TableHeaderCellProps = JSX.ThHTMLAttributes<HTMLTableCellElement>;
 
 export const TableHeaderCell: Component<TableHeaderCellProps> = (props) => {
-  return <th {...props} />;
+  return <th {...props} class={twCx("text-sm", props.class)} />;
 };
 
 export type TableDataCellProps = JSX.TdHTMLAttributes<HTMLTableCellElement>;
 
 export const TableDataCell: Component<TableDataCellProps> = (props) => {
-  return <td {...props} />;
+  return <td {...props} class={twCx("text-xs", props.class)} />;
 };

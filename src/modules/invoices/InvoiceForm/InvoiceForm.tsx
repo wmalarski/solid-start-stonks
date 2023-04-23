@@ -95,7 +95,7 @@ const FormInputItem: Component<FormInputItemProps> = (props) => {
 };
 
 const FormDivider: Component = () => {
-  return <Divider class="col-span-2 m-0" />;
+  return <Divider class="col-span-2" />;
 };
 
 type SubHeadingProps = {
