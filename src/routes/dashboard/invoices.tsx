@@ -1,7 +1,13 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { createQuery, useQueryClient } from "@tanstack/solid-query";
 import { ErrorBoundary, Show, Suspense, type Component } from "solid-js";
-import { Navigate, useNavigate, useSearchParams } from "solid-start";
+import {
+  Navigate,
+  useNavigate,
+  useRouteData,
+  useSearchParams,
+  type RouteDataArgs,
+} from "solid-start";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { Pagination } from "~/components/Pagination";
 import { InvoicesList } from "~/modules/invoices/InvoicesList";
@@ -15,15 +21,48 @@ import { paths } from "~/utils/paths";
 
 const limit = 10;
 
-const InvoicesPage: Component = () => {
-  const [t] = useI18n();
+// export const routeData = () => {
+//   return createServerData$(async (_source, { request }) => {
+//     console.log("Index", Boolean(request));
 
-  const [searchParams] = useSearchParams();
-  const page = () => +searchParams.page || 0;
+//     const session = await getSession(request);
+
+//     if (!session) {
+//       return redirect(paths.login);
+//     }
+//     return redirect(paths.invoices());
+//   });
+// };
+
+// export const createInvoiceServerData = (
+//   key: () => ReturnType<typeof selectInvoiceKey>
+// ) => {
+//   return createServerData$(
+//     async ([, { id }], event) => {
+//       const user = await getUser(event.request);
+
+//       const invoice = await selectInvoiceById({ id, userId: user.id });
+
+//       if (!invoice) {
+//         throw redirect(paths.notFound);
+//       }
+
+//       return invoice;
+//     },
+//     { key }
+//   );
+// };
+
+export const routeData = (args: RouteDataArgs) => {
+  const page = () => +args.location.query.page || 0;
+
+  // const invoices = createInvoicesServerData(() =>
+  //   selectInvoicesKey({ limit, offset: page() * limit })
+  // );
 
   const queryClient = useQueryClient();
 
-  const invoicesQuery = createQuery(() => ({
+  return createQuery(() => ({
     queryFn: async (context) => {
       const result = await selectInvoicesServerQuery(context.queryKey);
 
@@ -34,7 +73,17 @@ const InvoicesPage: Component = () => {
       return result;
     },
     queryKey: selectInvoicesKey({ limit, offset: page() * limit }),
+    suspense: true,
   }));
+};
+
+const InvoicesPage: Component = () => {
+  const [t] = useI18n();
+
+  const [searchParams] = useSearchParams();
+  const page = () => +searchParams.page || 0;
+
+  const invoicesQuery = useRouteData<typeof routeData>();
 
   const navigate = useNavigate();
 
@@ -53,6 +102,7 @@ const InvoicesPage: Component = () => {
                   onChange={(page) => navigate(paths.invoices(page))}
                 />
               </div>
+              {/* <pre>{JSON.stringify(invoices().collection, null, 2)}</pre> */}
               <InvoicesList invoices={invoices().collection} />;
             </div>
           )}

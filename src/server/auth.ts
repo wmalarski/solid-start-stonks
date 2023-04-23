@@ -29,20 +29,27 @@ export const authOptions: SolidAuthConfig = {
 };
 
 export const getSession = (request: Request) => {
+  console.log("getSession", Boolean(request));
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const unsafeRequest = request as any;
 
-  if (!unsafeRequest.sessionPromise) {
+  if (!unsafeRequest?.sessionPromise) {
+    console.log("=====getAuthSession====");
     unsafeRequest.sessionPromise = getAuthSession(request, authOptions);
   }
 
-  return unsafeRequest.sessionPromise;
+  return unsafeRequest?.sessionPromise;
 };
 
 export const getUser = async (request: Request) => {
+  console.log("getUser", Boolean(request));
+
   const session = await getSession(request);
+
   if (!session?.user) {
     throw new ServerError("UNAUTHORIZED");
   }
+
   return session.user;
 };
