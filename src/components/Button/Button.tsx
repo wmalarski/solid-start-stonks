@@ -1,6 +1,7 @@
-import { Button as KobalteButton, Link as KobalteLink } from "@kobalte/core";
+import { Button as KobalteButton } from "@kobalte/core";
 import { type VariantProps } from "class-variance-authority";
-import type { Component, JSX } from "solid-js";
+import type { Component, ComponentProps, JSX } from "solid-js";
+import { A } from "solid-start";
 import { twCva } from "../utils/twCva";
 
 export const buttonClass = twCva(["btn"], {
@@ -79,11 +80,9 @@ export const ButtonGroup: Component<ButtonGroupProps> = (props) => {
   return <div {...props} class={buttonGroupClass({ class: props.class })} />;
 };
 
-export type LinkButtonProps = KobalteLink.LinkRootProps &
+export type LinkButtonProps = ComponentProps<typeof A> &
   VariantProps<typeof buttonClass>;
 
 export const LinkButton: Component<LinkButtonProps> = (props) => {
-  return (
-    <KobalteLink.Root {...props} class={buttonClass({ class: props.class })} />
-  );
+  return <A {...props} class={buttonClass({ class: props.class })} />;
 };

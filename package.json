@@ -61,6 +61,7 @@
     "vite-plugin-solid": "^2.7.0"
   },
   "dependencies": {
+    "@notionhq/client": "2.2.11",
     "@auth/core": "^0.7.0",
     "@auth/solid-start": "^0.1.1",
     "@kobalte/core": "^0.8.2",
