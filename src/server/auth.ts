@@ -4,14 +4,11 @@ import {
   type SolidAuthConfig,
 } from "@auth/solid-start";
 import { FetchEvent, ServerError } from "solid-start";
-import { db } from "~/db/db";
-import { createDrizzleAdapter } from "./adapters/drizzleOrm";
 import { serverEnv } from "./env";
 
 export const getAuthOptions = (
   event: Pick<FetchEvent, "env" | "locals">,
 ): SolidAuthConfig => ({
-  adapter: createDrizzleAdapter(db),
   callbacks: {
     session({ session, user }) {
       if (session.user) {
