@@ -23,9 +23,12 @@ export const selectInvoiceServerQuery = server$(
     const parsed = selectInvoiceArgs.parse(args);
 
     const event = useRequest();
-    const request = server$.request || event.request;
 
-    const user = await getUser(request);
+    const user = await getUser({
+      request: server$.request || event.request,
+      locals: server$.locals || event.locals,
+      env: server$.env || event.env,
+    });
 
     return selectInvoiceById({ id: parsed.id, userId: user.id });
   }
@@ -49,9 +52,12 @@ export const selectInvoicesServerQuery = server$(
     const parsed = selectInvoicesArgs.parse(args);
 
     const event = useRequest();
-    const request = server$.request || event.request;
-
-    const user = await getUser(request);
+    
+    const user = await getUser({
+      request: server$.request || event.request,
+      locals: server$.locals || event.locals,
+      env: server$.env || event.env,
+    });
 
     const [collection, total] = await Promise.all([
       selectInvoicesByUserId({
@@ -98,7 +104,7 @@ export const updateInvoiceServerMutation = server$(
   async (data: z.infer<typeof updateInvoiceArgs>) => {
     const parsed = updateInvoiceArgs.parse(data);
 
-    const user = await getUser(server$.request);
+    const user = await getUser(server$);
 
     await updateInvoice({
       change: parsed,
@@ -114,7 +120,7 @@ export const insertInvoiceServerMutation = server$(
   async (data: z.infer<typeof invoiceSchema>) => {
     const parsed = invoiceSchema.parse(data);
 
-    const user = await getUser(server$.request);
+    const user = await getUser(server$);
 
     const invoice = await insertInvoice({ ...parsed, userId: user.id });
 
@@ -128,7 +134,7 @@ export const deleteInvoiceServerMutation = server$(
   async (data: z.infer<typeof deleteSchemaArgs>) => {
     const parsed = deleteSchemaArgs.parse(data);
 
-    const user = await getUser(server$.request);
+    const user = await getUser(server$);
 
     await deleteInvoice({ id: parsed.id, userId: user.id });
 

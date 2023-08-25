@@ -3,12 +3,12 @@ import {
   getSession as getAuthSession,
   type SolidAuthConfig,
 } from "@auth/solid-start";
-import { ServerError } from "solid-start";
+import { FetchEvent, ServerError } from "solid-start";
 import { db } from "~/db/db";
 import { createDrizzleAdapter } from "./adapters/drizzleOrm";
 import { serverEnv } from "./env";
 
-export const authOptions: SolidAuthConfig = {
+export const getAuthOptions = (event: Pick<FetchEvent, 'env' | 'locals'>): SolidAuthConfig => ({
   adapter: createDrizzleAdapter(db),
   callbacks: {
     session({ session, user }) {
@@ -21,26 +21,32 @@ export const authOptions: SolidAuthConfig = {
   debug: false,
   providers: [
     Google({
-      clientId: serverEnv.GOOGLE_ID,
-      clientSecret: serverEnv.GOOGLE_SECRET,
+      clientId: serverEnv(event).googleId,
+      clientSecret: serverEnv(event).googleSecret,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }) as any,
   ],
-};
+});
 
-export const getSession = (request: Request) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const unsafeRequest = request as any;
+const SESSION_CACHE_KEY = "__session";
 
-  if (!unsafeRequest?.sessionPromise) {
-    unsafeRequest.sessionPromise = getAuthSession(request, authOptions);
+export const getSession = (event: Pick<FetchEvent, 'env' | 'locals' | 'request'>): ReturnType<typeof getAuthSession> => {
+  const cached = event.locals[SESSION_CACHE_KEY];
+
+  if (cached) {
+    return cached as ReturnType<typeof getAuthSession>;
   }
+  
+  const options = getAuthOptions(event);
+  const promise = getAuthSession(event.request, options);
 
-  return unsafeRequest?.sessionPromise;
+  event.locals[SESSION_CACHE_KEY] = promise;
+
+  return promise;
 };
 
-export const getUser = async (request: Request) => {
-  const session = await getSession(request);
+export const getUser = async (event: Pick<FetchEvent, 'env' | 'locals' | 'request'>) => {
+  const session = await getSession(event);
 
   if (!session?.user) {
     throw new ServerError("UNAUTHORIZED");
