@@ -31,7 +31,7 @@ export const selectInvoiceServerQuery = server$(
     });
 
     return selectInvoiceById({ id: parsed.id, userId: user.id });
-  }
+  },
 );
 
 const selectInvoicesArgs = z.object({
@@ -52,7 +52,7 @@ export const selectInvoicesServerQuery = server$(
     const parsed = selectInvoicesArgs.parse(args);
 
     const event = useRequest();
-    
+
     const user = await getUser({
       request: server$.request || event.request,
       locals: server$.locals || event.locals,
@@ -69,7 +69,7 @@ export const selectInvoicesServerQuery = server$(
     ]);
 
     return { collection, total };
-  }
+  },
 );
 
 const invoiceSchema = z.object({
@@ -97,7 +97,7 @@ const invoiceSchema = z.object({
 
 const updateInvoiceArgs = z.intersection(
   invoiceSchema.partial(),
-  z.object({ id: z.string() })
+  z.object({ id: z.string() }),
 );
 
 export const updateInvoiceServerMutation = server$(
@@ -113,7 +113,7 @@ export const updateInvoiceServerMutation = server$(
     });
 
     return parsed;
-  }
+  },
 );
 
 export const insertInvoiceServerMutation = server$(
@@ -125,7 +125,7 @@ export const insertInvoiceServerMutation = server$(
     const invoice = await insertInvoice({ ...parsed, userId: user.id });
 
     return invoice;
-  }
+  },
 );
 
 const deleteSchemaArgs = z.object({ id: z.string() });
@@ -139,5 +139,5 @@ export const deleteInvoiceServerMutation = server$(
     await deleteInvoice({ id: parsed.id, userId: user.id });
 
     return parsed.id;
-  }
+  },
 );

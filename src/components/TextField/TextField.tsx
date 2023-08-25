@@ -22,7 +22,7 @@ export const TextFieldLabel: Component<TextFieldLabelProps> = (props) => {
 export type TextFieldDescriptionProps = TextField.TextFieldDescriptionProps;
 
 export const TextFieldDescription: Component<TextFieldDescriptionProps> = (
-  props
+  props,
 ) => {
   return (
     <TextField.Description
@@ -35,7 +35,7 @@ export const TextFieldDescription: Component<TextFieldDescriptionProps> = (
 export type TextFieldErrorMessageProps = TextField.TextFieldErrorMessageProps;
 
 export const TextFieldErrorMessage: Component<TextFieldErrorMessageProps> = (
-  props
+  props,
 ) => {
   return (
     <TextField.ErrorMessage

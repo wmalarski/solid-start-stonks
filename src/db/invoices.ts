@@ -41,7 +41,7 @@ export type CountInvoicesByUserIdArgs = {
 };
 
 export const countInvoicesByUserId = async (
-  args: CountInvoicesByUserIdArgs
+  args: CountInvoicesByUserIdArgs,
 ) => {
   const counts = await db
     .select({ count: sql<number>`count(${invoices.userId})` })

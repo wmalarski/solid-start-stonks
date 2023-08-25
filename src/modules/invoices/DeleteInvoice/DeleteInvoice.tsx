@@ -33,7 +33,7 @@ export const DeleteInvoice: Component<Props> = (props) => {
   }));
 
   const onSubmit: JSX.FormHTMLAttributes<HTMLFormElement>["onSubmit"] = (
-    event
+    event,
   ) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);

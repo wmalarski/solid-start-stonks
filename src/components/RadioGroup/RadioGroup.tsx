@@ -41,7 +41,7 @@ export type RadioGroupItemControlProps =
   KobalteRadioGroup.RadioGroupItemControlProps;
 
 export const RadioGroupItemControl: Component<RadioGroupItemControlProps> = (
-  props
+  props,
 ) => {
   return (
     <KobalteRadioGroup.ItemControl
@@ -51,7 +51,7 @@ export const RadioGroupItemControl: Component<RadioGroupItemControlProps> = (
         "peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-blue-700",
         // "data-[checked]:border-blue-700 data-[checked]:bg-blue-700",
         "data-[invalid]:border-red-500 data-[invalid]:bg-red-500",
-        props.class
+        props.class,
       )}
     />
   );
@@ -75,7 +75,7 @@ export type RadioGroupItemLabelProps =
   KobalteRadioGroup.RadioGroupItemLabelProps;
 
 export const RadioGroupItemLabel: Component<RadioGroupItemLabelProps> = (
-  props
+  props,
 ) => {
   return (
     <KobalteRadioGroup.ItemLabel
@@ -89,7 +89,7 @@ export type RadioGroupDescriptionProps =
   KobalteRadioGroup.RadioGroupDescriptionProps;
 
 export const RadioGroupDescription: Component<RadioGroupDescriptionProps> = (
-  props
+  props,
 ) => {
   return (
     <KobalteRadioGroup.Description
@@ -103,7 +103,7 @@ export type RadioGroupErrorMessageProps =
   KobalteRadioGroup.RadioGroupErrorMessageProps;
 
 export const RadioGroupErrorMessage: Component<RadioGroupErrorMessageProps> = (
-  props
+  props,
 ) => {
   return (
     <KobalteRadioGroup.ErrorMessage

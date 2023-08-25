@@ -8,7 +8,9 @@ import { db } from "~/db/db";
 import { createDrizzleAdapter } from "./adapters/drizzleOrm";
 import { serverEnv } from "./env";
 
-export const getAuthOptions = (event: Pick<FetchEvent, 'env' | 'locals'>): SolidAuthConfig => ({
+export const getAuthOptions = (
+  event: Pick<FetchEvent, "env" | "locals">,
+): SolidAuthConfig => ({
   adapter: createDrizzleAdapter(db),
   callbacks: {
     session({ session, user }) {
@@ -30,13 +32,15 @@ export const getAuthOptions = (event: Pick<FetchEvent, 'env' | 'locals'>): Solid
 
 const SESSION_CACHE_KEY = "__session";
 
-export const getSession = (event: Pick<FetchEvent, 'env' | 'locals' | 'request'>): ReturnType<typeof getAuthSession> => {
+export const getSession = (
+  event: Pick<FetchEvent, "env" | "locals" | "request">,
+): ReturnType<typeof getAuthSession> => {
   const cached = event.locals[SESSION_CACHE_KEY];
 
   if (cached) {
     return cached as ReturnType<typeof getAuthSession>;
   }
-  
+
   const options = getAuthOptions(event);
   const promise = getAuthSession(event.request, options);
 
@@ -45,7 +49,9 @@ export const getSession = (event: Pick<FetchEvent, 'env' | 'locals' | 'request'>
   return promise;
 };
 
-export const getUser = async (event: Pick<FetchEvent, 'env' | 'locals' | 'request'>) => {
+export const getUser = async (
+  event: Pick<FetchEvent, "env" | "locals" | "request">,
+) => {
   const session = await getSession(event);
 
   if (!session?.user) {

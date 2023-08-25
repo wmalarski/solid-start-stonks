@@ -183,7 +183,7 @@ type InvoicePaymentSummaryProps = {
 };
 
 export const InvoicePaymentSummary: Component<InvoicePaymentSummaryProps> = (
-  props
+  props,
 ) => {
   const [t] = useI18n();
 

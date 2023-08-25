@@ -17,7 +17,7 @@ export type BreadcrumbsSeparatorProps =
   KobalteBreadcrumbs.BreadcrumbsSeparatorProps;
 
 export const BreadcrumbsSeparator: Component<BreadcrumbsSeparatorProps> = (
-  props
+  props,
 ) => {
   return (
     <KobalteBreadcrumbs.Separator

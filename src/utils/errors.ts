@@ -7,7 +7,7 @@ export const getServerError = (error?: any) => {
   try {
     const errors = JSON.parse(message);
     return Object.fromEntries(
-      errors.map((entry: any) => [entry.path.join("."), entry])
+      errors.map((entry: any) => [entry.path.join("."), entry]),
     );
   } catch {
     return;

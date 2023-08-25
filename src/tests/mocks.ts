@@ -38,6 +38,6 @@ export const mockInvoices = (count: number): Invoice[] => {
   return new Array(count).fill(0).map(() =>
     mockInvoice({
       id: mockId(),
-    })
+    }),
   );
 };
