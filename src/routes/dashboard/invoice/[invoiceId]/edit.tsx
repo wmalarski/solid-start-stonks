@@ -17,7 +17,7 @@ import {
   selectInvoiceKey,
   selectInvoiceServerQuery,
   updateInvoiceServerMutation,
-} from "~/server/invoices";
+} from "~/server/invoices/actions";
 import { getServerError } from "~/utils/errors";
 import { paths } from "~/utils/paths";
 

@@ -12,34 +12,31 @@ import {
   TextFieldRoot,
   type TextFieldInputProps,
 } from "~/components/TextField";
-import type { Invoice } from "~/db/invoices";
+import type { Invoice } from "~/server/invoices/api";
 
 export type InvoiceFormData = Omit<Invoice, "id">;
 
 const formDefault: InvoiceFormData = {
-  buyer_address_1: "",
-  buyer_address_2: "",
-  buyer_name: "",
-  buyer_nip: "",
+  buyerAddress1: "",
+  buyerAddress2: "",
+  buyerName: "",
+  buyerNip: "",
   city: "",
-  created_at: new Date(),
-  date: new Date(),
-  invoice_title: "",
+  date: new Date().toDateString(),
+  invoiceTitle: "",
   notes: "",
-  payment_account: "",
-  payment_bank: "",
-  payment_method: "transfer",
-  seller_address1: "",
-  seller_address2: "",
-  seller_name: "",
-  seller_nip: "",
-  service_count: 0,
-  service_payed: 0,
-  service_price: 0,
-  service_title: "",
-  service_unit: "",
-  updated_at: new Date(),
-  userId: "",
+  paymentAccount: "",
+  paymentBank: "",
+  paymentMethod: "transfer",
+  sellerAddress1: "",
+  sellerAddress2: "",
+  sellerName: "",
+  sellerNip: "",
+  serviceCount: 0,
+  servicePayed: 0,
+  servicePrice: 0,
+  serviceTitle: "",
+  serviceUnit: "",
 };
 
 type FormItemContainerProps = {
@@ -147,15 +144,15 @@ export const InvoiceForm: Component<Props> = (props) => {
         />
         <input
           id="paymentMethod"
-          name="payment_method"
+          name="paymentMethod"
           type="hidden"
-          value={initial().payment_method}
+          value={initial().paymentMethod}
         />
         <input
           id="servicePayed"
-          name="service_payed"
+          name="servicePayed"
           type="hidden"
-          value={initial().service_payed}
+          value={initial().servicePayed}
         />
         <SubHeading>{t("invoiceForm.general")}</SubHeading>
         <FormInputItem
@@ -182,149 +179,149 @@ export const InvoiceForm: Component<Props> = (props) => {
         <FormInputItem
           isLoading={props.isLoading}
           id="invoiceTitle"
-          name="invoice_title"
+          name="invoiceTitle"
           label={t("invoiceForm.invoiceTitle")}
           type="text"
-          value={initial().invoice_title}
-          error={props.error?.invoice_title}
+          value={initial().invoiceTitle}
+          error={props.error?.invoiceTitle}
         />
         <FormDivider />
         <SubHeading>{t("invoiceForm.seller")}</SubHeading>
         <FormInputItem
           isLoading={props.isLoading}
           id="sellerAddress1"
-          name="seller_address1"
+          name="sellerAddress1"
           label={t("invoiceForm.sellerAddress1")}
           type="text"
-          value={initial().seller_address1}
-          error={props.error?.seller_address1}
+          value={initial().sellerAddress1}
+          error={props.error?.sellerAddress1}
         />
         <FormInputItem
           isLoading={props.isLoading}
           id="sellerAddress2"
-          name="seller_address2"
+          name="sellerAddress2"
           label={t("invoiceForm.sellerAddress2")}
           type="text"
-          value={initial().seller_address2}
-          error={props.error?.seller_address2}
+          value={initial().sellerAddress2}
+          error={props.error?.sellerAddress2}
         />
         <FormInputItem
           isLoading={props.isLoading}
           id="sellerName"
-          name="seller_name"
+          name="sellerName"
           label={t("invoiceForm.sellerName")}
           type="text"
-          value={initial().seller_name}
-          error={props.error?.seller_name}
+          value={initial().sellerName}
+          error={props.error?.sellerName}
         />
         <FormInputItem
           isLoading={props.isLoading}
           id="sellerNip"
-          name="seller_nip"
+          name="sellerNip"
           label={t("invoiceForm.sellerNip")}
           type="text"
-          value={initial().seller_nip}
-          error={props.error?.seller_nip}
+          value={initial().sellerNip}
+          error={props.error?.sellerNip}
         />
         <FormDivider />
         <SubHeading>{t("invoiceForm.buyer")}</SubHeading>
         <FormInputItem
           isLoading={props.isLoading}
           id="buyerAddress1"
-          name="buyer_address_1"
+          name="buyerAddress1"
           label={t("invoiceForm.buyerAddress1")}
           type="text"
-          value={initial().buyer_address_1}
-          error={props.error?.buyer_address_1}
+          value={initial().buyerAddress1}
+          error={props.error?.buyerAddress1}
         />
         <FormInputItem
           isLoading={props.isLoading}
           id="buyerAddress2"
-          name="buyer_address_2"
+          name="buyerAddress2"
           label={t("invoiceForm.buyerAddress2")}
           type="text"
-          value={initial().buyer_address_2}
-          error={props.error?.buyer_address_2}
+          value={initial().buyerAddress2}
+          error={props.error?.buyerAddress2}
         />
         <FormInputItem
           isLoading={props.isLoading}
           id="buyerName"
-          name="buyer_name"
+          name="buyerName"
           label={t("invoiceForm.buyerName")}
           type="text"
-          value={initial().buyer_name}
-          error={props.error?.buyer_name}
+          value={initial().buyerName}
+          error={props.error?.buyerName}
         />
         <FormInputItem
           isLoading={props.isLoading}
           id="buyerNip"
-          name="buyer_nip"
+          name="buyerNip"
           label={t("invoiceForm.buyerNip")}
           type="text"
-          value={initial().buyer_nip}
-          error={props.error?.buyer_nip}
+          value={initial().buyerNip}
+          error={props.error?.buyerNip}
         />
         <FormDivider />
         <SubHeading>{t("invoiceForm.payment")}</SubHeading>
         <FormInputItem
           isLoading={props.isLoading}
           id="paymentAccount"
-          name="payment_account"
+          name="paymentAccount"
           label={t("invoiceForm.paymentAccount")}
           type="text"
-          value={initial().payment_account}
-          error={props.error?.payment_account}
+          value={initial().paymentAccount}
+          error={props.error?.paymentAccount}
         />
         <FormInputItem
           isLoading={props.isLoading}
           id="paymentBank"
-          name="payment_bank"
+          name="paymentBank"
           label={t("invoiceForm.paymentBank")}
           type="text"
-          value={initial().payment_bank}
-          error={props.error?.payment_bank}
+          value={initial().paymentBank}
+          error={props.error?.paymentBank}
         />
         <FormDivider />
         <SubHeading>{t("invoiceForm.service")}</SubHeading>
         <FormInputItem
           isLoading={props.isLoading}
           id="serviceCount"
-          name="service_count"
+          name="serviceCount"
           label={t("invoiceForm.serviceCount")}
           type="number"
           min={0}
           step={1}
-          value={initial().service_count}
-          error={props.error?.service_count}
+          value={initial().serviceCount}
+          error={props.error?.serviceCount}
         />
         <FormInputItem
           isLoading={props.isLoading}
           id="servicePrice"
-          name="service_price"
+          name="servicePrice"
           label={t("invoiceForm.servicePrice")}
           type="number"
           min={0}
           step={1}
-          value={initial().service_price}
-          error={props.error?.service_price}
+          value={initial().servicePrice}
+          error={props.error?.servicePrice}
         />
         <FormInputItem
           isLoading={props.isLoading}
           id="serviceTitle"
-          name="service_title"
+          name="serviceTitle"
           label={t("invoiceForm.serviceTitle")}
           type="text"
-          value={initial().service_title}
-          error={props.error?.service_title}
+          value={initial().serviceTitle}
+          error={props.error?.serviceTitle}
         />
         <FormInputItem
           isLoading={props.isLoading}
           id="serviceUnit"
-          name="service_unit"
+          name="serviceUnit"
           label={t("invoiceForm.serviceUnit")}
           type="text"
-          value={initial().service_unit}
-          error={props.error?.service_unit}
+          value={initial().serviceUnit}
+          error={props.error?.serviceUnit}
         />
         <FormDivider />
         <SubHeading>{t("invoiceForm.notes")}</SubHeading>

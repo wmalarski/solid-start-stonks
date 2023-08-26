@@ -3,7 +3,7 @@ import {
   getSession as getAuthSession,
   type SolidAuthConfig,
 } from "@auth/solid-start";
-import { FetchEvent, ServerError } from "solid-start";
+import { ServerError, type FetchEvent } from "solid-start";
 import { serverEnv } from "./env";
 
 export const getAuthOptions = (

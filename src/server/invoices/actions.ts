@@ -8,7 +8,7 @@ import {
   selectInvoicesByUserId,
   updateInvoice,
 } from "~/db/invoices";
-import { getUser } from "./auth";
+import { getUser } from "../auth";
 
 const selectInvoiceArgs = z.object({
   id: z.string(),
@@ -25,9 +25,9 @@ export const selectInvoiceServerQuery = server$(
     const event = useRequest();
 
     const user = await getUser({
-      request: server$.request || event.request,
-      locals: server$.locals || event.locals,
       env: server$.env || event.env,
+      locals: server$.locals || event.locals,
+      request: server$.request || event.request,
     });
 
     return selectInvoiceById({ id: parsed.id, userId: user.id });
@@ -54,9 +54,9 @@ export const selectInvoicesServerQuery = server$(
     const event = useRequest();
 
     const user = await getUser({
-      request: server$.request || event.request,
-      locals: server$.locals || event.locals,
       env: server$.env || event.env,
+      locals: server$.locals || event.locals,
+      request: server$.request || event.request,
     });
 
     const [collection, total] = await Promise.all([
@@ -73,26 +73,26 @@ export const selectInvoicesServerQuery = server$(
 );
 
 const invoiceSchema = z.object({
-  buyer_address_1: z.string(),
-  buyer_address_2: z.string(),
-  buyer_name: z.string(),
-  buyer_nip: z.string(),
+  buyerAddress1: z.string(),
+  buyerAddress2: z.string(),
+  buyerName: z.string(),
+  buyerNip: z.string(),
   city: z.string(),
   date: z.coerce.date(),
-  invoice_title: z.string(),
+  invoiceTitle: z.string(),
   notes: z.string(),
-  payment_account: z.string(),
-  payment_bank: z.string(),
-  payment_method: z.string(),
-  seller_address1: z.string(),
-  seller_address2: z.string(),
-  seller_name: z.string(),
-  seller_nip: z.string(),
-  service_count: z.coerce.number().min(0),
-  service_payed: z.coerce.number().min(0),
-  service_price: z.coerce.number().min(0),
-  service_title: z.string(),
-  service_unit: z.string(),
+  paymentAccount: z.string(),
+  paymentBank: z.string(),
+  paymentMethod: z.string(),
+  sellerAddress1: z.string(),
+  sellerAddress2: z.string(),
+  sellerName: z.string(),
+  sellerNip: z.string(),
+  serviceCount: z.coerce.number().min(0),
+  servicePayed: z.coerce.number().min(0),
+  servicePrice: z.coerce.number().min(0),
+  serviceTitle: z.string(),
+  serviceUnit: z.string(),
 });
 
 const updateInvoiceArgs = z.intersection(

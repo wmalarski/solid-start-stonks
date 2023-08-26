@@ -25,7 +25,7 @@ import {
 } from "~/components/utils/format";
 import { pricePLN } from "~/components/utils/pricePLN";
 import { twCx } from "~/components/utils/twCva";
-import type { Invoice } from "~/db/invoices";
+import type { Invoice } from "~/server/notionInvoices";
 
 type InvoiceCompanyProps = {
   address1: string;
@@ -61,7 +61,7 @@ export const InvoiceSummary: Component<InvoiceSummaryProps> = (props) => {
   const currencyFormatter = useCurrencyFormatter();
 
   const sum = () => {
-    return props.invoice.service_count * props.invoice.service_price;
+    return props.invoice.serviceCount * props.invoice.servicePrice;
   };
 
   return (
@@ -77,13 +77,13 @@ export const InvoiceSummary: Component<InvoiceSummaryProps> = (props) => {
         <tr>
           <td>{t("invoice.payed")}</td>
           <td class="text-right">
-            {currencyFormatter(props.invoice.service_payed)}
+            {currencyFormatter(props.invoice.servicePayed)}
           </td>
         </tr>
         <tr>
           <td>{t("invoice.leftToPay")}</td>
           <td class="text-right">
-            {currencyFormatter(sum() - props.invoice.service_payed)}
+            {currencyFormatter(sum() - props.invoice.servicePayed)}
           </td>
         </tr>
       </tbody>
@@ -101,7 +101,7 @@ export const InvoicePaymentMethod: Component<InvoicePaymentProps> = (props) => {
   return (
     <RadioGroupRoot
       class="flex flex-row items-start gap-4"
-      value={props.invoice.payment_method}
+      value={props.invoice.paymentMethod}
     >
       <RadioGroupLabel>{t("invoice.paymentMethod")}</RadioGroupLabel>
       <div class="flex flex-col gap-1">
@@ -135,7 +135,7 @@ export const InvoiceTable: Component<InvoiceTableProps> = (props) => {
   const numberFormatter = useNumberFormatter();
 
   const sum = () => {
-    return props.invoice.service_count * props.invoice.service_price;
+    return props.invoice.serviceCount * props.invoice.servicePrice;
   };
 
   return (
@@ -166,11 +166,11 @@ export const InvoiceTable: Component<InvoiceTableProps> = (props) => {
         <TableRow class="border text-xs">
           <TableDataCell>1</TableDataCell>
           <TableDataCell class="whitespace-break-spaces">
-            {props.invoice.service_title}
+            {props.invoice.serviceTitle}
           </TableDataCell>
-          <TableDataCell>{props.invoice.service_unit}</TableDataCell>
-          <TableDataCell>{props.invoice.service_count}</TableDataCell>
-          <TableDataCell>{props.invoice.service_price}</TableDataCell>
+          <TableDataCell>{props.invoice.serviceUnit}</TableDataCell>
+          <TableDataCell>{props.invoice.serviceCount}</TableDataCell>
+          <TableDataCell>{props.invoice.servicePrice}</TableDataCell>
           <TableDataCell>{numberFormatter(sum())}</TableDataCell>
         </TableRow>
       </TableBody>
@@ -204,11 +204,11 @@ export const InvoicePaymentSummary: Component<InvoicePaymentSummaryProps> = (
         </tr>
         <tr>
           <td class="text-right">{t("invoice.bankName")}</td>
-          <td>{props.invoice.payment_bank}</td>
+          <td>{props.invoice.paymentBank}</td>
         </tr>
         <tr>
           <td class="text-right">{t("invoice.account")}</td>
-          <td>{props.invoice.payment_account}</td>
+          <td>{props.invoice.paymentAccount}</td>
         </tr>
       </tbody>
     </table>

@@ -10,7 +10,7 @@ import { InvoicesTopbar } from "~/modules/invoices/InvoicesTopbar";
 import {
   insertInvoiceServerMutation,
   selectAllInvoicesKey,
-} from "~/server/invoices";
+} from "~/server/invoices/actions";
 import { getServerError } from "~/utils/errors";
 import { paths } from "~/utils/paths";
 

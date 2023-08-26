@@ -1,6 +1,6 @@
 import type { QueryDatabaseResponse } from "@notionhq/client/build/src/api-endpoints";
-import { FetchEvent } from "solid-start";
-import { queryNotionDatabase } from "./notion";
+import type { FetchEvent } from "solid-start";
+import { queryNotionDatabase } from "../notion";
 
 const databaseResponseToInvoice = (
   response: QueryDatabaseResponse["results"][0],
@@ -74,9 +74,7 @@ const databaseResponseToInvoice = (
   return null;
 };
 
-export type NotionInvoice = NonNullable<
-  ReturnType<typeof databaseResponseToInvoice>
->;
+export type Invoice = NonNullable<ReturnType<typeof databaseResponseToInvoice>>;
 
 type QueryNotionInvoicesArgs = {
   event: FetchEvent;
@@ -93,7 +91,7 @@ export const queryNotionInvoices = async ({
     start_cursor: startCursor,
   });
 
-  const results: NotionInvoice[] = [];
+  const results: Invoice[] = [];
 
   response.results.forEach((entry) => {
     const invoice = databaseResponseToInvoice(entry);
@@ -120,8 +118,8 @@ export const queryNotionInvoice = async ({
 }: QueryNotionInvoiceArgs) => {
   const response = await queryNotionDatabase({
     event,
+    filter: { number: { equals: id }, property: "ID" },
     page_size: 1,
-    filter: { property: "ID", number: { equals: id } },
   });
 
   const result = response.results.at(0);

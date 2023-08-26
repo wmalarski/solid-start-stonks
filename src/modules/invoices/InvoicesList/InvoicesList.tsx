@@ -5,7 +5,7 @@ import { buttonClass } from "~/components/Button";
 import { Card, CardActions, CardBody, CardTitle } from "~/components/Card";
 import { Divider } from "~/components/Divider";
 import { useDateFormatter } from "~/components/utils/format";
-import type { Invoice } from "~/db/invoices";
+import type { Invoice } from "~/server/notionInvoices";
 import { paths } from "~/utils/paths";
 import { DeleteInvoice } from "../DeleteInvoice";
 import { InvoiceCompany, InvoiceSummary } from "../InvoicePrimitives";
@@ -24,7 +24,7 @@ const InvoiceItem: Component<InvoiceItemProps> = (props) => {
       <CardBody component="div" class="bg-base-100">
         <div class="flex justify-between">
           <CardTitle component="h2" class="text-2xl font-extrabold">
-            {t("invoice.title", { title: props.invoice.invoice_title })}
+            {t("invoice.title", { title: props.invoice.invoiceTitle })}
           </CardTitle>
           <span class="col-span-2 text-right text-sm">
             {t("invoice.header", {
@@ -35,17 +35,17 @@ const InvoiceItem: Component<InvoiceItemProps> = (props) => {
         </div>
         <div class="grid grid-cols-2 gap-x-16 gap-y-2">
           <InvoiceCompany
-            address1={props.invoice.seller_address1}
-            address2={props.invoice.seller_address2}
-            name={props.invoice.seller_name}
-            nip={props.invoice.seller_nip}
+            address1={props.invoice.sellerAddress1}
+            address2={props.invoice.sellerAddress2}
+            name={props.invoice.sellerName}
+            nip={props.invoice.sellerNip}
             title={t("invoice.seller")}
           />
           <InvoiceCompany
-            address1={props.invoice.buyer_address_1}
-            address2={props.invoice.buyer_address_2}
-            name={props.invoice.buyer_name}
-            nip={props.invoice.buyer_nip}
+            address1={props.invoice.buyerAddress1}
+            address2={props.invoice.buyerAddress2}
+            name={props.invoice.buyerName}
+            nip={props.invoice.buyerNip}
             title={t("invoice.buyer")}
           />
           <Divider class="col-span-2" />

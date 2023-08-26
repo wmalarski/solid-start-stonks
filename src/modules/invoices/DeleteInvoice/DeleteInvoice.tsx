@@ -3,11 +3,11 @@ import { createMutation, useQueryClient } from "@tanstack/solid-query";
 import type { Component, JSX } from "solid-js";
 import { useNavigate } from "solid-start";
 import { Button } from "~/components/Button";
-import { type Invoice } from "~/db/invoices";
 import {
   deleteInvoiceServerMutation,
   selectAllInvoicesKey,
-} from "~/server/invoices";
+} from "~/server/invoices/actions";
+import type { Invoice } from "~/server/notionInvoices";
 import { paths } from "~/utils/paths";
 
 type Props = {

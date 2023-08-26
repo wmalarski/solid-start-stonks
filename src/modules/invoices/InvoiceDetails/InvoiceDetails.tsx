@@ -2,7 +2,7 @@ import { useI18n } from "@solid-primitives/i18n";
 import type { Component } from "solid-js";
 import { Divider } from "~/components/Divider";
 import { useDateFormatter } from "~/components/utils/format";
-import type { Invoice } from "~/db/invoices";
+import type { Invoice } from "~/server/notionInvoices";
 import {
   InvoiceCompany,
   InvoicePaymentMethod,
@@ -30,21 +30,21 @@ export const InvoiceDetails: Component<Props> = (props) => {
       </span>
       <InvoiceCompany
         title={t("invoice.seller")}
-        address1={props.invoice.seller_address1}
-        address2={props.invoice.seller_address2}
-        name={props.invoice.seller_name}
-        nip={props.invoice.seller_nip}
+        address1={props.invoice.sellerAddress1}
+        address2={props.invoice.sellerAddress2}
+        name={props.invoice.sellerName}
+        nip={props.invoice.sellerNip}
       />
       <InvoiceCompany
         title={t("invoice.buyer")}
-        address1={props.invoice.buyer_address_1}
-        address2={props.invoice.buyer_address_2}
-        name={props.invoice.buyer_name}
-        nip={props.invoice.buyer_nip}
+        address1={props.invoice.buyerAddress1}
+        address2={props.invoice.buyerAddress2}
+        name={props.invoice.buyerName}
+        nip={props.invoice.buyerNip}
       />
       <div class="col-span-2">
         <p class="m-1 text-center text-2xl font-extrabold">
-          {t("invoice.title", { title: props.invoice.invoice_title })}
+          {t("invoice.title", { title: props.invoice.invoiceTitle })}
         </p>
         <Divider />
       </div>

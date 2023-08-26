@@ -1,5 +1,5 @@
 import { SolidAuth } from "@auth/solid-start";
-import { FetchEvent } from "solid-start";
+import type { FetchEvent } from "solid-start";
 import { getAuthOptions } from "~/server/auth";
 
 export const GET = (event: FetchEvent) => {

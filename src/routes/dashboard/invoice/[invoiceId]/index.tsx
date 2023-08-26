@@ -5,7 +5,10 @@ import { Navigate, useParams } from "solid-start";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { InvoiceDetails } from "~/modules/invoices/InvoiceDetails";
 import { InvoiceTopbar } from "~/modules/invoices/InvoiceTopbar";
-import { selectInvoiceKey, selectInvoiceServerQuery } from "~/server/invoices";
+import {
+  selectInvoiceKey,
+  selectInvoiceServerQuery,
+} from "~/server/invoices/actions";
 import { paths } from "~/utils/paths";
 
 const InvoicePage: Component = () => {

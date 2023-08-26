@@ -9,7 +9,7 @@ import {
 } from "~/components/Breadcrumbs";
 import { buttonClass } from "~/components/Button";
 import { Navbar } from "~/components/Navbar";
-import type { Invoice } from "~/db/invoices";
+import type { Invoice } from "~/server/notionInvoices";
 import { paths } from "~/utils/paths";
 import { DeleteInvoice } from "../DeleteInvoice";
 
@@ -26,7 +26,7 @@ export const InvoiceTopbar: Component<Props> = (props) => {
       { path: paths.invoices(), text: t("topbar.home") },
       {
         path: paths.invoice(props.invoice.id),
-        text: props.invoice.invoice_title,
+        text: props.invoice.invoiceTitle,
       },
       ...(props.breadcrumbs || []),
     ];

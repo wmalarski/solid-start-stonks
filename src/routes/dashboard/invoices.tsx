@@ -10,7 +10,7 @@ import {
   selectInvoiceKey,
   selectInvoicesKey,
   selectInvoicesServerQuery,
-} from "~/server/invoices";
+} from "~/server/invoices/actions";
 import { paths } from "~/utils/paths";
 
 const limit = 10;
