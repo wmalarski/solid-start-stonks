@@ -1,5 +1,6 @@
 import { Client } from "@notionhq/client";
 import type {
+  CreateDatabaseParameters,
   QueryDatabaseParameters,
   QueryDatabaseResponse,
 } from "@notionhq/client/build/src/api-endpoints";
@@ -32,7 +33,7 @@ export const databaseResponseToProperties = (
   return "properties" in response ? response.properties : null;
 };
 
-type QueryDatabaseProperties = NonNullable<
+export type QueryDatabaseProperties = NonNullable<
   ReturnType<typeof databaseResponseToProperties>
 >;
 
@@ -73,6 +74,30 @@ export const uniqueIdToPlainText = (property: QueryDatabaseProperty) => {
   return property.unique_id.number;
 };
 
+export type CreateProperties = CreateDatabaseParameters["properties"];
+
+type CreateProperty = CreateProperties[0];
+
+export const plainTextToTitle = (text: string): CreateProperty => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return { title: [{ text: { content: text } }] as any, type: "title" };
+};
+
+export const plainTextToRichText = (text: string): CreateProperty => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return { rich_text: [{ text: { content: text } }] as any, type: "rich_text" };
+};
+
+export const plainNumberToNumber = (value: number): CreateProperty => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return { number: value as any, type: "number" };
+};
+
+export const plainDateToDate = (date: string): CreateProperty => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return { date: { start: date } as any, type: "date" };
+};
+
 export const getNotionUsers = (event: FetchEvent) => {
   const notion = getNotionClient(event);
 
@@ -93,7 +118,7 @@ export const queryNotionDatabase = ({
   return notion.databases.query({ database_id: env.notionDatabase, ...args });
 };
 
-type InsertNotionDatabaseArgs = Omit<QueryDatabaseParameters, "database_id"> & {
+type InsertNotionDatabaseArgs = Omit<CreateDatabaseParameters, "parent"> & {
   event: FetchEvent;
 };
 
@@ -106,7 +131,6 @@ export const insertNotionDatabase = ({
 
   return notion.databases.create({
     parent: { database_id: env.notionDatabase, type: "database_id" },
-    properties: {},
-    // ...args,
+    ...args,
   });
 };

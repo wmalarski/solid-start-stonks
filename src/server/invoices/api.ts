@@ -2,11 +2,17 @@ import type { FetchEvent } from "solid-start";
 import {
   databaseResponseToProperties,
   dateToPlainDate,
+  insertNotionDatabase,
   numberToPlainNumber,
+  plainDateToDate,
+  plainNumberToNumber,
+  plainTextToRichText,
+  plainTextToTitle,
   queryNotionDatabase,
   richTextToPlainText,
   titleToPlainText,
   uniqueIdToPlainText,
+  type CreateProperties,
   type QueryDatabaseResult,
 } from "../notion";
 
@@ -42,11 +48,40 @@ const databaseResponseToInvoice = (result: QueryDatabaseResult) => {
       serviceUnit: richTextToPlainText(properties.serviceUnit),
     };
   } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error("[INVOICE PARSE ERROR]", err);
     return null;
   }
 };
 
 export type Invoice = NonNullable<ReturnType<typeof databaseResponseToInvoice>>;
+
+const invoiceToDatabaseProperties = (
+  invoice: Omit<Invoice, "id">,
+): CreateProperties => {
+  return {
+    buyerAddress1: plainTextToTitle(invoice.buyerAddress1),
+    buyerAddress2: plainTextToRichText(invoice.buyerAddress2),
+    buyerName: plainTextToRichText(invoice.buyerName),
+    buyerNip: plainTextToRichText(invoice.buyerNip),
+    city: plainTextToRichText(invoice.city),
+    date: plainDateToDate(invoice.date),
+    invoiceTitle: plainTextToRichText(invoice.invoiceTitle),
+    notes: plainTextToRichText(invoice.notes),
+    paymentAccount: plainTextToRichText(invoice.paymentAccount),
+    paymentBank: plainTextToRichText(invoice.paymentBank),
+    paymentMethod: plainTextToRichText(invoice.paymentMethod),
+    sellerAddress1: plainTextToRichText(invoice.sellerAddress1),
+    sellerAddress2: plainTextToRichText(invoice.sellerAddress2),
+    sellerName: plainTextToRichText(invoice.sellerName),
+    sellerNip: plainTextToRichText(invoice.sellerNip),
+    serviceCount: plainNumberToNumber(invoice.serviceCount),
+    servicePayed: plainNumberToNumber(invoice.servicePayed),
+    servicePrice: plainNumberToNumber(invoice.servicePrice),
+    serviceTitle: plainTextToRichText(invoice.serviceTitle),
+    serviceUnit: plainTextToRichText(invoice.serviceUnit),
+  };
+};
 
 type QueryNotionInvoicesArgs = {
   event: FetchEvent;
@@ -105,24 +140,21 @@ export const queryNotionInvoice = async ({
 
 type InsertNotionInvoiceArgs = {
   event: FetchEvent;
-  id: number;
+  invoice: Omit<Invoice, "id">;
 };
 
 export const insertNotionInvoice = async ({
   event,
-  id,
-}: QueryNotionInvoiceArgs) => {
-  const response = await queryNotionDatabase({
+  invoice,
+}: InsertNotionInvoiceArgs) => {
+  const properties = invoiceToDatabaseProperties(invoice);
+
+  const response = await insertNotionDatabase({
     event,
-    filter: { number: { equals: id }, property: "ID" },
-    page_size: 1,
+    properties,
   });
 
-  const result = response.results.at(0);
+  console.log(response);
 
-  if (!result) {
-    return null;
-  }
-
-  return databaseResponseToInvoice(result);
+  return response;
 };
