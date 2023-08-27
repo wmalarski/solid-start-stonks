@@ -29,9 +29,11 @@ const EditInvoicePage: Component = () => {
 
   const queryClient = useQueryClient();
 
+  const id = () => +params.invoiceId;
+
   const invoiceQuery = createQuery(() => ({
     queryFn: (context) => selectInvoiceServerQuery(context.queryKey),
-    queryKey: selectInvoiceKey({ id: params.invoiceId }),
+    queryKey: selectInvoiceKey({ id: id() }),
     suspense: true,
   }));
 
@@ -39,18 +41,18 @@ const EditInvoicePage: Component = () => {
     mutationFn: updateInvoiceServerMutation,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: selectInvoiceKey({ id: params.invoiceId }),
+        queryKey: selectInvoiceKey({ id: id() }),
       });
       queryClient.invalidateQueries({
         queryKey: selectAllInvoicesKey(),
       });
 
-      navigate(paths.invoice(params.invoiceId));
+      navigate(paths.invoice(id()));
     },
   }));
 
   const onSubmit = (data: InvoiceFormData) => {
-    editMutation.mutate({ ...data, id: params.invoiceId });
+    editMutation.mutate({ ...data, id: id() });
   };
 
   return (

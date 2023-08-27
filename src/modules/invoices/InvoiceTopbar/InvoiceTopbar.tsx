@@ -9,7 +9,7 @@ import {
 } from "~/components/Breadcrumbs";
 import { buttonClass } from "~/components/Button";
 import { Navbar } from "~/components/Navbar";
-import type { Invoice } from "~/server/notionInvoices";
+import type { Invoice } from "~/server/invoices/api";
 import { paths } from "~/utils/paths";
 import { DeleteInvoice } from "../DeleteInvoice";
 

@@ -7,7 +7,7 @@ import {
   deleteInvoiceServerMutation,
   selectAllInvoicesKey,
 } from "~/server/invoices/actions";
-import type { Invoice } from "~/server/notionInvoices";
+import type { Invoice } from "~/server/invoices/api";
 import { paths } from "~/utils/paths";
 
 type Props = {
@@ -37,7 +37,7 @@ export const DeleteInvoice: Component<Props> = (props) => {
   ) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    deleteMutation.mutate({ id: form.get("id") as string });
+    deleteMutation.mutate({ id: Number(form.get("id")) });
   };
 
   return (

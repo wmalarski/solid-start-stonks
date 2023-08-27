@@ -28,7 +28,7 @@ const AddInvoicePage: Component = () => {
         queryKey: selectAllInvoicesKey(),
       });
 
-      navigate(paths.invoice(data.id));
+      navigate(paths.invoice(+data.id));
     },
   }));
 

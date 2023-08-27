@@ -5,7 +5,7 @@ import { buttonClass } from "~/components/Button";
 import { Card, CardActions, CardBody, CardTitle } from "~/components/Card";
 import { Divider } from "~/components/Divider";
 import { useDateFormatter } from "~/components/utils/format";
-import type { Invoice } from "~/server/notionInvoices";
+import type { Invoice } from "~/server/invoices/api";
 import { paths } from "~/utils/paths";
 import { DeleteInvoice } from "../DeleteInvoice";
 import { InvoiceCompany, InvoiceSummary } from "../InvoicePrimitives";

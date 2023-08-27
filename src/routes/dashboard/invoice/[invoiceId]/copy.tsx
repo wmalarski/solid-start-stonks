@@ -27,11 +27,13 @@ const CopyInvoicePage: Component = () => {
   const params = useParams();
   const navigate = useNavigate();
 
+  const id = () => +params.invoiceId;
+
   const queryClient = useQueryClient();
 
   const invoiceQuery = createQuery(() => ({
     queryFn: (context) => selectInvoiceServerQuery(context.queryKey),
-    queryKey: selectInvoiceKey({ id: params.invoiceId }),
+    queryKey: selectInvoiceKey({ id: id() }),
     suspense: true,
   }));
 
@@ -42,7 +44,7 @@ const CopyInvoicePage: Component = () => {
         queryKey: selectAllInvoicesKey(),
       });
 
-      navigate(paths.invoice(data.id));
+      navigate(paths.invoice(+data.id));
     },
   }));
 

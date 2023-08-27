@@ -25,7 +25,7 @@ import {
 } from "~/components/utils/format";
 import { pricePLN } from "~/components/utils/pricePLN";
 import { twCx } from "~/components/utils/twCva";
-import type { Invoice } from "~/server/notionInvoices";
+import type { Invoice } from "~/server/invoices/api";
 
 type InvoiceCompanyProps = {
   address1: string;

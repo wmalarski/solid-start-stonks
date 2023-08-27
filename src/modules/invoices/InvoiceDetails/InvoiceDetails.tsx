@@ -2,7 +2,7 @@ import { useI18n } from "@solid-primitives/i18n";
 import type { Component } from "solid-js";
 import { Divider } from "~/components/Divider";
 import { useDateFormatter } from "~/components/utils/format";
-import type { Invoice } from "~/server/notionInvoices";
+import type { Invoice } from "~/server/invoices/api";
 import {
   InvoiceCompany,
   InvoicePaymentMethod,

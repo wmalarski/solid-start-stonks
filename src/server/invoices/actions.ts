@@ -1,17 +1,15 @@
 import server$, { useRequest } from "solid-start/server";
 import { z } from "zod";
 import {
-  countInvoicesByUserId,
+  createInvoice,
   deleteInvoice,
-  insertInvoice,
-  selectInvoiceById,
-  selectInvoicesByUserId,
+  queryInvoice,
+  queryInvoices,
   updateInvoice,
-} from "~/db/invoices";
-import { getUser } from "../auth";
+} from "./api";
 
 const selectInvoiceArgs = z.object({
-  id: z.string(),
+  id: z.coerce.number(),
 });
 
 export const selectInvoiceKey = (args: z.infer<typeof selectInvoiceArgs>) => {
@@ -19,24 +17,30 @@ export const selectInvoiceKey = (args: z.infer<typeof selectInvoiceArgs>) => {
 };
 
 export const selectInvoiceServerQuery = server$(
-  async ([, args]: ReturnType<typeof selectInvoiceKey>) => {
+  ([, args]: ReturnType<typeof selectInvoiceKey>) => {
     const parsed = selectInvoiceArgs.parse(args);
 
-    const event = useRequest();
+    const requestEvent = useRequest();
 
-    const user = await getUser({
-      env: server$.env || event.env,
-      locals: server$.locals || event.locals,
-      request: server$.request || event.request,
+    const event = {
+      clientAddress: server$.clientAddress || requestEvent.clientAddress,
+      env: server$.env || requestEvent.env,
+      fetch: server$.fetch || requestEvent.fetch,
+      locals: server$.locals || requestEvent.locals,
+      request: server$.request || requestEvent.request,
+    };
+
+    // const user = await getUser(event);
+
+    return queryInvoice({
+      event,
+      id: parsed.id,
     });
-
-    return selectInvoiceById({ id: parsed.id, userId: user.id });
   },
 );
 
 const selectInvoicesArgs = z.object({
-  limit: z.number(),
-  offset: z.number(),
+  startCursor: z.string().optional(),
 });
 
 export const selectInvoicesKey = (args: z.infer<typeof selectInvoicesArgs>) => {
@@ -51,24 +55,34 @@ export const selectInvoicesServerQuery = server$(
   async ([, args]: ReturnType<typeof selectInvoicesKey>) => {
     const parsed = selectInvoicesArgs.parse(args);
 
-    const event = useRequest();
+    const requestEvent = useRequest();
 
-    const user = await getUser({
-      env: server$.env || event.env,
-      locals: server$.locals || event.locals,
-      request: server$.request || event.request,
-    });
+    const event = {
+      clientAddress: server$.clientAddress || requestEvent.clientAddress,
+      env: server$.env || requestEvent.env,
+      fetch: server$.fetch || requestEvent.fetch,
+      locals: server$.locals || requestEvent.locals,
+      request: server$.request || requestEvent.request,
+    };
 
-    const [collection, total] = await Promise.all([
-      selectInvoicesByUserId({
-        limit: parsed.limit,
-        offset: parsed.offset,
-        userId: user.id,
+    // const user = await getUser({
+    //   env: server$.env || event.env,
+    //   locals: server$.locals || event.locals,
+    //   request: server$.request || event.request,
+    // });
+
+    const [collection] = await Promise.all([
+      queryInvoices({
+        event,
+        startCursor: parsed.startCursor,
+        // limit: parsed.limit,
+        // offset: parsed.offset,
+        // userId: user.id,
       }),
-      countInvoicesByUserId({ userId: user.id }),
+      // countInvoicesByUserId({ userId: user.id }),
     ]);
 
-    return { collection, total };
+    return { collection, total: 10 };
   },
 );
 
@@ -78,7 +92,7 @@ const invoiceSchema = z.object({
   buyerName: z.string(),
   buyerNip: z.string(),
   city: z.string(),
-  date: z.coerce.date(),
+  date: z.string(),
   invoiceTitle: z.string(),
   notes: z.string(),
   paymentAccount: z.string(),
@@ -96,20 +110,20 @@ const invoiceSchema = z.object({
 });
 
 const updateInvoiceArgs = z.intersection(
-  invoiceSchema.partial(),
-  z.object({ id: z.string() }),
+  invoiceSchema,
+  z.object({ id: z.coerce.number() }),
 );
 
 export const updateInvoiceServerMutation = server$(
   async (data: z.infer<typeof updateInvoiceArgs>) => {
     const parsed = updateInvoiceArgs.parse(data);
 
-    const user = await getUser(server$);
+    // const user = await getUser(server$);
 
     await updateInvoice({
-      change: parsed,
-      id: parsed.id,
-      userId: user.id,
+      event: server$,
+      invoice: parsed,
+      // userId: user.id,
     });
 
     return parsed;
@@ -120,23 +134,21 @@ export const insertInvoiceServerMutation = server$(
   async (data: z.infer<typeof invoiceSchema>) => {
     const parsed = invoiceSchema.parse(data);
 
-    const user = await getUser(server$);
+    // const user = await getUser(server$);
 
-    const invoice = await insertInvoice({ ...parsed, userId: user.id });
+    const invoice = await createInvoice({ event: server$, invoice: parsed });
 
     return invoice;
   },
 );
 
-const deleteSchemaArgs = z.object({ id: z.string() });
+const deleteSchemaArgs = z.object({ id: z.coerce.number() });
 
 export const deleteInvoiceServerMutation = server$(
   async (data: z.infer<typeof deleteSchemaArgs>) => {
     const parsed = deleteSchemaArgs.parse(data);
 
-    const user = await getUser(server$);
-
-    await deleteInvoice({ id: parsed.id, userId: user.id });
+    await deleteInvoice({ event: server$, id: parsed.id });
 
     return parsed.id;
   },

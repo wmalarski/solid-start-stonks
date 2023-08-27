@@ -20,6 +20,7 @@ const InvoicesPage: Component = () => {
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const cursor = () => searchParams.startCursor;
   const page = () => +searchParams.page || 0;
 
   const queryClient = useQueryClient();
@@ -28,13 +29,13 @@ const InvoicesPage: Component = () => {
     queryFn: async (context) => {
       const result = await selectInvoicesServerQuery(context.queryKey);
 
-      result.collection.forEach((invoice) => {
+      result.collection.results.forEach((invoice) => {
         queryClient.setQueryData(selectInvoiceKey({ id: invoice.id }), invoice);
       });
 
       return result;
     },
-    queryKey: selectInvoicesKey({ limit, offset: page() * limit }),
+    queryKey: selectInvoicesKey({ startCursor: cursor() }),
     suspense: true,
   }));
 
@@ -53,7 +54,7 @@ const InvoicesPage: Component = () => {
                   onChange={(page) => navigate(paths.invoices(page))}
                 />
               </div>
-              <InvoicesList invoices={invoices().collection} />;
+              <InvoicesList invoices={invoices().collection.results} />;
             </div>
           )}
         </Show>

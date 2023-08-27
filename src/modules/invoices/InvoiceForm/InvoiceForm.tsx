@@ -105,7 +105,7 @@ const SubHeading: Component<SubHeadingProps> = (props) => {
 
 type Props = {
   error?: Record<string, ZodIssue>;
-  id?: string;
+  id?: number;
   initial?: InvoiceFormData;
   isLoading: boolean;
   onSubmit: (data: InvoiceFormData) => void;

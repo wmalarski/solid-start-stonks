@@ -19,7 +19,7 @@ const getNotionClient = (event: FetchEvent): Client => {
 
   const env = serverEnv(event);
 
-  const notion = new Client({ auth: env.notionKey });
+  const notion = new Client({ auth: env.notionKey, fetch: event.fetch });
 
   event.locals[NOTION_CACHE_KEY] = notion;
 
