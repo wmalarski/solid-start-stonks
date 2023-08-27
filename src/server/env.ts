@@ -1,20 +1,20 @@
 import type { FetchEvent } from "solid-start";
-import { z } from "zod";
+import * as v from "valibot";
 
 if (typeof window !== "undefined") {
   throw new Error("SERVER ON CLIENT!");
 }
 
 const getEnvSchema = () => {
-  return z.object({
-    googleId: z.string(),
-    googleSecret: z.string(),
-    notionDatabase: z.string(),
-    notionKey: z.string(),
+  return v.object({
+    googleId: v.string(),
+    googleSecret: v.string(),
+    notionDatabase: v.string(),
+    notionKey: v.string(),
   });
 };
 
-type ServerEnv = z.infer<ReturnType<typeof getEnvSchema>>;
+type ServerEnv = v.Input<ReturnType<typeof getEnvSchema>>;
 
 type ServerEnvArgs = Pick<FetchEvent, "env" | "locals">;
 
@@ -28,7 +28,7 @@ export const serverEnv = ({ env, locals }: ServerEnvArgs): ServerEnv => {
 
   const envSchema = getEnvSchema();
 
-  const parsed = envSchema.parse({
+  const parsed = v.parse(envSchema, {
     googleId: env.GOOGLE_ID,
     googleSecret: env.GOOGLE_SECRET,
     notionDatabase: env.NOTION_DATABASE,

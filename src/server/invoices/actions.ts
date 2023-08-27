@@ -1,5 +1,5 @@
 import server$, { useRequest } from "solid-start/server";
-import { z } from "zod";
+import * as v from "valibot";
 import {
   createInvoice,
   deleteInvoice,
@@ -8,17 +8,21 @@ import {
   updateInvoice,
 } from "./api";
 
-const selectInvoiceArgs = z.object({
-  id: z.coerce.number(),
-});
+const selectInvoiceArgs = () => {
+  return v.object({
+    id: v.coerce(v.number(), Number),
+  });
+};
 
-export const selectInvoiceKey = (args: z.infer<typeof selectInvoiceArgs>) => {
+export const selectInvoiceKey = (
+  args: v.Input<ReturnType<typeof selectInvoiceArgs>>,
+) => {
   return ["selectInvoice", args] as const;
 };
 
 export const selectInvoiceServerQuery = server$(
   ([, args]: ReturnType<typeof selectInvoiceKey>) => {
-    const parsed = selectInvoiceArgs.parse(args);
+    const parsed = v.parse(selectInvoiceArgs(), args);
 
     const requestEvent = useRequest();
 
@@ -39,11 +43,15 @@ export const selectInvoiceServerQuery = server$(
   },
 );
 
-const selectInvoicesArgs = z.object({
-  startCursor: z.string().optional(),
-});
+const selectInvoicesArgs = () => {
+  return v.object({
+    startCursor: v.optional(v.string()),
+  });
+};
 
-export const selectInvoicesKey = (args: z.infer<typeof selectInvoicesArgs>) => {
+export const selectInvoicesKey = (
+  args: v.Input<ReturnType<typeof selectInvoicesArgs>>,
+) => {
   return ["selectInvoices", args] as const;
 };
 
@@ -53,7 +61,7 @@ export const selectAllInvoicesKey = () => {
 
 export const selectInvoicesServerQuery = server$(
   async ([, args]: ReturnType<typeof selectInvoicesKey>) => {
-    const parsed = selectInvoicesArgs.parse(args);
+    const parsed = v.parse(selectInvoicesArgs(), args);
 
     const requestEvent = useRequest();
 
@@ -86,37 +94,41 @@ export const selectInvoicesServerQuery = server$(
   },
 );
 
-const invoiceSchema = z.object({
-  buyerAddress1: z.string(),
-  buyerAddress2: z.string(),
-  buyerName: z.string(),
-  buyerNip: z.string(),
-  city: z.string(),
-  date: z.string(),
-  invoiceTitle: z.string(),
-  notes: z.string(),
-  paymentAccount: z.string(),
-  paymentBank: z.string(),
-  paymentMethod: z.string(),
-  sellerAddress1: z.string(),
-  sellerAddress2: z.string(),
-  sellerName: z.string(),
-  sellerNip: z.string(),
-  serviceCount: z.coerce.number().min(0),
-  servicePayed: z.coerce.number().min(0),
-  servicePrice: z.coerce.number().min(0),
-  serviceTitle: z.string(),
-  serviceUnit: z.string(),
-});
+const invoiceSchema = () => {
+  return v.object({
+    buyerAddress1: v.string(),
+    buyerAddress2: v.string(),
+    buyerName: v.string(),
+    buyerNip: v.string(),
+    city: v.string(),
+    date: v.string(),
+    invoiceTitle: v.string(),
+    notes: v.string(),
+    paymentAccount: v.string(),
+    paymentBank: v.string(),
+    paymentMethod: v.string(),
+    sellerAddress1: v.string(),
+    sellerAddress2: v.string(),
+    sellerName: v.string(),
+    sellerNip: v.string(),
+    serviceCount: v.coerce(v.number([v.minValue(0)]), Number),
+    servicePayed: v.coerce(v.number([v.minValue(0)]), Number),
+    servicePrice: v.coerce(v.number([v.minValue(0)]), Number),
+    serviceTitle: v.string(),
+    serviceUnit: v.string(),
+  });
+};
 
-const updateInvoiceArgs = z.intersection(
-  invoiceSchema,
-  z.object({ id: z.coerce.number() }),
-);
+const updateInvoiceArgs = () => {
+  return v.merge([
+    invoiceSchema(),
+    v.object({ id: v.coerce(v.number(), Number) }),
+  ]);
+};
 
 export const updateInvoiceServerMutation = server$(
-  async (data: z.infer<typeof updateInvoiceArgs>) => {
-    const parsed = updateInvoiceArgs.parse(data);
+  async (data: v.Input<ReturnType<typeof updateInvoiceArgs>>) => {
+    const parsed = v.parse(updateInvoiceArgs(), data);
 
     // const user = await getUser(server$);
 
@@ -131,8 +143,8 @@ export const updateInvoiceServerMutation = server$(
 );
 
 export const insertInvoiceServerMutation = server$(
-  async (data: z.infer<typeof invoiceSchema>) => {
-    const parsed = invoiceSchema.parse(data);
+  async (data: v.Input<ReturnType<typeof invoiceSchema>>) => {
+    const parsed = v.parse(invoiceSchema(), data);
 
     // const user = await getUser(server$);
 
@@ -142,11 +154,13 @@ export const insertInvoiceServerMutation = server$(
   },
 );
 
-const deleteSchemaArgs = z.object({ id: z.coerce.number() });
+const deleteSchemaArgs = () => {
+  return v.object({ id: v.coerce(v.number(), Number) });
+};
 
 export const deleteInvoiceServerMutation = server$(
-  async (data: z.infer<typeof deleteSchemaArgs>) => {
-    const parsed = deleteSchemaArgs.parse(data);
+  async (data: v.Input<ReturnType<typeof deleteSchemaArgs>>) => {
+    const parsed = v.parse(deleteSchemaArgs(), data);
 
     await deleteInvoice({ event: server$, id: parsed.id });
 

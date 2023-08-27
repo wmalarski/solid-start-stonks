@@ -15,6 +15,7 @@
     "tanstack",
     "Topbar",
     "trpc",
-    "undici"
+    "undici",
+    "valibot"
   ]
 }

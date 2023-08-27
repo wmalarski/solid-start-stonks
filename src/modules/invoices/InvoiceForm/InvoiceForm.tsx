@@ -1,6 +1,6 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { Show, createSignal, type Component, type JSX } from "solid-js";
-import type { ZodIssue } from "zod";
+import type * as v from "valibot";
 import { Button } from "~/components/Button";
 import { Card, CardBody } from "~/components/Card";
 import { DatePicker } from "~/components/DatePicker";
@@ -41,7 +41,7 @@ const formDefault: InvoiceFormData = {
 
 type FormItemContainerProps = {
   children: JSX.Element;
-  error?: ZodIssue;
+  error?: v.Issue;
   id: string;
   label: string;
 };
@@ -65,7 +65,7 @@ const FormItemContainer: Component<FormItemContainerProps> = (props) => {
 };
 
 type FormInputItemProps = TextFieldInputProps & {
-  error?: ZodIssue;
+  error?: v.Issue;
   id: string;
   isLoading: boolean;
   label: string;
@@ -104,7 +104,7 @@ const SubHeading: Component<SubHeadingProps> = (props) => {
 };
 
 type Props = {
-  error?: Record<string, ZodIssue>;
+  error?: Record<string, v.Issue>;
   id?: number;
   initial?: InvoiceFormData;
   isLoading: boolean;
