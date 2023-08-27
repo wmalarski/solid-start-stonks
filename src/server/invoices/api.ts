@@ -1,8 +1,8 @@
 import type { FetchEvent } from "solid-start";
 import {
+  createNotionDatabase,
   databaseResponseToProperties,
   dateToPlainDate,
-  insertNotionDatabase,
   numberToPlainNumber,
   plainDateToDate,
   plainNumberToNumber,
@@ -12,6 +12,7 @@ import {
   richTextToPlainText,
   titleToPlainText,
   uniqueIdToPlainText,
+  updateNotionDatabase,
   type CreateProperties,
   type QueryDatabaseResult,
 } from "../notion";
@@ -83,15 +84,15 @@ const invoiceToDatabaseProperties = (
   };
 };
 
-type QueryNotionInvoicesArgs = {
+type QueryInvoicesArgs = {
   event: FetchEvent;
   startCursor?: string;
 };
 
-export const queryNotionInvoices = async ({
+export const queryInvoices = async ({
   event,
   startCursor,
-}: QueryNotionInvoicesArgs) => {
+}: QueryInvoicesArgs) => {
   const response = await queryNotionDatabase({
     event,
     page_size: 10,
@@ -110,19 +111,14 @@ export const queryNotionInvoices = async ({
   return { ...response, results };
 };
 
-export type QueryNotionInvoicesResponse = Awaited<
-  ReturnType<typeof queryNotionInvoices>
->;
+export type QueryInvoicesResponse = Awaited<ReturnType<typeof queryInvoices>>;
 
-type QueryNotionInvoiceArgs = {
+type QueryInvoiceArgs = {
   event: FetchEvent;
   id: number;
 };
 
-export const queryNotionInvoice = async ({
-  event,
-  id,
-}: QueryNotionInvoiceArgs) => {
+export const queryInvoice = async ({ event, id }: QueryInvoiceArgs) => {
   const response = await queryNotionDatabase({
     event,
     filter: { number: { equals: id }, property: "ID" },
@@ -138,20 +134,54 @@ export const queryNotionInvoice = async ({
   return databaseResponseToInvoice(result);
 };
 
-type InsertNotionInvoiceArgs = {
+type CreateInvoiceArgs = {
   event: FetchEvent;
   invoice: Omit<Invoice, "id">;
 };
 
-export const insertNotionInvoice = async ({
-  event,
-  invoice,
-}: InsertNotionInvoiceArgs) => {
+export const createInvoice = async ({ event, invoice }: CreateInvoiceArgs) => {
   const properties = invoiceToDatabaseProperties(invoice);
 
-  const response = await insertNotionDatabase({
+  const response = await createNotionDatabase({
     event,
     properties,
+  });
+
+  console.log(response);
+
+  return response;
+};
+
+type UpdateInvoiceArgs = {
+  event: FetchEvent;
+  invoice: Invoice;
+};
+
+export const updateInvoice = async ({ event, invoice }: UpdateInvoiceArgs) => {
+  const properties = invoiceToDatabaseProperties(invoice);
+
+  const response = await updateNotionDatabase({
+    event,
+    properties,
+  });
+
+  console.log(response);
+
+  return response;
+};
+
+type DeleteInvoiceArgs = {
+  event: FetchEvent;
+  id: number;
+};
+
+export const deleteInvoice = async ({ event }: DeleteInvoiceArgs) => {
+  // const properties = invoiceToDatabaseProperties(invoice);
+
+  const response = await updateNotionDatabase({
+    archived: true,
+    event,
+    // properties,
   });
 
   console.log(response);

@@ -3,6 +3,7 @@ import type {
   CreateDatabaseParameters,
   QueryDatabaseParameters,
   QueryDatabaseResponse,
+  UpdateDatabaseParameters,
 } from "@notionhq/client/build/src/api-endpoints";
 import type { FetchEvent } from "solid-start";
 import { serverEnv } from "./env";
@@ -118,19 +119,39 @@ export const queryNotionDatabase = ({
   return notion.databases.query({ database_id: env.notionDatabase, ...args });
 };
 
-type InsertNotionDatabaseArgs = Omit<CreateDatabaseParameters, "parent"> & {
+type CreateNotionDatabaseArgs = Omit<CreateDatabaseParameters, "parent"> & {
   event: FetchEvent;
 };
 
-export const insertNotionDatabase = ({
+export const createNotionDatabase = ({
   event,
   ...args
-}: InsertNotionDatabaseArgs) => {
+}: CreateNotionDatabaseArgs) => {
   const env = serverEnv(event);
   const notion = getNotionClient(event);
 
   return notion.databases.create({
     parent: { database_id: env.notionDatabase, type: "database_id" },
+    ...args,
+  });
+};
+
+type UpdateNotionDatabaseArgs = Omit<
+  UpdateDatabaseParameters,
+  "database_id"
+> & {
+  event: FetchEvent;
+};
+
+export const updateNotionDatabase = ({
+  event,
+  ...args
+}: UpdateNotionDatabaseArgs) => {
+  const env = serverEnv(event);
+  const notion = getNotionClient(event);
+
+  return notion.databases.update({
+    database_id: env.notionDatabase,
     ...args,
   });
 };
