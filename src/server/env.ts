@@ -28,11 +28,13 @@ export const serverEnv = ({ env, locals }: ServerEnvArgs): ServerEnv => {
 
   const envSchema = getEnvSchema();
 
+  console.log({ env });
+
   const parsed = v.parse(envSchema, {
-    googleId: env.GOOGLE_ID,
-    googleSecret: env.GOOGLE_SECRET,
-    notionDatabase: env.NOTION_DATABASE,
-    notionKey: env.NOTION_KEY,
+    googleId: env.GOOGLE_ID || process.env.GOOGLE_ID,
+    googleSecret: env.GOOGLE_SECRET || process.env.GOOGLE_SECRET,
+    notionDatabase: env.NOTION_DATABASE || process.env.NOTION_DATABASE,
+    notionKey: env.NOTION_KEY || process.env.NOTION_KEY,
   });
 
   locals[ENV_CACHE_KEY] = parsed;

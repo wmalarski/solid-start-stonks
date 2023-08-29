@@ -33,7 +33,7 @@ export const getSession = (
   event: Pick<FetchEvent, "env" | "locals" | "request">,
 ): ReturnType<typeof getAuthSession> => {
   const cached = event.locals[SESSION_CACHE_KEY];
-
+  console.log("import", event.env);
   if (cached) {
     return cached as ReturnType<typeof getAuthSession>;
   }

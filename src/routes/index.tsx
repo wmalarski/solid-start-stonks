@@ -7,8 +7,8 @@ import { getSession } from "~/server/auth";
 import { paths } from "~/utils/paths";
 
 export const routeData = () => {
-  return createServerData$(async (_source, event) => {
-    const session = await getSession(event);
+  return createServerData$(async (_source, { env, request, locals }) => {
+    const session = await getSession({ env, locals, request });
 
     if (!session) {
       return redirect(paths.login);
