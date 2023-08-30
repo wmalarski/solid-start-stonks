@@ -147,8 +147,6 @@ export const createInvoice = async ({ event, invoice }: CreateInvoiceArgs) => {
     properties,
   });
 
-  console.log(response);
-
   return response;
 };
 
@@ -160,12 +158,12 @@ type UpdateInvoiceArgs = {
 export const updateInvoice = async ({ event, invoice }: UpdateInvoiceArgs) => {
   const properties = invoiceToDatabaseProperties(invoice);
 
+  console.log({ event });
+
   const response = await updateNotionDatabase({
     event,
     properties,
   });
-
-  console.log(response);
 
   return response;
 };
@@ -183,8 +181,6 @@ export const deleteInvoice = async ({ event }: DeleteInvoiceArgs) => {
     event,
     // properties,
   });
-
-  console.log(response);
 
   return response;
 };

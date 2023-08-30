@@ -28,8 +28,6 @@ export const serverEnv = ({ env, locals }: ServerEnvArgs): ServerEnv => {
 
   const envSchema = getEnvSchema();
 
-  console.log({ env });
-
   const parsed = v.parse(envSchema, {
     googleId: env.GOOGLE_ID || process.env.GOOGLE_ID,
     googleSecret: env.GOOGLE_SECRET || process.env.GOOGLE_SECRET,

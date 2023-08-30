@@ -19,7 +19,7 @@ const getNotionClient = (event: FetchEvent): Client => {
 
   const env = serverEnv(event);
 
-  const notion = new Client({ auth: env.notionKey, fetch: event.fetch });
+  const notion = new Client({ auth: env.notionKey });
 
   event.locals[NOTION_CACHE_KEY] = notion;
 
@@ -69,7 +69,7 @@ export const dateToPlainDate = (property: QueryDatabaseProperty) => {
 };
 
 export const uniqueIdToPlainText = (property: QueryDatabaseProperty) => {
-  if (property.type !== "unique_id" || !property.unique_id.number) {
+  if (property.type !== "unique_id" || !("number" in property.unique_id)) {
     throw new Error(`parsing-error: ${property.type}`);
   }
   return property.unique_id.number;

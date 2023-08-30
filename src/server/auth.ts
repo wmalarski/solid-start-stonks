@@ -8,24 +8,24 @@ import { serverEnv } from "./env";
 
 export const getAuthOptions = (
   event: Pick<FetchEvent, "env" | "locals">,
-): SolidAuthConfig => ({
-  callbacks: {
-    session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id;
-      }
-      return session;
-    },
-  },
-  debug: false,
-  providers: [
-    Google({
-      clientId: serverEnv(event).googleId,
-      clientSecret: serverEnv(event).googleSecret,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    }) as any,
-  ],
-});
+): SolidAuthConfig => {
+  const env = serverEnv(event);
+  return {
+    // callbacks: {
+    //   signIn() {
+    //     return true;
+    //   },
+    // },
+    debug: true,
+    providers: [
+      Google({
+        clientId: env.googleId,
+        clientSecret: env.googleSecret,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      }) as any,
+    ],
+  };
+};
 
 const SESSION_CACHE_KEY = "__session";
 
@@ -33,7 +33,6 @@ export const getSession = (
   event: Pick<FetchEvent, "env" | "locals" | "request">,
 ): ReturnType<typeof getAuthSession> => {
   const cached = event.locals[SESSION_CACHE_KEY];
-  console.log("import", event.env);
   if (cached) {
     return cached as ReturnType<typeof getAuthSession>;
   }
