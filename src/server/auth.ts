@@ -1,31 +1,5 @@
-import Google from "@auth/core/providers/google";
-import {
-  getSession as getAuthSession,
-  type SolidAuthConfig,
-} from "@auth/solid-start";
+import { getSession as getAuthSession } from "@auth/solid-start";
 import { ServerError, type FetchEvent } from "solid-start";
-import { serverEnv } from "./env";
-
-export const getAuthOptions = (
-  event: Pick<FetchEvent, "env" | "locals">,
-): SolidAuthConfig => {
-  const env = serverEnv(event);
-  return {
-    // callbacks: {
-    //   signIn() {
-    //     return true;
-    //   },
-    // },
-    debug: true,
-    providers: [
-      Google({
-        clientId: env.googleId,
-        clientSecret: env.googleSecret,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      }) as any,
-    ],
-  };
-};
 
 const SESSION_CACHE_KEY = "__session";
 

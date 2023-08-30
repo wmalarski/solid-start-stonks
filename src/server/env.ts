@@ -7,10 +7,14 @@ if (typeof window !== "undefined") {
 
 const getEnvSchema = () => {
   return v.object({
-    googleId: v.string(),
-    googleSecret: v.string(),
+    clientID: v.string(),
+    clientSecret: v.string(),
+    domain: v.string(),
+    nodeEnv: v.string(),
     notionDatabase: v.string(),
     notionKey: v.string(),
+    redirectUri: v.string(),
+    sessionSecret: v.string(),
   });
 };
 
@@ -29,10 +33,14 @@ export const serverEnv = ({ env, locals }: ServerEnvArgs): ServerEnv => {
   const envSchema = getEnvSchema();
 
   const parsed = v.parse(envSchema, {
-    googleId: env.GOOGLE_ID || process.env.GOOGLE_ID,
-    googleSecret: env.GOOGLE_SECRET || process.env.GOOGLE_SECRET,
+    clientID: env.CLIENT_ID || process.env.CLIENT_ID,
+    clientSecret: env.CLIENT_SECRET || process.env.CLIENT_SECRET,
+    domain: env.DOMAIN || process.env.DOMAIN,
+    nodeEnv: env.NODE_ENV || process.env.NODE_ENV,
     notionDatabase: env.NOTION_DATABASE || process.env.NOTION_DATABASE,
     notionKey: env.NOTION_KEY || process.env.NOTION_KEY,
+    redirectUri: env.REDIRECT_URI || process.env.REDIRECT_URI,
+    sessionSecret: env.SESSION_SECRET || process.env.SESSION_SECRET,
   });
 
   locals[ENV_CACHE_KEY] = parsed;

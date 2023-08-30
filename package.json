@@ -12,6 +12,7 @@
   "type": "module",
   "devDependencies": {
     "@babel/core": "7.22.11",
+    "@types/auth0-js": "^9.21.0",
     "@types/node": "^20.5.7",
     "@typescript-eslint/eslint-plugin": "^6.5.0",
     "@typescript-eslint/parser": "^6.5.0",
@@ -46,6 +47,7 @@
     "@solidjs/meta": "^0.28.6",
     "@solidjs/router": "^0.8.3",
     "@tanstack/solid-query": "^5.0.0-beta.18",
+    "auth0-js": "^9.22.1",
     "class-variance-authority": "0.7.0",
     "daisyui": "^3.6.3",
     "dotenv": "^16.3.1",
