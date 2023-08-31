@@ -1,74 +1,125 @@
-import type { RequestEventBase } from "@builder.io/qwik-city";
-import jwt from "jsonwebtoken";
-import { getServerEnv } from "./env";
-import type { Session } from "./oauth";
+import {
+  ServerError,
+  createCookieSessionStorage,
+  type FetchEvent,
+} from "solid-start";
+import {
+  coerce,
+  number,
+  object,
+  safeParseAsync,
+  string,
+  type Input,
+} from "valibot";
+import { serverEnv } from "../env";
 
-const options = {
-  httpOnly: true,
-  maxAge: 0,
-  name: "__session",
-  path: "/",
-  sameSite: "lax",
-} as const;
+const accessTokenKey = "access_token";
+const idTokenKey = "id_token";
+const scopeKey = "scope";
+const expiresInKey = "expires_in";
+const tokenTypeKey = "token_type";
 
-const SESSION_COOKIE_KEY = "__session";
-
-export const createCookieSession = (
-  event: RequestEventBase,
-  session: Session,
-) => {
-  const env = getServerEnv(event);
-
-  const token = jwt.sign(session, env.sessionSecret, { expiresIn: "7d" });
-
-  event.cookie.set(SESSION_COOKIE_KEY, token, {
-    ...options,
-    maxAge: 60 * 60 * 24 * 7, // 7 days
-    secure: env.nodeEnv === "production",
+const sessionSchema = () => {
+  return object({
+    [accessTokenKey]: string(),
+    [expiresInKey]: coerce(number(), Number),
+    [idTokenKey]: string(),
+    [scopeKey]: string(),
+    [tokenTypeKey]: string(),
   });
 };
 
-export const deleteCookieSession = (event: RequestEventBase) => {
-  event.cookie.delete(SESSION_COOKIE_KEY, options);
+export type Session = Input<ReturnType<typeof sessionSchema>>;
+
+const createStorage = (event: FetchEvent) => {
+  const env = serverEnv(event);
+  return createCookieSessionStorage({
+    cookie: {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+      name: "session",
+      path: "/",
+      sameSite: "lax",
+      secrets: [env.sessionSecret],
+      secure: true,
+    },
+  });
 };
 
-const getCookieSession = (event: RequestEventBase): Session | null => {
-  const token = event.cookie.get(SESSION_COOKIE_KEY)?.value;
-  const env = getServerEnv(event);
+const SESSION_COOKIE_KEY = "__session";
 
-  if (!token) {
-    return null;
+const getSessionFromCookie = async (
+  event: FetchEvent,
+): Promise<Session | null> => {
+  const storage = createStorage(event);
+
+  const cookie = await storage.getSession(event.request.headers.get("Cookie"));
+
+  const parsed = await safeParseAsync(sessionSchema(), {
+    [accessTokenKey]: cookie.get(accessTokenKey),
+    [expiresInKey]: cookie.get(expiresInKey),
+    [idTokenKey]: cookie.get(idTokenKey),
+    [scopeKey]: cookie.get(scopeKey),
+    [tokenTypeKey]: cookie.get(tokenTypeKey),
+  });
+
+  if (parsed.success) {
+    return parsed.output;
   }
 
-  try {
-    const session = jwt.verify(token, env.sessionSecret);
-
-    return session as Session;
-  } catch (err) {
-    deleteCookieSession(event);
-
-    return null;
-  }
+  return null;
 };
 
-const SESSION_CACHE_KEY = "__session";
-
-export const getRequestCookieSession = (
-  event: RequestEventBase,
-): Session | null => {
-  const value = event.sharedMap.get(SESSION_CACHE_KEY);
-
-  if (value) {
-    return value.session;
+export const getSession = (event: FetchEvent): Promise<Session | null> => {
+  const cached = event.locals[SESSION_COOKIE_KEY];
+  if (cached) {
+    return cached as Promise<Session | null>;
   }
 
-  const session = getCookieSession(event);
+  const sessionPromise = getSessionFromCookie(event);
+  event.locals[SESSION_COOKIE_KEY] = sessionPromise;
 
-  event.sharedMap.set(SESSION_CACHE_KEY, { session });
+  return sessionPromise;
+};
+
+export const getSessionOrThrow = async (
+  event: FetchEvent,
+): Promise<Session> => {
+  const session = await getSession(event);
+
+  if (!session) {
+    throw new ServerError("Unauthorized", { status: 401 });
+  }
 
   return session;
 };
 
-export const clearRequestSession = (event: RequestEventBase) => {
-  event.sharedMap.set(SESSION_CACHE_KEY, { session: null });
+type SetSessionCookieArgs = {
+  event: FetchEvent;
+  session: Session;
+};
+
+export const setSessionCookie = async ({
+  event,
+  session,
+}: SetSessionCookieArgs) => {
+  const storage = createStorage(event);
+
+  const cookie = await storage.getSession(event.request.headers.get("Cookie"));
+
+  cookie.set(accessTokenKey, session.access_token);
+  cookie.set(idTokenKey, session.id_token);
+  cookie.set(scopeKey, session.scope);
+  cookie.set(expiresInKey, session.expires_in);
+  cookie.set(tokenTypeKey, session.token_type);
+
+  return storage.commitSession(cookie);
+};
+
+export const destroySessionCookie = async (event: FetchEvent) => {
+  const storage = createStorage(event);
+
+  const cookie = await storage.getSession(event.request.headers.get("Cookie"));
+
+  return storage.destroySession(cookie);
 };
