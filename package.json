@@ -38,8 +38,6 @@
     "vite-plugin-solid": "^2.7.0"
   },
   "dependencies": {
-    "@auth/core": "^0.12.0",
-    "@auth/solid-start": "^0.1.1",
     "@kobalte/core": "^0.11.0",
     "@kobalte/tailwindcss": "^0.8.0",
     "@notionhq/client": "2.2.12",

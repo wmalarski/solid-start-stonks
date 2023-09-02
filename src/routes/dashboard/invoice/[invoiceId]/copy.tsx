@@ -62,7 +62,7 @@ const CopyInvoicePage: Component = () => {
                 invoice={invoice()}
                 breadcrumbs={[
                   {
-                    path: paths.copyInvoice(invoice().id),
+                    path: paths.copyInvoice(id()),
                     text: t("topbar.copyInvoice"),
                   },
                 ]}

@@ -1,5 +1,6 @@
 import server$, { useRequest } from "solid-start/server";
 import * as v from "valibot";
+import { getSessionOrThrow } from "../auth/session";
 import {
   createInvoice,
   deleteInvoice,
@@ -34,7 +35,7 @@ export const selectInvoiceServerQuery = server$(
       request: server$.request || requestEvent.request,
     };
 
-    // const user = await getUser(event);
+    getSessionOrThrow(event);
 
     return queryInvoice({
       event,
@@ -73,11 +74,7 @@ export const selectInvoicesServerQuery = server$(
       request: server$.request || requestEvent.request,
     };
 
-    // const user = await getUser({
-    //   env: server$.env || event.env,
-    //   locals: server$.locals || event.locals,
-    //   request: server$.request || event.request,
-    // });
+    getSessionOrThrow(event);
 
     const [collection] = await Promise.all([
       queryInvoices({
@@ -130,12 +127,11 @@ export const updateInvoiceServerMutation = server$(
   async (data: v.Input<ReturnType<typeof updateInvoiceArgs>>) => {
     const parsed = v.parse(updateInvoiceArgs(), data);
 
-    // const user = await getUser(server$);
+    getSessionOrThrow(server$);
 
     await updateInvoice({
       event: server$,
       invoice: parsed,
-      // userId: user.id,
     });
 
     return parsed;
@@ -146,7 +142,7 @@ export const insertInvoiceServerMutation = server$(
   async (data: v.Input<ReturnType<typeof invoiceSchema>>) => {
     const parsed = v.parse(invoiceSchema(), data);
 
-    // const user = await getUser(server$);
+    getSessionOrThrow(server$);
 
     const invoice = await createInvoice({ event: server$, invoice: parsed });
 
@@ -161,6 +157,8 @@ const deleteSchemaArgs = () => {
 export const deleteInvoiceServerMutation = server$(
   async (data: v.Input<ReturnType<typeof deleteSchemaArgs>>) => {
     const parsed = v.parse(deleteSchemaArgs(), data);
+
+    getSessionOrThrow(server$);
 
     await deleteInvoice({ event: server$, id: parsed.id });
 

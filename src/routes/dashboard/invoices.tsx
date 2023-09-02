@@ -30,7 +30,12 @@ const InvoicesPage: Component = () => {
       const result = await selectInvoicesServerQuery(context.queryKey);
 
       result.collection.results.forEach((invoice) => {
-        queryClient.setQueryData(selectInvoiceKey({ id: invoice.id }), invoice);
+        if (invoice.id) {
+          queryClient.setQueryData(
+            selectInvoiceKey({ id: invoice.id }),
+            invoice,
+          );
+        }
       });
 
       return result;

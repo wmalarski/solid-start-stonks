@@ -65,7 +65,7 @@ const EditInvoicePage: Component = () => {
                 invoice={invoice()}
                 breadcrumbs={[
                   {
-                    path: paths.editInvoice(invoice().id),
+                    path: paths.editInvoice(id()),
                     text: t("topbar.editInvoice"),
                   },
                 ]}
@@ -76,7 +76,7 @@ const EditInvoicePage: Component = () => {
               <div class="p-8 pt-0">
                 <InvoiceForm
                   error={getServerError(editMutation.error)}
-                  id={invoice().id}
+                  id={id()}
                   initial={invoice()}
                   isLoading={editMutation.isPending}
                   onSubmit={onSubmit}

@@ -6,7 +6,7 @@ import { defineConfig } from "vite";
 export default defineConfig(() => {
   dotenv.config();
   return {
-    plugins: [solid({ adapter: vercel() })],
+    plugins: [solid({ adapter: vercel({}) })],
     ssr: { noExternal: ["@kobalte/core"] },
   };
 });
