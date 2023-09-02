@@ -1,5 +1,5 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { For, type Component } from "solid-js";
+import { For, Show, type Component } from "solid-js";
 import { A } from "solid-start";
 import { buttonClass } from "~/components/Button";
 import { Card, CardActions, CardBody, CardTitle } from "~/components/Card";
@@ -12,6 +12,7 @@ import { InvoiceCompany, InvoiceSummary } from "../InvoicePrimitives";
 
 type InvoiceItemProps = {
   invoice: Invoice;
+  invoiceId: number;
 };
 
 const InvoiceItem: Component<InvoiceItemProps> = (props) => {
@@ -54,23 +55,23 @@ const InvoiceItem: Component<InvoiceItemProps> = (props) => {
         <CardActions>
           <A
             class={buttonClass({ size: "sm", variant: "link" })}
-            href={paths.invoice(props.invoice.id)}
+            href={paths.invoice(props.invoiceId)}
           >
             {t("invoices.more")}
           </A>
           <A
             class={buttonClass({ size: "sm", variant: "link" })}
-            href={paths.editInvoice(props.invoice.id)}
+            href={paths.editInvoice(props.invoiceId)}
           >
             {t("topbar.editInvoice")}
           </A>
           <A
             class={buttonClass({ size: "sm", variant: "link" })}
-            href={paths.copyInvoice(props.invoice.id)}
+            href={paths.copyInvoice(props.invoiceId)}
           >
             {t("topbar.copyInvoice")}
           </A>
-          <DeleteInvoice invoice={props.invoice} />
+          <DeleteInvoice invoice={props.invoice} invoiceId={props.invoiceId} />
         </CardActions>
       </CardBody>
     </Card>
@@ -85,7 +86,13 @@ export const InvoicesList: Component<Props> = (props) => {
   return (
     <div class="flex w-full flex-col gap-4 px-8">
       <For each={props.invoices}>
-        {(invoice) => <InvoiceItem invoice={invoice} />}
+        {(invoice) => (
+          <Show when={invoice.id}>
+            {(invoiceId) => (
+              <InvoiceItem invoice={invoice} invoiceId={invoiceId()} />
+            )}
+          </Show>
+        )}
       </For>
     </div>
   );

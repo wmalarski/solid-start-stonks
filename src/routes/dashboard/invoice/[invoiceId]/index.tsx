@@ -16,9 +16,11 @@ const InvoicePage: Component = () => {
 
   const params = useParams();
 
+  const id = () => +params.invoiceId;
+
   const invoiceQuery = createQuery(() => ({
     queryFn: (context) => selectInvoiceServerQuery(context.queryKey),
-    queryKey: selectInvoiceKey({ id: +params.invoiceId }),
+    queryKey: selectInvoiceKey({ id: id() }),
     suspense: true,
   }));
 
@@ -28,7 +30,7 @@ const InvoicePage: Component = () => {
         <Show when={invoiceQuery.data}>
           {(invoice) => (
             <div class="grid w-full grid-cols-1 grid-rows-[auto_1fr] items-start">
-              <InvoiceTopbar invoice={invoice()} />
+              <InvoiceTopbar invoice={invoice()} invoiceId={id()} />
               <h1 class="px-8 text-3xl font-semibold print:invisible print:hidden">
                 {t("invoice.title", { title: invoice().invoiceTitle })}
               </h1>

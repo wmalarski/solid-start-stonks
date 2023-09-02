@@ -63,6 +63,7 @@ const EditInvoicePage: Component = () => {
             <div class="grid w-full grid-cols-1 grid-rows-[auto_1fr] items-start">
               <InvoiceTopbar
                 invoice={invoice()}
+                invoiceId={id()}
                 breadcrumbs={[
                   {
                     path: paths.editInvoice(id()),

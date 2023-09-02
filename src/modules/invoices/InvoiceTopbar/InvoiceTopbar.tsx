@@ -14,6 +14,7 @@ import { paths } from "~/utils/paths";
 import { DeleteInvoice } from "../DeleteInvoice";
 
 type Props = {
+  invoiceId: number;
   invoice: Invoice;
   breadcrumbs?: { path: string; text: string }[];
 };
@@ -25,7 +26,7 @@ export const InvoiceTopbar: Component<Props> = (props) => {
     return [
       { path: paths.invoices(), text: t("topbar.home") },
       {
-        path: paths.invoice(props.invoice.id),
+        path: paths.invoice(props.invoiceId),
         text: props.invoice.invoiceTitle,
       },
       ...(props.breadcrumbs || []),
@@ -52,18 +53,18 @@ export const InvoiceTopbar: Component<Props> = (props) => {
       </BreadcrumbsRoot>
       <div>
         <A
-          href={paths.editInvoice(props.invoice.id)}
+          href={paths.editInvoice(props.invoiceId)}
           class={buttonClass({ size: "sm", variant: "link" })}
         >
           {t("topbar.editInvoice")}
         </A>
         <A
-          href={paths.copyInvoice(props.invoice.id)}
+          href={paths.copyInvoice(props.invoiceId)}
           class={buttonClass({ size: "sm", variant: "link" })}
         >
           {t("topbar.copyInvoice")}
         </A>
-        <DeleteInvoice invoice={props.invoice} />
+        <DeleteInvoice invoice={props.invoice} invoiceId={props.invoiceId} />
       </div>
     </Navbar>
   );

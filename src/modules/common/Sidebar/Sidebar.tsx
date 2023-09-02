@@ -1,17 +1,15 @@
-import { signOut } from "@auth/solid-start/client";
 import { useI18n } from "@solid-primitives/i18n";
 import type { Component } from "solid-js";
 import { A } from "solid-start";
 import { Button } from "~/components/Button";
 import { Menu, MenuItem } from "~/components/Menu";
+import { destroySessionServerAction } from "~/server/auth/actions";
 import { paths } from "~/utils/paths";
 
 export const Sidebar: Component = () => {
   const [t] = useI18n();
 
-  const handleClick = () => {
-    signOut();
-  };
+  const [signOut, { Form }] = destroySessionServerAction();
 
   return (
     <div
@@ -27,9 +25,11 @@ export const Sidebar: Component = () => {
       </Menu>
       <Menu class="w-56 p-2 ">
         <MenuItem>
-          <Button onClick={handleClick} size="sm">
-            {t("sidebar.logout")}
-          </Button>
+          <Form>
+            <Button isLoading={signOut.pending} size="sm">
+              {t("sidebar.logout")}
+            </Button>
+          </Form>
         </MenuItem>
       </Menu>
     </div>

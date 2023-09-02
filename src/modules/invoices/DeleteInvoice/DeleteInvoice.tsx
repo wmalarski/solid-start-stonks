@@ -12,6 +12,7 @@ import { paths } from "~/utils/paths";
 
 type Props = {
   invoice: Invoice;
+  invoiceId: number;
 };
 
 export const DeleteInvoice: Component<Props> = (props) => {
@@ -42,7 +43,7 @@ export const DeleteInvoice: Component<Props> = (props) => {
 
   return (
     <form onSubmit={onSubmit}>
-      <input type="hidden" name="id" id="id" value={props.invoice.id} />
+      <input type="hidden" name="id" id="id" value={props.invoiceId} />
       <Button
         color="warning"
         disabled={deleteMutation.isPending}

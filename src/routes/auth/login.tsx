@@ -1,4 +1,3 @@
-import { signIn } from "@auth/solid-start/client";
 import { useI18n } from "@solid-primitives/i18n";
 import type { Component } from "solid-js";
 import { redirect } from "solid-start";
@@ -21,8 +20,17 @@ export const routeData = () => {
 const Login: Component = () => {
   const [t] = useI18n();
 
-  const onClick = () => {
-    signIn("google");
+  const onClick = async () => {
+    const auth0 = await import("auth0-js");
+
+    const webAuth = new auth0.WebAuth({
+      clientID: import.meta.env.PUBLIC_AUTH0_CLIENT_ID,
+      domain: import.meta.env.PUBLIC_AUTH0_DOMAIN,
+      redirectUri: import.meta.env.PUBLIC_AUTH0_REDIRECT_URL,
+      responseType: "code",
+    });
+
+    webAuth.authorize({ connection: "google-oauth2" });
   };
 
   return (
