@@ -1,15 +1,15 @@
-import { z, type RequestHandler } from "@builder.io/qwik-city";
-import { createCookieSession } from "~/server/auth";
+import { redirect, type APIEvent } from "solid-start";
+import { object, parseAsync, string } from "valibot";
+import { exchangeAuthToken, getAuthUserInfo } from "~/server/auth/oauth";
+import { setSessionCookie } from "~/server/auth/session";
 import { getNotionUsers } from "~/server/notion";
-import { exchangeAuthToken, getAuthUserInfo } from "~/server/oauth";
 import { paths } from "~/utils/paths";
 
-export const onGet: RequestHandler = async (event) => {
-  const schema = z.object({ code: z.string(), state: z.string() });
+export const GET = async (event: APIEvent) => {
+  const schema = object({ code: string(), state: string() });
 
-  const parsed = await schema.parseAsync(
-    Object.fromEntries(event.query.entries()),
-  );
+  const search = new URL(event.request.url).searchParams;
+  const parsed = await parseAsync(schema, Object.fromEntries(search.entries()));
 
   const session = await exchangeAuthToken({ ...parsed, event });
   const user = await getAuthUserInfo({ event, session });
@@ -22,10 +22,10 @@ export const onGet: RequestHandler = async (event) => {
   );
 
   if (!hasAccess) {
-    throw event.redirect(302, paths.home);
+    throw redirect(paths.index, 302);
   }
 
-  createCookieSession(event, session);
+  setSessionCookie({ event, session });
 
-  throw event.redirect(302, paths.invoices);
+  throw redirect(paths.invoices(0), 302);
 };

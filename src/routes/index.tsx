@@ -3,12 +3,12 @@ import { redirect, useRouteData } from "solid-start";
 import { createServerData$ } from "solid-start/server";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { Sidebar } from "~/modules/common/Sidebar/Sidebar";
-import { getSession } from "~/server/auth";
+import { getSession } from "~/server/auth/session";
 import { paths } from "~/utils/paths";
 
 export const routeData = () => {
-  return createServerData$(async (_source, { env, request, locals }) => {
-    const session = await getSession({ env, locals, request });
+  return createServerData$(async (_source, event) => {
+    const session = await getSession(event);
 
     if (!session) {
       return redirect(paths.login);

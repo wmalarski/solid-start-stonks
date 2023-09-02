@@ -5,7 +5,7 @@ import { redirect } from "solid-start";
 import { createServerData$ } from "solid-start/server";
 import { Button } from "~/components/Button";
 import { Card, CardActions, CardBody, CardTitle } from "~/components/Card";
-import { getSession } from "~/server/auth";
+import { getSession } from "~/server/auth/session";
 import { paths } from "~/utils/paths";
 
 export const routeData = () => {

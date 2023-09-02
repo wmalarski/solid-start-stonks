@@ -2,7 +2,7 @@ import type { Component } from "solid-js";
 import { Outlet } from "solid-start";
 import { createServerData$, redirect } from "solid-start/server";
 import { Sidebar } from "~/modules/common/Sidebar/Sidebar";
-import { getSession } from "~/server/auth";
+import { getSession } from "~/server/auth/session";
 import { paths } from "~/utils/paths";
 
 export const routeData = () => {

@@ -1,7 +1,7 @@
 import type { FetchEvent } from "solid-start";
 import { buildSearchParams } from "~/utils/searchParams";
 import { serverEnv } from "../env";
-import type { Session } from "./cookies";
+import type { Session } from "./session";
 
 export type User = {
   sub: string;
