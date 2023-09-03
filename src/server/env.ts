@@ -34,13 +34,13 @@ export const serverEnv = ({ env, locals }: ServerEnvArgs): ServerEnv => {
   const envSchema = getEnvSchema();
 
   const parsed = parse(envSchema, {
-    clientID: env.CLIENT_ID || process.env.CLIENT_ID,
-    clientSecret: env.CLIENT_SECRET || process.env.CLIENT_SECRET,
-    domain: env.DOMAIN || process.env.DOMAIN,
+    clientID: env.CLIENT_ID || process.env.VITE_AUTH0_CLIENT_ID,
+    clientSecret: env.CLIENT_SECRET || process.env.AUTH0_CLIENT_SECRET,
+    domain: env.DOMAIN || process.env.VITE_AUTH0_DOMAIN,
     nodeEnv: env.NODE_ENV || process.env.NODE_ENV,
     notionDatabase: env.NOTION_DATABASE || process.env.NOTION_DATABASE,
     notionKey: env.NOTION_KEY || process.env.NOTION_KEY,
-    redirectUri: env.REDIRECT_URI || process.env.REDIRECT_URI,
+    redirectUri: env.REDIRECT_URI || process.env.VITE_AUTH0_REDIRECT_URL,
     sessionSecret: env.SESSION_SECRET || process.env.SESSION_SECRET,
   });
 

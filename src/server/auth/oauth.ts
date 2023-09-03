@@ -55,18 +55,20 @@ type ExchangeAuthTokenArgs = {
 };
 
 export const exchangeAuthToken = (args: ExchangeAuthTokenArgs) => {
-  const config = serverEnv(args.event);
+  const env = serverEnv(args.event);
+
+  const body = new URLSearchParams({
+    client_id: env.clientID,
+    client_secret: env.clientSecret,
+    code: args.code,
+    grant_type: "authorization_code",
+    redirect_uri: env.redirectUri,
+  });
 
   return authFetchJson<Session>({
     event: args.event,
     init: {
-      body: new URLSearchParams({
-        client_id: config.clientID,
-        client_secret: config.clientSecret,
-        code: args.code,
-        grant_type: "authorization_code",
-        redirect_uri: config.redirectUri,
-      }),
+      body,
       headers: { "content-type": "application/x-www-form-urlencoded" },
       method: "POST",
     },

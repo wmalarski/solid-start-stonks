@@ -12,6 +12,7 @@ export const GET = async (event: APIEvent) => {
   const parsed = await parseAsync(schema, Object.fromEntries(search.entries()));
 
   const session = await exchangeAuthToken({ ...parsed, event });
+
   const user = await getAuthUserInfo({ event, session });
 
   const users = await getNotionUsers(event);
@@ -25,7 +26,7 @@ export const GET = async (event: APIEvent) => {
     throw redirect(paths.index, 302);
   }
 
-  setSessionCookie({ event, session });
+  const cookie = await setSessionCookie({ event, session });
 
-  throw redirect(paths.invoices(0), 302);
+  return redirect(paths.invoices(), { headers: { "Set-Cookie": cookie } });
 };

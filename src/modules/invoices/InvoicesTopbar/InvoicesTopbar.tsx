@@ -1,4 +1,3 @@
-import { As } from "@kobalte/core";
 import { useI18n } from "@solid-primitives/i18n";
 import type { Component } from "solid-js";
 import { A } from "solid-start";
@@ -18,10 +17,8 @@ export const InvoicesTopbar: Component = () => {
     <Navbar class="flex w-full justify-between px-8 print:invisible print:hidden">
       <BreadcrumbsRoot class="text-sm">
         <BreadcrumbsList>
-          <BreadcrumbsItem asChild>
-            <As component={A} href={paths.invoices()}>
-              {t("topbar.home")}
-            </As>
+          <BreadcrumbsItem>
+            <A href={paths.invoices()}>{t("topbar.home")}</A>
           </BreadcrumbsItem>
         </BreadcrumbsList>
       </BreadcrumbsRoot>

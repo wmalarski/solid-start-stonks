@@ -1,5 +1,5 @@
 import type { Component } from "solid-js";
-import { Outlet } from "solid-start";
+import { Outlet, useRouteData } from "solid-start";
 import { createServerData$, redirect } from "solid-start/server";
 import { Sidebar } from "~/modules/common/Sidebar/Sidebar";
 import { getSession } from "~/server/auth/session";
@@ -12,10 +12,14 @@ export const routeData = () => {
     if (!session) {
       return redirect(paths.login);
     }
+
+    return null;
   });
 };
 
 const Dashboard: Component = () => {
+  useRouteData<typeof routeData>();
+
   return (
     <main class="flex min-h-screen w-full flex-row">
       <Sidebar />

@@ -92,7 +92,6 @@ export const selectInvoicesServerQuery = server$(
         startCursor: parsed.startCursor,
         // limit: parsed.limit,
         // offset: parsed.offset,
-        // userId: user.id,
       }),
       // countInvoicesByUserId({ userId: user.id }),
     ]);

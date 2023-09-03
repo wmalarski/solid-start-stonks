@@ -1,7 +1,7 @@
 import { useI18n } from "@solid-primitives/i18n";
 import { createQuery, useQueryClient } from "@tanstack/solid-query";
 import { ErrorBoundary, Show, Suspense, type Component } from "solid-js";
-import { Navigate, useNavigate, useSearchParams } from "solid-start";
+import { useNavigate, useSearchParams } from "solid-start";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { Pagination } from "~/components/Pagination";
 import { InvoicesList } from "~/modules/invoices/InvoicesList";
@@ -45,7 +45,7 @@ const InvoicesPage: Component = () => {
   }));
 
   return (
-    <ErrorBoundary fallback={<Navigate href={paths.notFound} />}>
+    <ErrorBoundary fallback={(e) => <pre>{JSON.stringify(e, null, 2)}</pre>}>
       <Suspense fallback={<LoadingSpinner />}>
         <Show when={invoicesQuery.data}>
           {(invoices) => (

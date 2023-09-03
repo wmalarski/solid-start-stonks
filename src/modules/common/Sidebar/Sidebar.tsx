@@ -24,13 +24,11 @@ export const Sidebar: Component = () => {
         </MenuItem>
       </Menu>
       <Menu class="w-56 p-2 ">
-        <MenuItem>
-          <Form>
-            <Button isLoading={signOut.pending} size="sm">
-              {t("sidebar.logout")}
-            </Button>
-          </Form>
-        </MenuItem>
+        <Form>
+          <Button isLoading={signOut.pending} size="sm">
+            {t("sidebar.logout")}
+          </Button>
+        </Form>
       </Menu>
     </div>
   );
