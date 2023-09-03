@@ -6,6 +6,7 @@ import {
 } from "@tanstack/solid-query";
 import { ErrorBoundary, Show, Suspense, type Component } from "solid-js";
 import { Navigate, useNavigate, useParams } from "solid-start";
+import { coerce, number } from "valibot";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import {
   InvoiceForm,
@@ -20,20 +21,22 @@ import {
 } from "~/server/invoices/actions";
 import { getServerError } from "~/utils/errors";
 import { paths } from "~/utils/paths";
+import { safeParseOrNull } from "~/utils/validation";
 
-const CopyInvoicePage: Component = () => {
+type CopyInvoiceQueryProps = {
+  id: number;
+};
+
+const CopyInvoiceQuery: Component<CopyInvoiceQueryProps> = (props) => {
   const [t] = useI18n();
 
-  const params = useParams();
   const navigate = useNavigate();
-
-  const id = () => +params.invoiceId;
 
   const queryClient = useQueryClient();
 
   const invoiceQuery = createQuery(() => ({
     queryFn: (context) => selectInvoiceServerQuery(context.queryKey),
-    queryKey: selectInvoiceKey({ id: id() }),
+    queryKey: selectInvoiceKey({ id: props.id }),
     suspense: true,
   }));
 
@@ -60,10 +63,10 @@ const CopyInvoicePage: Component = () => {
             <div class="grid w-full grid-cols-1 grid-rows-[auto_1fr] items-start">
               <InvoiceTopbar
                 invoice={invoice()}
-                invoiceId={id()}
+                invoiceId={props.id}
                 breadcrumbs={[
                   {
-                    path: paths.copyInvoice(id()),
+                    path: paths.copyInvoice(props.id),
                     text: t("topbar.copyInvoice"),
                   },
                 ]}
@@ -84,6 +87,18 @@ const CopyInvoicePage: Component = () => {
         </Show>
       </Suspense>
     </ErrorBoundary>
+  );
+};
+
+const CopyInvoicePage: Component = () => {
+  const params = useParams();
+
+  const id = () => safeParseOrNull(coerce(number(), Number), params.invoiceId);
+
+  return (
+    <Show when={id()} fallback={<Navigate href={paths.notFound} />}>
+      {(id) => <CopyInvoiceQuery id={id()} />}
+    </Show>
   );
 };
 

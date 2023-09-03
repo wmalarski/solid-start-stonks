@@ -6,6 +6,7 @@ import {
 } from "@tanstack/solid-query";
 import { ErrorBoundary, Show, Suspense, type Component } from "solid-js";
 import { Navigate, useNavigate, useParams } from "solid-start";
+import { coerce, number } from "valibot";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import {
   InvoiceForm,
@@ -20,20 +21,22 @@ import {
 } from "~/server/invoices/actions";
 import { getServerError } from "~/utils/errors";
 import { paths } from "~/utils/paths";
+import { safeParseOrNull } from "~/utils/validation";
 
-const EditInvoicePage: Component = () => {
+type EditInvoiceQueryProps = {
+  id: number;
+};
+
+const EditInvoiceQuery: Component<EditInvoiceQueryProps> = (props) => {
   const [t] = useI18n();
 
-  const params = useParams();
   const navigate = useNavigate();
 
   const queryClient = useQueryClient();
 
-  const id = () => +params.invoiceId;
-
   const invoiceQuery = createQuery(() => ({
     queryFn: (context) => selectInvoiceServerQuery(context.queryKey),
-    queryKey: selectInvoiceKey({ id: id() }),
+    queryKey: selectInvoiceKey({ id: props.id }),
     suspense: true,
   }));
 
@@ -41,18 +44,18 @@ const EditInvoicePage: Component = () => {
     mutationFn: updateInvoiceServerMutation,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: selectInvoiceKey({ id: id() }),
+        queryKey: selectInvoiceKey({ id: props.id }),
       });
       queryClient.invalidateQueries({
         queryKey: selectAllInvoicesKey(),
       });
 
-      navigate(paths.invoice(id()));
+      navigate(paths.invoice(props.id));
     },
   }));
 
   const onSubmit = (data: InvoiceFormData) => {
-    editMutation.mutate({ ...data, id: id() });
+    editMutation.mutate({ ...data, id: props.id });
   };
 
   return (
@@ -63,10 +66,10 @@ const EditInvoicePage: Component = () => {
             <div class="grid w-full grid-cols-1 grid-rows-[auto_1fr] items-start">
               <InvoiceTopbar
                 invoice={invoice()}
-                invoiceId={id()}
+                invoiceId={props.id}
                 breadcrumbs={[
                   {
-                    path: paths.editInvoice(id()),
+                    path: paths.editInvoice(props.id),
                     text: t("topbar.editInvoice"),
                   },
                 ]}
@@ -77,7 +80,7 @@ const EditInvoicePage: Component = () => {
               <div class="p-8 pt-0">
                 <InvoiceForm
                   error={getServerError(editMutation.error)}
-                  id={id()}
+                  id={props.id}
                   initial={invoice()}
                   isLoading={editMutation.isPending}
                   onSubmit={onSubmit}
@@ -88,6 +91,18 @@ const EditInvoicePage: Component = () => {
         </Show>
       </Suspense>
     </ErrorBoundary>
+  );
+};
+
+const EditInvoicePage: Component = () => {
+  const params = useParams();
+
+  const id = () => safeParseOrNull(coerce(number(), Number), params.invoiceId);
+
+  return (
+    <Show when={id()} fallback={<Navigate href={paths.notFound} />}>
+      {(id) => <EditInvoiceQuery id={id()} />}
+    </Show>
   );
 };
 

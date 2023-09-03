@@ -2,6 +2,7 @@ import { useI18n } from "@solid-primitives/i18n";
 import { createQuery } from "@tanstack/solid-query";
 import { ErrorBoundary, Show, Suspense, type Component } from "solid-js";
 import { Navigate, useParams } from "solid-start";
+import { coerce, number } from "valibot";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { InvoiceDetails } from "~/modules/invoices/InvoiceDetails";
 import { InvoiceTopbar } from "~/modules/invoices/InvoiceTopbar";
@@ -10,17 +11,18 @@ import {
   selectInvoiceServerQuery,
 } from "~/server/invoices/actions";
 import { paths } from "~/utils/paths";
+import { safeParseOrNull } from "~/utils/validation";
 
-const InvoicePage: Component = () => {
+type InvoiceQueryProps = {
+  id: number;
+};
+
+const InvoiceQuery: Component<InvoiceQueryProps> = (props) => {
   const [t] = useI18n();
-
-  const params = useParams();
-
-  const id = () => +params.invoiceId;
 
   const invoiceQuery = createQuery(() => ({
     queryFn: (context) => selectInvoiceServerQuery(context.queryKey),
-    queryKey: selectInvoiceKey({ id: id() }),
+    queryKey: selectInvoiceKey({ id: props.id }),
     suspense: true,
   }));
 
@@ -30,7 +32,7 @@ const InvoicePage: Component = () => {
         <Show when={invoiceQuery.data}>
           {(invoice) => (
             <div class="grid w-full grid-cols-1 grid-rows-[auto_1fr] items-start">
-              <InvoiceTopbar invoice={invoice()} invoiceId={id()} />
+              <InvoiceTopbar invoice={invoice()} invoiceId={props.id} />
               <h1 class="px-8 text-3xl font-semibold print:invisible print:hidden">
                 {t("invoice.title", { title: invoice().invoiceTitle })}
               </h1>
@@ -44,6 +46,18 @@ const InvoicePage: Component = () => {
         </Show>
       </Suspense>
     </ErrorBoundary>
+  );
+};
+
+const InvoicePage: Component = () => {
+  const params = useParams();
+
+  const id = () => safeParseOrNull(coerce(number(), Number), params.invoiceId);
+
+  return (
+    <Show when={id()} fallback={<Navigate href={paths.notFound} />}>
+      {(id) => <InvoiceQuery id={id()} />}
+    </Show>
   );
 };
 

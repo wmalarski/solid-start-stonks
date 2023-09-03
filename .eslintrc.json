@@ -81,11 +81,7 @@
         "selector": "typeLike",
         "format": [
           "PascalCase"
-        ],
-        "custom": {
-          "regex": "^(I|T|E)[A-Z]",
-          "match": false
-        }
+        ]
       }
     ],
     "@typescript-eslint/no-unused-expressions": [
