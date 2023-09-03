@@ -25,7 +25,7 @@ export const Sidebar: Component = () => {
       </Menu>
       <Menu class="w-56 p-2 ">
         <Form>
-          <Button isLoading={signOut.pending} size="sm">
+          <Button isLoading={signOut.pending} size="sm" type="submit">
             {t("sidebar.logout")}
           </Button>
         </Form>
