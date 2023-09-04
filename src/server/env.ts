@@ -1,5 +1,5 @@
 import type { FetchEvent } from "solid-start";
-import { object, parse, string, type Input } from "valibot";
+import { object, parseAsync, string, type Input } from "valibot";
 
 if (typeof window !== "undefined") {
   throw new Error("SERVER ON CLIENT!");
@@ -24,16 +24,19 @@ type ServerEnvArgs = Pick<FetchEvent, "env" | "locals">;
 
 const ENV_CACHE_KEY = "__env";
 
-export const serverEnv = ({ env, locals }: ServerEnvArgs): ServerEnv => {
+export const serverEnv = ({
+  env,
+  locals,
+}: ServerEnvArgs): Promise<ServerEnv> => {
   const cached = locals[ENV_CACHE_KEY];
 
   if (cached) {
-    return cached as ServerEnv;
+    return cached as Promise<ServerEnv>;
   }
 
   const envSchema = getEnvSchema();
 
-  const parsed = parse(envSchema, {
+  const parsed = parseAsync(envSchema, {
     clientID: env.CLIENT_ID || process.env.VITE_AUTH0_CLIENT_ID,
     clientSecret: env.CLIENT_SECRET || process.env.AUTH0_CLIENT_SECRET,
     domain: env.DOMAIN || process.env.VITE_AUTH0_DOMAIN,

@@ -31,8 +31,9 @@ const sessionSchema = () => {
 
 export type Session = Input<ReturnType<typeof sessionSchema>>;
 
-const createStorage = (event: FetchEvent) => {
-  const env = serverEnv(event);
+const createStorage = async (event: FetchEvent) => {
+  const env = await serverEnv(event);
+
   return createCookieSessionStorage({
     cookie: {
       httpOnly: true,
@@ -51,7 +52,7 @@ const SESSION_COOKIE_KEY = "__session";
 const getSessionFromCookie = async (
   event: FetchEvent,
 ): Promise<Session | null> => {
-  const storage = createStorage(event);
+  const storage = await createStorage(event);
 
   const cookie = await storage.getSession(event.request.headers.get("Cookie"));
 
@@ -99,11 +100,11 @@ type SetSessionCookieArgs = {
   session: Session;
 };
 
-export const setSessionCookie = async ({
+export const commitSessionCookie = async ({
   event,
   session,
 }: SetSessionCookieArgs) => {
-  const storage = createStorage(event);
+  const storage = await createStorage(event);
 
   const cookie = await storage.getSession(event.request.headers.get("Cookie"));
 
@@ -117,7 +118,7 @@ export const setSessionCookie = async ({
 };
 
 export const destroySessionCookie = async (event: FetchEvent) => {
-  const storage = createStorage(event);
+  const storage = await createStorage(event);
 
   const cookie = await storage.getSession(event.request.headers.get("Cookie"));
 

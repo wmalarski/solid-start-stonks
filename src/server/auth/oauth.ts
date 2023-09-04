@@ -24,8 +24,8 @@ type AuthFetchArgs = {
   session?: Session;
 };
 
-export const authFetch = (args: AuthFetchArgs) => {
-  const config = serverEnv(args.event);
+export const authFetch = async (args: AuthFetchArgs) => {
+  const config = await serverEnv(args.event);
 
   const search = buildSearchParams(args.query);
 
@@ -54,8 +54,8 @@ type ExchangeAuthTokenArgs = {
   event: FetchEvent;
 };
 
-export const exchangeAuthToken = (args: ExchangeAuthTokenArgs) => {
-  const env = serverEnv(args.event);
+export const exchangeAuthToken = async (args: ExchangeAuthTokenArgs) => {
+  const env = await serverEnv(args.event);
 
   const body = new URLSearchParams({
     client_id: env.clientID,

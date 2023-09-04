@@ -6,7 +6,7 @@ import {
   number,
   object,
   optional,
-  parse,
+  parseAsync,
   string,
   type Input,
 } from "valibot";
@@ -32,8 +32,8 @@ export const selectInvoiceKey = (
 };
 
 export const selectInvoiceServerQuery = server$(
-  ([, args]: ReturnType<typeof selectInvoiceKey>) => {
-    const parsed = parse(selectInvoiceArgs(), args);
+  async ([, args]: ReturnType<typeof selectInvoiceKey>) => {
+    const parsed = await parseAsync(selectInvoiceArgs(), args);
 
     const requestEvent = useRequest();
 
@@ -45,7 +45,7 @@ export const selectInvoiceServerQuery = server$(
       request: server$.request || requestEvent.request,
     };
 
-    getSessionOrThrow(event);
+    await getSessionOrThrow(event);
 
     return queryInvoice({
       event,
@@ -72,7 +72,7 @@ export const selectAllInvoicesKey = () => {
 
 export const selectInvoicesServerQuery = server$(
   async ([, args]: ReturnType<typeof selectInvoicesKey>) => {
-    const parsed = parse(selectInvoicesArgs(), args);
+    const parsed = await parseAsync(selectInvoicesArgs(), args);
 
     const requestEvent = useRequest();
 
@@ -84,16 +84,13 @@ export const selectInvoicesServerQuery = server$(
       request: server$.request || requestEvent.request,
     };
 
-    getSessionOrThrow(event);
+    await getSessionOrThrow(event);
 
     const [collection] = await Promise.all([
       queryInvoices({
         event,
         startCursor: parsed.startCursor,
-        // limit: parsed.limit,
-        // offset: parsed.offset,
       }),
-      // countInvoicesByUserId({ userId: user.id }),
     ]);
 
     return { collection, total: 10 };
@@ -131,9 +128,9 @@ const updateInvoiceArgs = () => {
 
 export const updateInvoiceServerMutation = server$(
   async (data: Input<ReturnType<typeof updateInvoiceArgs>>) => {
-    const parsed = parse(updateInvoiceArgs(), data);
+    const parsed = await parseAsync(updateInvoiceArgs(), data);
 
-    getSessionOrThrow(server$);
+    await getSessionOrThrow(server$);
 
     await updateInvoice({
       event: server$,
@@ -146,9 +143,9 @@ export const updateInvoiceServerMutation = server$(
 
 export const insertInvoiceServerMutation = server$(
   async (data: Input<ReturnType<typeof invoiceSchema>>) => {
-    const parsed = parse(invoiceSchema(), data);
+    const parsed = await parseAsync(invoiceSchema(), data);
 
-    getSessionOrThrow(server$);
+    await getSessionOrThrow(server$);
 
     const invoice = await createInvoice({ event: server$, invoice: parsed });
 
@@ -162,9 +159,9 @@ const deleteSchemaArgs = () => {
 
 export const deleteInvoiceServerMutation = server$(
   async (data: Input<ReturnType<typeof deleteSchemaArgs>>) => {
-    const parsed = parse(deleteSchemaArgs(), data);
+    const parsed = await parseAsync(deleteSchemaArgs(), data);
 
-    getSessionOrThrow(server$);
+    await getSessionOrThrow(server$);
 
     await deleteInvoice({ event: server$, id: parsed.id });
 

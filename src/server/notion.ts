@@ -10,14 +10,14 @@ import { serverEnv } from "./env";
 
 const NOTION_CACHE_KEY = "__notion";
 
-const getNotionClient = (event: FetchEvent): Client => {
+const getNotionClient = async (event: FetchEvent): Promise<Client> => {
   const cached = event.locals[NOTION_CACHE_KEY];
 
   if (cached) {
     return cached as Client;
   }
 
-  const env = serverEnv(event);
+  const env = await serverEnv(event);
 
   const notion = new Client({ auth: env.notionKey });
 
@@ -99,8 +99,8 @@ export const plainDateToDate = (date: string): CreateProperty => {
   return { date: { start: date } as any, type: "date" };
 };
 
-export const getNotionUsers = (event: FetchEvent) => {
-  const notion = getNotionClient(event);
+export const getNotionUsers = async (event: FetchEvent) => {
+  const notion = await getNotionClient(event);
 
   return notion.users.list({});
 };
@@ -109,12 +109,12 @@ type QueryNotionDatabaseArgs = Omit<QueryDatabaseParameters, "database_id"> & {
   event: FetchEvent;
 };
 
-export const queryNotionDatabase = ({
+export const queryNotionDatabase = async ({
   event,
   ...args
 }: QueryNotionDatabaseArgs) => {
-  const env = serverEnv(event);
-  const notion = getNotionClient(event);
+  const env = await serverEnv(event);
+  const notion = await getNotionClient(event);
 
   return notion.databases.query({ database_id: env.notionDatabase, ...args });
 };
@@ -123,12 +123,12 @@ type CreateNotionDatabaseArgs = Omit<CreateDatabaseParameters, "parent"> & {
   event: FetchEvent;
 };
 
-export const createNotionDatabase = ({
+export const createNotionDatabase = async ({
   event,
   ...args
 }: CreateNotionDatabaseArgs) => {
-  const env = serverEnv(event);
-  const notion = getNotionClient(event);
+  const env = await serverEnv(event);
+  const notion = await getNotionClient(event);
 
   return notion.databases.create({
     parent: { database_id: env.notionDatabase, type: "database_id" },
@@ -143,12 +143,12 @@ type UpdateNotionDatabaseArgs = Omit<
   event: FetchEvent;
 };
 
-export const updateNotionDatabase = ({
+export const updateNotionDatabase = async ({
   event,
   ...args
 }: UpdateNotionDatabaseArgs) => {
-  const env = serverEnv(event);
-  const notion = getNotionClient(event);
+  const env = await serverEnv(event);
+  const notion = await getNotionClient(event);
 
   return notion.databases.update({
     database_id: env.notionDatabase,

@@ -1,7 +1,7 @@
 import { redirect, type APIEvent } from "solid-start";
 import { object, parseAsync, string } from "valibot";
 import { exchangeAuthToken, getAuthUserInfo } from "~/server/auth/oauth";
-import { setSessionCookie } from "~/server/auth/session";
+import { commitSessionCookie } from "~/server/auth/session";
 import { getNotionUsers } from "~/server/notion";
 import { paths } from "~/utils/paths";
 
@@ -26,7 +26,7 @@ export const GET = async (event: APIEvent) => {
     throw redirect(paths.index, 302);
   }
 
-  const cookie = await setSessionCookie({ event, session });
+  const cookie = await commitSessionCookie({ event, session });
 
   return redirect(paths.invoices(), { headers: { "Set-Cookie": cookie } });
 };
