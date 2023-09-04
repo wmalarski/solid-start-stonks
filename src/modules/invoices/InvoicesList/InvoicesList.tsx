@@ -12,7 +12,7 @@ import { InvoiceCompany, InvoiceSummary } from "../InvoicePrimitives";
 
 type InvoiceItemProps = {
   invoice: Invoice;
-  invoiceId: number;
+  invoiceId: string;
 };
 
 const InvoiceItem: Component<InvoiceItemProps> = (props) => {

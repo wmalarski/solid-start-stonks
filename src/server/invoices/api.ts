@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { FetchEvent } from "solid-start";
 import {
-  appendBlock,
+  createPage,
   databaseResponseToProperties,
   dateToPlainDate,
   deleteBlock,
+  getPage,
   numberToPlainNumber,
   plainDateToDate,
   plainNumberToNumber,
@@ -13,7 +14,6 @@ import {
   queryDatabase,
   richTextToPlainText,
   titleToPlainText,
-  uniqueIdToPlainText,
   updateBlock,
   type CreateProperties,
   type QueryDatabaseResult,
@@ -34,7 +34,7 @@ const databaseResponseToInvoice = (result: QueryDatabaseResult) => {
       buyerNip: richTextToPlainText(properties.buyerNip),
       city: richTextToPlainText(properties.city),
       date: dateToPlainDate(properties.date),
-      id: uniqueIdToPlainText(properties.ID),
+      id: result.id,
       invoiceTitle: richTextToPlainText(properties.invoiceTitle),
       notes: richTextToPlainText(properties.notes),
       paymentAccount: richTextToPlainText(properties.paymentAccount),
@@ -115,25 +115,18 @@ export const queryInvoices = async ({
 
 export type QueryInvoicesResponse = Awaited<ReturnType<typeof queryInvoices>>;
 
-type QueryInvoiceArgs = {
+type GetInvoiceArgs = {
   event: FetchEvent;
-  id: number;
+  pageId: string;
 };
 
-export const queryInvoice = async ({ event, id }: QueryInvoiceArgs) => {
-  const response = await queryDatabase({
+export const getInvoice = async ({ event, pageId }: GetInvoiceArgs) => {
+  const response = await getPage({
     event,
-    filter: { number: { equals: id }, property: "ID" },
-    page_size: 1,
+    page_id: pageId,
   });
 
-  const result = response.results.at(0);
-
-  if (!result) {
-    return null;
-  }
-
-  return databaseResponseToInvoice(result);
+  return databaseResponseToInvoice(response);
 };
 
 type CreateInvoiceArgs = {
@@ -141,33 +134,10 @@ type CreateInvoiceArgs = {
   invoice: Omit<Invoice, "id">;
 };
 
-export const createInvoice = async ({ event }: CreateInvoiceArgs) => {
-  // const properties = invoiceToDatabaseProperties(invoice);
+export const createInvoice = ({ event, invoice }: CreateInvoiceArgs) => {
+  const properties = invoiceToDatabaseProperties(invoice);
 
-  const response = await appendBlock({
-    children: [
-      {
-        table_row: {
-          cells: [
-            [
-              { text: { content: "1" }, type: "text" },
-              { text: { content: "2" }, type: "text" },
-            ],
-            [
-              { text: { content: "3" }, type: "text" },
-              { text: { content: "4" }, type: "text" },
-            ],
-          ],
-        },
-      },
-    ],
-    event,
-    // properties,
-  });
-
-  console.log({ response });
-
-  return response;
+  return createPage({ event, properties });
 };
 
 type UpdateInvoiceArgs = {

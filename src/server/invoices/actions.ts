@@ -14,15 +14,13 @@ import { getSessionOrThrow } from "../auth/session";
 import {
   createInvoice,
   deleteInvoice,
-  queryInvoice,
+  getInvoice,
   queryInvoices,
   updateInvoice,
 } from "./api";
 
 const selectInvoiceArgs = () => {
-  return object({
-    id: coerce(number(), Number),
-  });
+  return object({ id: string() });
 };
 
 export const selectInvoiceKey = (
@@ -47,10 +45,7 @@ export const selectInvoiceServerQuery = server$(
 
     await getSessionOrThrow(event);
 
-    return queryInvoice({
-      event,
-      id: parsed.id,
-    });
+    return getInvoice({ event, pageId: parsed.id });
   },
 );
 
@@ -121,7 +116,7 @@ const invoiceSchema = () => {
 };
 
 const updateInvoiceArgs = () => {
-  return merge([invoiceSchema(), object({ id: coerce(number(), Number) })]);
+  return merge([invoiceSchema(), object({ id: string() })]);
 };
 
 export const updateInvoiceServerMutation = server$(
@@ -158,9 +153,7 @@ export const insertInvoiceServerMutation = server$(
 
     await getSessionOrThrow(event);
 
-    const invoice = await createInvoice({ event, invoice: parsed });
-
-    return invoice;
+    return createInvoice({ event, invoice: parsed });
   },
 );
 

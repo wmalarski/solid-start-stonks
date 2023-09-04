@@ -1,7 +1,7 @@
 import type { Invoice } from "~/server/invoices/api";
 
-export const mockId = (): number => {
-  return Math.floor(Math.random() * 1e16);
+export const mockId = (): string => {
+  return `${Math.floor(Math.random() * 1e16)}`;
 };
 
 export const mockInvoice = (update: Partial<Invoice> = {}): Invoice => {
@@ -12,7 +12,7 @@ export const mockInvoice = (update: Partial<Invoice> = {}): Invoice => {
     buyerNip: "string",
     city: "string",
     date: new Date().toDateString(),
-    id: 1,
+    id: "1",
     invoiceTitle: "string",
     notes: "notes",
     paymentAccount: "string",

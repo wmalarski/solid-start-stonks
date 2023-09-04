@@ -6,7 +6,7 @@ import {
 } from "@tanstack/solid-query";
 import { ErrorBoundary, Show, Suspense, type Component } from "solid-js";
 import { Navigate, useNavigate, useParams } from "solid-start";
-import { coerce, number } from "valibot";
+import { string } from "valibot";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import {
   InvoiceForm,
@@ -24,7 +24,7 @@ import { paths } from "~/utils/paths";
 import { safeParseOrNull } from "~/utils/validation";
 
 type CopyInvoiceQueryProps = {
-  id: number;
+  invoiceId: string;
 };
 
 const CopyInvoiceQuery: Component<CopyInvoiceQueryProps> = (props) => {
@@ -36,7 +36,7 @@ const CopyInvoiceQuery: Component<CopyInvoiceQueryProps> = (props) => {
 
   const invoiceQuery = createQuery(() => ({
     queryFn: (context) => selectInvoiceServerQuery(context.queryKey),
-    queryKey: selectInvoiceKey({ id: props.id }),
+    queryKey: selectInvoiceKey({ id: props.invoiceId }),
     suspense: true,
   }));
 
@@ -47,7 +47,7 @@ const CopyInvoiceQuery: Component<CopyInvoiceQueryProps> = (props) => {
         queryKey: selectAllInvoicesKey(),
       });
 
-      navigate(paths.invoice(+data.id));
+      navigate(paths.invoice(data.id));
     },
   }));
 
@@ -63,10 +63,10 @@ const CopyInvoiceQuery: Component<CopyInvoiceQueryProps> = (props) => {
             <div class="grid w-full grid-cols-1 grid-rows-[auto_1fr] items-start">
               <InvoiceTopbar
                 invoice={invoice()}
-                invoiceId={props.id}
+                invoiceId={props.invoiceId}
                 breadcrumbs={[
                   {
-                    path: paths.copyInvoice(props.id),
+                    path: paths.copyInvoice(props.invoiceId),
                     text: t("topbar.copyInvoice"),
                   },
                 ]}
@@ -93,11 +93,11 @@ const CopyInvoiceQuery: Component<CopyInvoiceQueryProps> = (props) => {
 const CopyInvoicePage: Component = () => {
   const params = useParams();
 
-  const id = () => safeParseOrNull(coerce(number(), Number), params.invoiceId);
+  const invoiceId = () => safeParseOrNull(string(), params.invoiceId);
 
   return (
-    <Show when={id()} fallback={<Navigate href={paths.notFound} />}>
-      {(id) => <CopyInvoiceQuery id={id()} />}
+    <Show when={invoiceId()} fallback={<Navigate href={paths.notFound} />}>
+      {(invoiceId) => <CopyInvoiceQuery invoiceId={invoiceId()} />}
     </Show>
   );
 };

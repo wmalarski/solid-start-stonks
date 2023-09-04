@@ -2,11 +2,14 @@ import { Client } from "@notionhq/client";
 import type {
   AppendBlockChildrenParameters,
   CreateDatabaseParameters,
+  CreatePageParameters,
   DeleteBlockParameters,
+  GetPageParameters,
   QueryDatabaseParameters,
   QueryDatabaseResponse,
   UpdateBlockParameters,
   UpdateDatabaseParameters,
+  UpdatePageParameters,
 } from "@notionhq/client/build/src/api-endpoints";
 import type { FetchEvent } from "solid-start";
 import { serverEnv } from "./env";
@@ -31,9 +34,7 @@ const getNotionClient = async (event: FetchEvent): Promise<Client> => {
 
 export type QueryDatabaseResult = QueryDatabaseResponse["results"][0];
 
-export const databaseResponseToProperties = (
-  response: QueryDatabaseResponse["results"][0],
-) => {
+export const databaseResponseToProperties = (response: QueryDatabaseResult) => {
   return "properties" in response ? response.properties : null;
 };
 
@@ -78,28 +79,28 @@ export const uniqueIdToPlainText = (property: QueryDatabaseProperty) => {
   return property.unique_id.number;
 };
 
-export type CreateProperties = CreateDatabaseParameters["properties"];
+export type CreateProperties = CreatePageParameters["properties"];
 
-type CreateProperty = CreateProperties[0];
-
-export const plainTextToTitle = (text: string): CreateProperty => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return { rich_text: { text } as any, type: "rich_text" };
+export const plainTextToTitle = (content: string) => {
+  return {
+    title: [{ text: { content }, type: "text" as const }],
+    type: "title" as const,
+  };
 };
 
-export const plainTextToRichText = (text: string): CreateProperty => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return { rich_text: [{ text: { content: text } }] as any, type: "rich_text" };
+export const plainTextToRichText = (content: string) => {
+  return {
+    rich_text: [{ text: { content }, type: "text" as const }],
+    type: "rich_text" as const,
+  };
 };
 
-export const plainNumberToNumber = (value: number): CreateProperty => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return { number: value as any, type: "number" };
+export const plainNumberToNumber = (value: number) => {
+  return { number: value, type: "number" as const };
 };
 
-export const plainDateToDate = (date: string): CreateProperty => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return { date: { start: date } as any, type: "date" };
+export const plainDateToDate = (date: string) => {
+  return { date: { start: date }, type: "date" as const };
 };
 
 export const getNotionUsers = async (event: FetchEvent) => {
@@ -123,14 +124,14 @@ export const queryDatabase = async ({ event, ...args }: QueryDatabaseArgs) => {
   return notion.databases.query({ database_id: env.notionDatabase, ...args });
 };
 
-type CreateNotionDatabaseArgs = Omit<CreateDatabaseParameters, "parent"> & {
-  event: FetchEvent;
-};
+type CreateDatabaseArgs = WithFetchEvent<
+  Omit<CreateDatabaseParameters, "parent">
+>;
 
-export const createNotionDatabase = async ({
+export const createDatabase = async ({
   event,
   ...args
-}: CreateNotionDatabaseArgs) => {
+}: CreateDatabaseArgs) => {
   const env = await serverEnv(event);
   const notion = await getNotionClient(event);
 
@@ -140,17 +141,14 @@ export const createNotionDatabase = async ({
   });
 };
 
-type UpdateNotionDatabaseArgs = Omit<
-  UpdateDatabaseParameters,
-  "database_id"
-> & {
-  event: FetchEvent;
-};
+type UpdateDatabaseArgs = WithFetchEvent<
+  Omit<UpdateDatabaseParameters, "database_id">
+>;
 
-export const updateNotionDatabase = async ({
+export const updateDatabase = async ({
   event,
   ...args
-}: UpdateNotionDatabaseArgs) => {
+}: UpdateDatabaseArgs) => {
   const env = await serverEnv(event);
   const notion = await getNotionClient(event);
 
@@ -196,4 +194,32 @@ export const updateBlock = async ({ event, ...args }: UpdateBlockArgs) => {
   console.log(args);
 
   return notion.blocks.update({ ...args });
+};
+
+type CreatePageArgs = WithFetchEvent<Omit<CreatePageParameters, "parent">>;
+
+export const createPage = async ({ event, ...args }: CreatePageArgs) => {
+  const env = await serverEnv(event);
+  const notion = await getNotionClient(event);
+
+  return notion.pages.create({
+    parent: { database_id: env.notionDatabase, type: "database_id" },
+    ...args,
+  });
+};
+
+type UpdatePageArgs = WithFetchEvent<UpdatePageParameters>;
+
+export const updatePage = async ({ event, ...args }: UpdatePageArgs) => {
+  const notion = await getNotionClient(event);
+
+  return notion.pages.update(args);
+};
+
+type GetPageArgs = WithFetchEvent<GetPageParameters>;
+
+export const getPage = async ({ event, ...args }: GetPageArgs) => {
+  const notion = await getNotionClient(event);
+
+  return notion.pages.retrieve(args);
 };

@@ -2,7 +2,7 @@ import { useI18n } from "@solid-primitives/i18n";
 import { createQuery } from "@tanstack/solid-query";
 import { ErrorBoundary, Show, Suspense, type Component } from "solid-js";
 import { Navigate, useParams } from "solid-start";
-import { coerce, number } from "valibot";
+import { string } from "valibot";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { InvoiceDetails } from "~/modules/invoices/InvoiceDetails";
 import { InvoiceTopbar } from "~/modules/invoices/InvoiceTopbar";
@@ -14,7 +14,7 @@ import { paths } from "~/utils/paths";
 import { safeParseOrNull } from "~/utils/validation";
 
 type InvoiceQueryProps = {
-  id: number;
+  invoiceId: string;
 };
 
 const InvoiceQuery: Component<InvoiceQueryProps> = (props) => {
@@ -22,7 +22,7 @@ const InvoiceQuery: Component<InvoiceQueryProps> = (props) => {
 
   const invoiceQuery = createQuery(() => ({
     queryFn: (context) => selectInvoiceServerQuery(context.queryKey),
-    queryKey: selectInvoiceKey({ id: props.id }),
+    queryKey: selectInvoiceKey({ id: props.invoiceId }),
     suspense: true,
   }));
 
@@ -32,7 +32,7 @@ const InvoiceQuery: Component<InvoiceQueryProps> = (props) => {
         <Show when={invoiceQuery.data}>
           {(invoice) => (
             <div class="grid w-full grid-cols-1 grid-rows-[auto_1fr] items-start">
-              <InvoiceTopbar invoice={invoice()} invoiceId={props.id} />
+              <InvoiceTopbar invoice={invoice()} invoiceId={props.invoiceId} />
               <h1 class="px-8 text-3xl font-semibold print:invisible print:hidden">
                 {t("invoice.title", { title: invoice().invoiceTitle })}
               </h1>
@@ -52,11 +52,11 @@ const InvoiceQuery: Component<InvoiceQueryProps> = (props) => {
 const InvoicePage: Component = () => {
   const params = useParams();
 
-  const id = () => safeParseOrNull(coerce(number(), Number), params.invoiceId);
+  const invoiceId = () => safeParseOrNull(string(), params.invoiceId);
 
   return (
-    <Show when={id()} fallback={<Navigate href={paths.notFound} />}>
-      {(id) => <InvoiceQuery id={id()} />}
+    <Show when={invoiceId()} fallback={<Navigate href={paths.notFound} />}>
+      {(invoiceId) => <InvoiceQuery invoiceId={invoiceId()} />}
     </Show>
   );
 };

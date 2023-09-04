@@ -14,7 +14,7 @@ import { paths } from "~/utils/paths";
 import { DeleteInvoice } from "../DeleteInvoice";
 
 type Props = {
-  invoiceId: number;
+  invoiceId: string;
   invoice: Invoice;
   breadcrumbs?: { path: string; text: string }[];
 };

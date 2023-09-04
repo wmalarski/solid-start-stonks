@@ -12,7 +12,7 @@ import { paths } from "~/utils/paths";
 
 type Props = {
   invoice: Invoice;
-  invoiceId: number;
+  invoiceId: string;
 };
 
 export const DeleteInvoice: Component<Props> = (props) => {

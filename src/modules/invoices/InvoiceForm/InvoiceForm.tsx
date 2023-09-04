@@ -105,7 +105,7 @@ const SubHeading: Component<SubHeadingProps> = (props) => {
 
 type Props = {
   error?: Record<string, v.Issue>;
-  id?: number;
+  invoiceId?: string;
   initial?: InvoiceFormData;
   isLoading: boolean;
   onSubmit: (data: InvoiceFormData) => void;
@@ -133,7 +133,7 @@ export const InvoiceForm: Component<Props> = (props) => {
   return (
     <Card class="shadow-xl">
       <CardBody component="form" onSubmit={onSubmit} class="grid w-full gap-2">
-        <Show when={props.id}>
+        <Show when={props.invoiceId}>
           {(id) => <input id="id" name="id" type="hidden" value={id()} />}
         </Show>
         <input
