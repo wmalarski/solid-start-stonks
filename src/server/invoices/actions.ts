@@ -158,7 +158,7 @@ export const insertInvoiceServerMutation = server$(
 );
 
 const deleteSchemaArgs = () => {
-  return object({ id: coerce(number(), Number) });
+  return object({ id: string() });
 };
 
 export const deleteInvoiceServerMutation = server$(

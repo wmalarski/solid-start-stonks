@@ -38,7 +38,7 @@ export const DeleteInvoice: Component<Props> = (props) => {
   ) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    deleteMutation.mutate({ id: Number(form.get("id")) });
+    deleteMutation.mutate({ id: String(form.get("id")) });
   };
 
   return (

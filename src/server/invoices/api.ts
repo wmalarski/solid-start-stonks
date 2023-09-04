@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { FetchEvent } from "solid-start";
 import {
   createPage,
   databaseResponseToProperties,
   dateToPlainDate,
-  deleteBlock,
   getPage,
   numberToPlainNumber,
   plainDateToDate,
@@ -14,7 +12,7 @@ import {
   queryDatabase,
   richTextToPlainText,
   titleToPlainText,
-  updateBlock,
+  updatePage,
   type CreateProperties,
   type QueryDatabaseResult,
 } from "../notion";
@@ -145,34 +143,17 @@ type UpdateInvoiceArgs = {
   invoice: Invoice;
 };
 
-export const updateInvoice = async ({ event }: UpdateInvoiceArgs) => {
-  // const properties = invoiceToDatabaseProperties(invoice);
+export const updateInvoice = ({ event, invoice }: UpdateInvoiceArgs) => {
+  const properties = invoiceToDatabaseProperties(invoice);
 
-  console.log({ event });
-
-  const response = await updateBlock({
-    block_id: "",
-    event,
-    // properties,
-  });
-
-  return response;
+  return updatePage({ event, page_id: invoice.id, properties });
 };
 
 type DeleteInvoiceArgs = {
   event: FetchEvent;
-  id: number;
+  id: string;
 };
 
-export const deleteInvoice = async ({ event }: DeleteInvoiceArgs) => {
-  // const properties = invoiceToDatabaseProperties(invoice);
-
-  const response = await deleteBlock({
-    // archived: true,
-    block_id: "",
-    event,
-    // properties,
-  });
-
-  return response;
+export const deleteInvoice = ({ event, id }: DeleteInvoiceArgs) => {
+  return updatePage({ archived: true, event, page_id: id });
 };
