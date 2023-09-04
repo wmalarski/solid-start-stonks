@@ -1,9 +1,11 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { createQuery, useQueryClient } from "@tanstack/solid-query";
+import {
+  createInfiniteQuery,
+  useQueryClient,
+  type GetNextPageParamFunction,
+} from "@tanstack/solid-query";
 import { ErrorBoundary, Show, Suspense, type Component } from "solid-js";
-import { useNavigate, useSearchParams } from "solid-start";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
-import { Pagination } from "~/components/Pagination";
 import { InvoicesList } from "~/modules/invoices/InvoicesList";
 import { InvoicesTopbar } from "~/modules/invoices/InvoicesTopbar";
 import {
@@ -11,25 +13,35 @@ import {
   selectInvoicesKey,
   selectInvoicesServerQuery,
 } from "~/server/invoices/actions";
-import { paths } from "~/utils/paths";
 
 const limit = 10;
+
+const getNextPageParam: GetNextPageParamFunction<
+  string | null,
+  Awaited<ReturnType<typeof selectInvoicesServerQuery>>
+> = (lastPage) => {
+  if (!lastPage.next_cursor) {
+    return;
+  }
+  return lastPage.next_cursor;
+};
 
 const InvoicesPage: Component = () => {
   const [t] = useI18n();
 
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const cursor = () => searchParams.startCursor;
-  const page = () => +searchParams.page || 0;
-
   const queryClient = useQueryClient();
 
-  const invoicesQuery = createQuery(() => ({
+  const invoicesQuery = createInfiniteQuery(() => ({
+    getNextPageParam,
+    initialPageParam: null,
     queryFn: async (context) => {
-      const result = await selectInvoicesServerQuery(context.queryKey);
+      const [, args] = context.queryKey;
+      const startCursor = context.pageParam || undefined;
+      const result = await selectInvoicesServerQuery(
+        selectInvoicesKey({ ...args, startCursor }),
+      );
 
-      result.collection.results.forEach((invoice) => {
+      result.results.forEach((invoice) => {
         if (invoice.id) {
           queryClient.setQueryData(
             selectInvoiceKey({ id: invoice.id }),
@@ -40,7 +52,7 @@ const InvoicesPage: Component = () => {
 
       return result;
     },
-    queryKey: selectInvoicesKey({ startCursor: cursor() }),
+    queryKey: selectInvoicesKey({ pageSize: limit }),
     suspense: true,
   }));
 
@@ -53,13 +65,13 @@ const InvoicesPage: Component = () => {
               <InvoicesTopbar />
               <div class="flex justify-between px-8">
                 <h1 class="text-3xl font-semibold">{t("invoices.header")}</h1>
-                <Pagination
-                  current={page()}
-                  max={Math.ceil(invoices().total / limit)}
-                  onChange={(page) => navigate(paths.invoices(page))}
-                />
               </div>
-              <InvoicesList invoices={invoices().collection.results} />;
+              <InvoicesList
+                hasNextPage={invoicesQuery.hasNextPage}
+                invoices={invoices().pages.flatMap((page) => page.results)}
+                isFetching={invoicesQuery.isFetchingNextPage}
+                onFetchNextPage={invoicesQuery.fetchNextPage}
+              />
             </div>
           )}
         </Show>

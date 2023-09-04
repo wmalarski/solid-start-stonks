@@ -51,6 +51,7 @@ export const selectInvoiceServerQuery = server$(
 
 const selectInvoicesArgs = () => {
   return object({
+    pageSize: number(),
     startCursor: optional(string()),
   });
 };
@@ -81,12 +82,11 @@ export const selectInvoicesServerQuery = server$(
 
     await getSessionOrThrow(event);
 
-    const collection = await queryInvoices({
+    return queryInvoices({
       event,
+      pageSize: parsed.pageSize,
       startCursor: parsed.startCursor,
     });
-
-    return { collection, total: 10 };
   },
 );
 

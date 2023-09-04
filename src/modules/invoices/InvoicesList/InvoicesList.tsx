@@ -1,7 +1,7 @@
 import { useI18n } from "@solid-primitives/i18n";
-import { For, Show, type Component } from "solid-js";
+import { For, type Component } from "solid-js";
 import { A } from "solid-start";
-import { buttonClass } from "~/components/Button";
+import { Button, buttonClass } from "~/components/Button";
 import { Card, CardActions, CardBody, CardTitle } from "~/components/Card";
 import { Divider } from "~/components/Divider";
 import { useDateFormatter } from "~/components/utils/format";
@@ -12,7 +12,6 @@ import { InvoiceCompany, InvoiceSummary } from "../InvoicePrimitives";
 
 type InvoiceItemProps = {
   invoice: Invoice;
-  invoiceId: string;
 };
 
 const InvoiceItem: Component<InvoiceItemProps> = (props) => {
@@ -55,23 +54,23 @@ const InvoiceItem: Component<InvoiceItemProps> = (props) => {
         <CardActions>
           <A
             class={buttonClass({ size: "sm", variant: "link" })}
-            href={paths.invoice(props.invoiceId)}
+            href={paths.invoice(props.invoice.id)}
           >
             {t("invoices.more")}
           </A>
           <A
             class={buttonClass({ size: "sm", variant: "link" })}
-            href={paths.editInvoice(props.invoiceId)}
+            href={paths.editInvoice(props.invoice.id)}
           >
             {t("topbar.editInvoice")}
           </A>
           <A
             class={buttonClass({ size: "sm", variant: "link" })}
-            href={paths.copyInvoice(props.invoiceId)}
+            href={paths.copyInvoice(props.invoice.id)}
           >
             {t("topbar.copyInvoice")}
           </A>
-          <DeleteInvoice invoice={props.invoice} invoiceId={props.invoiceId} />
+          <DeleteInvoice invoice={props.invoice} invoiceId={props.invoice.id} />
         </CardActions>
       </CardBody>
     </Card>
@@ -79,21 +78,25 @@ const InvoiceItem: Component<InvoiceItemProps> = (props) => {
 };
 
 type Props = {
+  hasNextPage: boolean;
   invoices: Invoice[];
+  isFetching: boolean;
+  onFetchNextPage: VoidFunction;
 };
 
 export const InvoicesList: Component<Props> = (props) => {
+  const [t] = useI18n();
+
   return (
     <div class="flex w-full flex-col gap-4 px-8">
       <For each={props.invoices}>
-        {(invoice) => (
-          <Show when={invoice.id}>
-            {(invoiceId) => (
-              <InvoiceItem invoice={invoice} invoiceId={invoiceId()} />
-            )}
-          </Show>
-        )}
+        {(invoice) => <InvoiceItem invoice={invoice} />}
       </For>
+      {props.hasNextPage ? (
+        <Button isLoading={props.isFetching} onClick={props.onFetchNextPage}>
+          {t("invoices.more")}
+        </Button>
+      ) : null}
     </div>
   );
 };

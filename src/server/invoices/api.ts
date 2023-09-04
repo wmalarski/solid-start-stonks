@@ -86,16 +86,18 @@ export const invoiceToDatabaseProperties = (
 
 type QueryInvoicesArgs = {
   event: FetchEvent;
+  pageSize: number;
   startCursor?: string;
 };
 
 export const queryInvoices = async ({
   event,
+  pageSize,
   startCursor,
 }: QueryInvoicesArgs) => {
   const response = await queryDatabase({
     event,
-    page_size: 10,
+    page_size: pageSize,
     start_cursor: startCursor,
   });
 
