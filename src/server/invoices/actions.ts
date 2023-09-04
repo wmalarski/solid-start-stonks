@@ -1,4 +1,4 @@
-import server$, { useRequest } from "solid-start/server";
+import server$ from "solid-start/server";
 import {
   coerce,
   merge,
@@ -33,14 +33,12 @@ export const selectInvoiceServerQuery = server$(
   async ([, args]: ReturnType<typeof selectInvoiceKey>) => {
     const parsed = await parseAsync(selectInvoiceArgs(), args);
 
-    const requestEvent = useRequest();
-
     const event = {
-      clientAddress: server$.clientAddress || requestEvent.clientAddress,
-      env: server$.env || requestEvent.env,
-      fetch: server$.fetch || requestEvent.fetch,
-      locals: server$.locals || requestEvent.locals,
-      request: server$.request || requestEvent.request,
+      clientAddress: server$.clientAddress,
+      env: server$.env,
+      fetch: server$.fetch,
+      locals: server$.locals,
+      request: server$.request,
     };
 
     await getSessionOrThrow(event);
@@ -70,14 +68,12 @@ export const selectInvoicesServerQuery = server$(
   async ([, args]: ReturnType<typeof selectInvoicesKey>) => {
     const parsed = await parseAsync(selectInvoicesArgs(), args);
 
-    const requestEvent = useRequest();
-
     const event = {
-      clientAddress: server$.clientAddress || requestEvent.clientAddress,
-      env: server$.env || requestEvent.env,
-      fetch: server$.fetch || requestEvent.fetch,
-      locals: server$.locals || requestEvent.locals,
-      request: server$.request || requestEvent.request,
+      clientAddress: server$.clientAddress,
+      env: server$.env,
+      fetch: server$.fetch,
+      locals: server$.locals,
+      request: server$.request,
     };
 
     await getSessionOrThrow(event);

@@ -1,7 +1,6 @@
 // @refresh reload
 import { I18nContext } from "@solid-primitives/i18n";
-import { QueryClient, QueryClientProvider } from "@tanstack/solid-query";
-import { Suspense, createSignal, lazy, type JSX } from "solid-js";
+import { Suspense, lazy, type JSX } from "solid-js";
 import {
   Body,
   ErrorBoundary,
@@ -14,13 +13,12 @@ import {
   Title,
 } from "solid-start";
 import "./root.css";
+import { CacheProvider } from "./utils/CacheProvider";
 import { i18n } from "./utils/i18n";
 
 const ToastProvider = lazy(() => import("./components/Toast/ToastProvider"));
 
 const Root = (): JSX.Element => {
-  const [queryClient] = createSignal(new QueryClient());
-
   return (
     <Html lang="en" data-theme="corporate">
       <Head>
@@ -32,14 +30,14 @@ const Root = (): JSX.Element => {
         <Suspense>
           <ErrorBoundary>
             <I18nContext.Provider value={i18n}>
-              <QueryClientProvider client={queryClient()}>
+              <CacheProvider>
                 <Routes>
                   <FileRoutes />
                 </Routes>
                 <Suspense>
                   <ToastProvider />
                 </Suspense>
-              </QueryClientProvider>
+              </CacheProvider>
             </I18nContext.Provider>
           </ErrorBoundary>
         </Suspense>
