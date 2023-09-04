@@ -1,18 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { FetchEvent } from "solid-start";
 import {
-  createNotionDatabase,
+  appendBlock,
   databaseResponseToProperties,
   dateToPlainDate,
+  deleteBlock,
   numberToPlainNumber,
   plainDateToDate,
   plainNumberToNumber,
   plainTextToRichText,
   plainTextToTitle,
-  queryNotionDatabase,
+  queryDatabase,
   richTextToPlainText,
   titleToPlainText,
   uniqueIdToPlainText,
-  updateNotionDatabase,
+  updateBlock,
   type CreateProperties,
   type QueryDatabaseResult,
 } from "../notion";
@@ -57,7 +59,7 @@ const databaseResponseToInvoice = (result: QueryDatabaseResult) => {
 
 export type Invoice = NonNullable<ReturnType<typeof databaseResponseToInvoice>>;
 
-const invoiceToDatabaseProperties = (
+export const invoiceToDatabaseProperties = (
   invoice: Omit<Invoice, "id">,
 ): CreateProperties => {
   return {
@@ -93,7 +95,7 @@ export const queryInvoices = async ({
   event,
   startCursor,
 }: QueryInvoicesArgs) => {
-  const response = await queryNotionDatabase({
+  const response = await queryDatabase({
     event,
     page_size: 10,
     start_cursor: startCursor,
@@ -119,7 +121,7 @@ type QueryInvoiceArgs = {
 };
 
 export const queryInvoice = async ({ event, id }: QueryInvoiceArgs) => {
-  const response = await queryNotionDatabase({
+  const response = await queryDatabase({
     event,
     filter: { number: { equals: id }, property: "ID" },
     page_size: 1,
@@ -139,13 +141,31 @@ type CreateInvoiceArgs = {
   invoice: Omit<Invoice, "id">;
 };
 
-export const createInvoice = async ({ event, invoice }: CreateInvoiceArgs) => {
-  const properties = invoiceToDatabaseProperties(invoice);
+export const createInvoice = async ({ event }: CreateInvoiceArgs) => {
+  // const properties = invoiceToDatabaseProperties(invoice);
 
-  const response = await createNotionDatabase({
+  const response = await appendBlock({
+    children: [
+      {
+        table_row: {
+          cells: [
+            [
+              { text: { content: "1" }, type: "text" },
+              { text: { content: "2" }, type: "text" },
+            ],
+            [
+              { text: { content: "3" }, type: "text" },
+              { text: { content: "4" }, type: "text" },
+            ],
+          ],
+        },
+      },
+    ],
     event,
-    properties,
+    // properties,
   });
+
+  console.log({ response });
 
   return response;
 };
@@ -155,14 +175,15 @@ type UpdateInvoiceArgs = {
   invoice: Invoice;
 };
 
-export const updateInvoice = async ({ event, invoice }: UpdateInvoiceArgs) => {
-  const properties = invoiceToDatabaseProperties(invoice);
+export const updateInvoice = async ({ event }: UpdateInvoiceArgs) => {
+  // const properties = invoiceToDatabaseProperties(invoice);
 
   console.log({ event });
 
-  const response = await updateNotionDatabase({
+  const response = await updateBlock({
+    block_id: "",
     event,
-    properties,
+    // properties,
   });
 
   return response;
@@ -176,8 +197,9 @@ type DeleteInvoiceArgs = {
 export const deleteInvoice = async ({ event }: DeleteInvoiceArgs) => {
   // const properties = invoiceToDatabaseProperties(invoice);
 
-  const response = await updateNotionDatabase({
-    archived: true,
+  const response = await deleteBlock({
+    // archived: true,
+    block_id: "",
     event,
     // properties,
   });

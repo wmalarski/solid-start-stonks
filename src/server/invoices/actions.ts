@@ -86,12 +86,10 @@ export const selectInvoicesServerQuery = server$(
 
     await getSessionOrThrow(event);
 
-    const [collection] = await Promise.all([
-      queryInvoices({
-        event,
-        startCursor: parsed.startCursor,
-      }),
-    ]);
+    const collection = await queryInvoices({
+      event,
+      startCursor: parsed.startCursor,
+    });
 
     return { collection, total: 10 };
   },
@@ -130,12 +128,17 @@ export const updateInvoiceServerMutation = server$(
   async (data: Input<ReturnType<typeof updateInvoiceArgs>>) => {
     const parsed = await parseAsync(updateInvoiceArgs(), data);
 
-    await getSessionOrThrow(server$);
+    const event = {
+      clientAddress: server$.clientAddress,
+      env: server$.env,
+      fetch: server$.fetch,
+      locals: server$.locals,
+      request: server$.request,
+    };
 
-    await updateInvoice({
-      event: server$,
-      invoice: parsed,
-    });
+    await getSessionOrThrow(event);
+
+    await updateInvoice({ event, invoice: parsed });
 
     return parsed;
   },
@@ -145,9 +148,17 @@ export const insertInvoiceServerMutation = server$(
   async (data: Input<ReturnType<typeof invoiceSchema>>) => {
     const parsed = await parseAsync(invoiceSchema(), data);
 
-    await getSessionOrThrow(server$);
+    const event = {
+      clientAddress: server$.clientAddress,
+      env: server$.env,
+      fetch: server$.fetch,
+      locals: server$.locals,
+      request: server$.request,
+    };
 
-    const invoice = await createInvoice({ event: server$, invoice: parsed });
+    await getSessionOrThrow(event);
+
+    const invoice = await createInvoice({ event, invoice: parsed });
 
     return invoice;
   },
@@ -161,9 +172,17 @@ export const deleteInvoiceServerMutation = server$(
   async (data: Input<ReturnType<typeof deleteSchemaArgs>>) => {
     const parsed = await parseAsync(deleteSchemaArgs(), data);
 
-    await getSessionOrThrow(server$);
+    const event = {
+      clientAddress: server$.clientAddress,
+      env: server$.env,
+      fetch: server$.fetch,
+      locals: server$.locals,
+      request: server$.request,
+    };
 
-    await deleteInvoice({ event: server$, id: parsed.id });
+    await getSessionOrThrow(event);
+
+    await deleteInvoice({ event, id: parsed.id });
 
     return parsed.id;
   },

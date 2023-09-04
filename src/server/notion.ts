@@ -1,8 +1,11 @@
 import { Client } from "@notionhq/client";
 import type {
+  AppendBlockChildrenParameters,
   CreateDatabaseParameters,
+  DeleteBlockParameters,
   QueryDatabaseParameters,
   QueryDatabaseResponse,
+  UpdateBlockParameters,
   UpdateDatabaseParameters,
 } from "@notionhq/client/build/src/api-endpoints";
 import type { FetchEvent } from "solid-start";
@@ -81,7 +84,7 @@ type CreateProperty = CreateProperties[0];
 
 export const plainTextToTitle = (text: string): CreateProperty => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return { title: [{ text: { content: text } }] as any, type: "title" };
+  return { rich_text: { text } as any, type: "rich_text" };
 };
 
 export const plainTextToRichText = (text: string): CreateProperty => {
@@ -105,14 +108,15 @@ export const getNotionUsers = async (event: FetchEvent) => {
   return notion.users.list({});
 };
 
-type QueryNotionDatabaseArgs = Omit<QueryDatabaseParameters, "database_id"> & {
+type WithFetchEvent<T> = T & {
   event: FetchEvent;
 };
 
-export const queryNotionDatabase = async ({
-  event,
-  ...args
-}: QueryNotionDatabaseArgs) => {
+type QueryDatabaseArgs = WithFetchEvent<
+  Omit<QueryDatabaseParameters, "database_id">
+>;
+
+export const queryDatabase = async ({ event, ...args }: QueryDatabaseArgs) => {
   const env = await serverEnv(event);
   const notion = await getNotionClient(event);
 
@@ -154,4 +158,42 @@ export const updateNotionDatabase = async ({
     database_id: env.notionDatabase,
     ...args,
   });
+};
+
+type AppendBlockArgs = WithFetchEvent<
+  Omit<AppendBlockChildrenParameters, "block_id">
+>;
+
+export const appendBlock = async ({ event, ...args }: AppendBlockArgs) => {
+  const env = await serverEnv(event);
+  const notion = await getNotionClient(event);
+
+  console.log(args);
+
+  return notion.blocks.children.append({
+    block_id: env.notionDatabase,
+    children: [],
+    // parent: { database_id: env.notionDatabase, type: "database_id" },
+    // ...args,
+  });
+};
+
+type DeleteBlockArgs = WithFetchEvent<DeleteBlockParameters>;
+
+export const deleteBlock = async ({ event, ...args }: DeleteBlockArgs) => {
+  const notion = await getNotionClient(event);
+
+  console.log(args);
+
+  return notion.blocks.delete({ ...args });
+};
+
+type UpdateBlockArgs = WithFetchEvent<UpdateBlockParameters>;
+
+export const updateBlock = async ({ event, ...args }: UpdateBlockArgs) => {
+  const notion = await getNotionClient(event);
+
+  console.log(args);
+
+  return notion.blocks.update({ ...args });
 };
