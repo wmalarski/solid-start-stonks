@@ -12,7 +12,7 @@ export const routeData = () => {
     const session = await getSession(event);
 
     if (session) {
-      return redirect(paths.invoices());
+      return redirect(paths.invoices);
     }
 
     return null;

@@ -24,7 +24,7 @@ export const InvoiceTopbar: Component<Props> = (props) => {
 
   const breadcrumbs = createMemo(() => {
     return [
-      { path: paths.invoices(), text: t("topbar.home") },
+      { path: paths.invoices, text: t("topbar.home") },
       {
         path: paths.invoice(props.invoiceId),
         text: props.invoice.invoiceTitle,

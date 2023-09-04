@@ -10,7 +10,7 @@ export const InvoicesTopbar: Component = () => {
 
   return (
     <Navbar class="flex w-full justify-between px-8 print:invisible print:hidden">
-      <A href={paths.invoices()}>{t("topbar.home")}</A>
+      <A href={paths.invoices}>{t("topbar.home")}</A>
       <div>
         <A
           href={paths.addInvoice}

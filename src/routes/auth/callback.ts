@@ -28,5 +28,5 @@ export const GET = async (event: APIEvent) => {
 
   const cookie = await commitSessionCookie({ event, session });
 
-  return redirect(paths.invoices(), { headers: { "Set-Cookie": cookie } });
+  return redirect(paths.invoices, { headers: { "Set-Cookie": cookie } });
 };

@@ -13,7 +13,7 @@ export const routeData = () => {
     if (!session) {
       return redirect(paths.login);
     }
-    return redirect(paths.invoices());
+    return redirect(paths.invoices);
   });
 };
 

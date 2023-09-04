@@ -29,7 +29,7 @@ export const DeleteInvoice: Component<Props> = (props) => {
         queryKey: selectAllInvoicesKey(),
       });
 
-      navigate(paths.invoices());
+      navigate(paths.invoices);
     },
   }));
 
